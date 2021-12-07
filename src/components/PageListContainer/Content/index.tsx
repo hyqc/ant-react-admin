@@ -1,31 +1,12 @@
 import React from 'react';
 import { Card } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-export type ContentType = {
-  wrapperStyle?: React.CSSProperties;
-  cardStyle?: React.CSSProperties;
-};
-
-const Content: React.FC<ContentType> = (props: any) => {
-  const { wrapperStyle, cardStyle } = props;
-
-  const initCardStyle: any = () => {
-    let wrapperStyless = {
-      padding: '0 0 1.4rem',
-    };
-    if (wrapperStyle && Object.keys(wrapperStyle).length) {
-      wrapperStyless = { ...wrapperStyless, ...wrapperStyle };
-    }
-    return wrapperStyless;
-  };
-
-  const wrapperStyless = initCardStyle();
-
+// 列表页容器
+const Content: React.FC = (props: any) => {
   return (
-    <PageHeaderWrapper style={wrapperStyless}>
-      <Card style={cardStyle}>{props?.children}</Card>
-    </PageHeaderWrapper>
+    <Card style={{ margin: '0 0 2rem', backgroundColor: '#FFF', ...props?.style }} bordered={false}>
+      {props?.children}
+    </Card>
   );
 };
 
