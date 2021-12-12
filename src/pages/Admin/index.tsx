@@ -12,7 +12,7 @@ const FormSearchRowColSpan = 6;
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
 
-  const columns: ColumnsType = [
+  const columns: ColumnsType<any> = [
     {
       title: 'ID',
       dataIndex: 'id',
