@@ -1,5 +1,14 @@
 import { POST } from './config';
 
+export type APIItemType = {
+  url: string;
+  method?: string;
+};
+
+export type APIType = {
+  [key: string]: APIItemType;
+};
+
 export const Base = {
   login: {
     url: '/admin/base/login',

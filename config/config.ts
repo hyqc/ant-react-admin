@@ -73,5 +73,6 @@ export default defineConfig({
   // mock: false,
   define: {
     LoginPath: '/login',
+    BaseAPI: '/api',
   },
 });

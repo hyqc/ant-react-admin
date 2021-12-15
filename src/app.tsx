@@ -1,11 +1,10 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
-import type { RunTimeLayoutConfig } from 'umi';
-import { history, Link } from 'umi';
+import type { RunTimeLayoutConfig, RequestConfig } from 'umi';
+import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentAdminInfo } from './services/apis/base';
-import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import type { CurrentUser } from '@/services/apis/base';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -63,18 +62,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         history.push(LoginPath);
       }
     },
-    links: isDev
-      ? [
-          <Link to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-          <Link to="/~docs">
-            <BookOutlined />
-            <span>业务组件文档</span>
-          </Link>,
-        ]
-      : [],
+    links: [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -85,4 +73,27 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     // },
     ...initialState?.settings,
   };
+};
+
+// 请求拦截器：
+const interceptorsRequest = (url: string, options: any) => {
+  isDev && console.log('请求拦截器：', url, options);
+  return {
+    url: `${BaseAPI}${url}`,
+    options: { ...options, interceptors: true },
+  };
+};
+
+// 响应拦截器：
+const interceptorsResponse = (response: any, options: any) => {
+  isDev && console.log('响应拦截器：', response, options);
+  return response;
+};
+
+export const request: RequestConfig = {
+  timeout: 6000,
+  errorConfig: {},
+  middlewares: [],
+  requestInterceptors: [interceptorsRequest],
+  responseInterceptors: [interceptorsResponse],
 };

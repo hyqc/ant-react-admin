@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import { request } from 'umi';
 import { Base } from './api';
 import type { ResponseType } from './types';
 
