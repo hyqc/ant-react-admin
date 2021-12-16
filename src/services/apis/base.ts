@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import { Base } from './api';
+import { APIBase } from './api';
 import type { ResponseType } from './types';
 
 export type RequestLoginParamsType = {
@@ -15,25 +15,11 @@ export type ResponseLoginDataType = {
   menus: any;
 };
 
-export async function login(params: RequestLoginParamsType) {
-  return request<ResponseType>(Base.login.url, {
-    method: Base.login.method,
-    data: params,
-  });
-}
-
 export type RequestLogoutParamsType = {
   id: number;
 };
 
-export async function logout(params?: RequestLogoutParamsType) {
-  return request(Base.logout.url, {
-    method: Base.logout.method,
-    data: params,
-  });
-}
-
-export type CurrentUser = {
+export type ReponseCurrentUserType = {
   name?: string;
   avatar?: string;
   userid?: string;
@@ -54,8 +40,22 @@ export type CurrentUser = {
   phone?: string;
 };
 
+export async function login(params: RequestLoginParamsType) {
+  return request<ResponseType>(APIBase.login.url, {
+    method: APIBase.login.method,
+    data: params,
+  });
+}
+
+export async function logout(params?: RequestLogoutParamsType) {
+  return request(APIBase.logout.url, {
+    method: APIBase.logout.method,
+    data: params,
+  });
+}
+
 export async function currentAdminInfo() {
-  return request(Base.logout.url, {
-    method: Base.logout.method,
+  return request(APIBase.logout.url, {
+    method: APIBase.logout.method,
   });
 }

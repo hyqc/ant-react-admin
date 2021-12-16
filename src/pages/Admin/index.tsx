@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Content, Search, Container } from '@/components/PageListContainer';
-import { Form, Input, Button, Select, Row, Col, Table } from 'antd';
+import { Form, Input, Button, Select, Row, Col, Table, Avatar } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
-import type { AdminUserListItemType } from './types';
 import { ColumnsType } from 'antd/lib/table';
+import { adminUserList } from '@/services/apis/admin';
+import type {
+  ResponseListDataType,
+  ResponseListType,
+  ResponsePageInfoDataType,
+} from '@/services/apis/types';
+import type { ResponseAdminUserListItemType } from '@/services/apis/admin';
+import { SUCCESS } from '@/services/apis/code';
+import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 6;
 
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
+  const [pageInfo, setPageInfo] = useState<ResponsePageInfoDataType>();
+  const [adminUserListData, setAdminUserDataList] = useState<ResponseAdminUserListItemType[]>([]);
 
   const columns: ColumnsType<any> = [
     {
@@ -21,6 +31,9 @@ const Admin: React.FC = () => {
     {
       title: '头像',
       dataIndex: 'avatar',
+      render: (avatar, record) => {
+        return <Avatar src={avatar} />;
+      },
     },
     {
       title: '名称',
@@ -60,6 +73,33 @@ const Admin: React.FC = () => {
       },
     },
   ];
+
+  function getAdminUserList() {
+    adminUserList()
+      .then((res: ResponseListType) => {
+        if (res.code === SUCCESS) {
+          const data: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
+          const rows = data?.rows || [];
+          const pageInfo: ResponsePageInfoDataType = {
+            total: data.total,
+            pageSize: data.pageSize,
+            pageNo: data.pageNo,
+          };
+          setAdminUserDataList(rows);
+          setPageInfo(pageInfo);
+        }
+        console.log('result', res);
+      })
+      .catch((err) => {
+        console.log('error', err);
+      })
+      .finally();
+  }
+
+  useEffect(() => {
+    console.log('=========');
+    getAdminUserList();
+  }, []);
 
   return (
     <Container>
@@ -111,7 +151,7 @@ const Admin: React.FC = () => {
         </Form>
       </Search>
       <Content>
-        <Table columns={columns}></Table>
+        <Table rowKey="id" columns={columns} dataSource={adminUserListData}></Table>
       </Content>
     </Container>
   );

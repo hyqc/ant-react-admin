@@ -1,4 +1,8 @@
-export type AdminUserListItemType = {
+import { request } from 'umi';
+import { APIAdmin } from './api';
+import type { ResponseType } from './types';
+
+export type ResponseAdminUserListItemType = {
   id: number; // 管理员ID，唯一键
   name: string; // 管理员名称，唯一键
   nick_name: string; // 管理员昵称
@@ -14,7 +18,7 @@ export type AdminUserListItemType = {
   modify_time: string; // 最后更新时间
 };
 
-export type AdminUserListSearchParamsType = {
+export type RequestAdminUserListSearchParamsType = {
   name?: string; // 管理员名称
   nick_name?: string; // 管理员昵称
   status?: number; // 管理员状态，0全部，1正常，2禁用
@@ -24,7 +28,7 @@ export type AdminUserListSearchParamsType = {
   endDateTime?: string;
 };
 
-export type AdminUserAddParamsType = {
+export type RequestAdminUserAddParamsType = {
   name: string; // 管理员名称（账号）
   nick_name?: string; // 管理员昵称
   role_ids?: string; // 角色ID，示例："1,2,3"
@@ -33,7 +37,7 @@ export type AdminUserAddParamsType = {
   status?: number;
 };
 
-export type AdminUserEditParamsType = {
+export type RequestAdminUserEditParamsType = {
   id: number;
   name?: string; // 管理员名称（账号）
   nick_name?: string; // 管理员昵称
@@ -43,12 +47,19 @@ export type AdminUserEditParamsType = {
   status?: number;
 };
 
-export type AdminUserDeleteParamsType = {
+export type RequestAdminUserDeleteParamsType = {
   id: number;
 };
 
-export type AdminUserUpdatePasswordParamsType = {
+export type RequestAdminUserUpdatePasswordParamsType = {
   id: number;
   new_password: string;
   confirm_password: string;
 };
+
+export async function adminUserList(params?: RequestAdminUserListSearchParamsType) {
+  return request<ResponseType>(APIAdmin.list.url, {
+    method: APIAdmin.list.method,
+    data: params,
+  });
+}

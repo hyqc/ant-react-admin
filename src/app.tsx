@@ -5,7 +5,7 @@ import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentAdminInfo } from './services/apis/base';
-import type { CurrentUser } from '@/services/apis/base';
+import type { ReponseCurrentUserType } from '@/services/apis/base';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -19,8 +19,8 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: CurrentUser;
-  fetchUserInfo?: () => Promise<CurrentUser | undefined>;
+  currentUser?: ReponseCurrentUserType;
+  fetchUserInfo?: () => Promise<ReponseCurrentUserType | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {

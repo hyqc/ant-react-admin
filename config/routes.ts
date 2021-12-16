@@ -1,8 +1,6 @@
 ﻿export default [
   {
     path: '/login',
-    name: 'login',
-    icon: 'crown',
     component: './Login',
     layout: false,
   },
