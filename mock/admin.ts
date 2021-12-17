@@ -27,8 +27,8 @@ const AdminUserList: ResponseAdminUserListItemType[] = [
     avatar: defaultAvatarURL,
     role_ids: '2,3',
     role_names: '运营,测试',
-    status: 1,
-    status_text: '启用',
+    status: 2,
+    status_text: '禁用',
     last_ip: '127.0.0.1',
     create_time: '2021-12-17 22:22:33',
     modify_time: '2021-12-17 22:22:33',
@@ -52,5 +52,11 @@ export default {
   // 支持值为 Object 和 Array
   'POST /api/admin/user/list': (req: Request, res: Response) => {
     res.send(adminUserList);
+  },
+  'POST /api/admin/user/edit': (req: Request, res: Response) => {
+    res.send({
+      code: 0,
+      message: '更新成功',
+    });
   },
 };

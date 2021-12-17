@@ -6,6 +6,9 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentAdminInfo } from './services/apis/base';
 import type { ReponseCurrentUserType } from '@/services/apis/base';
+import { message } from 'antd';
+import type { ResponseType } from '@/services/apis/types';
+import { SUCCESS } from './services/apis/code';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -85,8 +88,13 @@ const interceptorsRequest = (url: string, options: any) => {
 };
 
 // 响应拦截器：
-const interceptorsResponse = (response: any, options: any) => {
+const interceptorsResponse = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
+  message.destroy();
+  const data: ResponseType = await response.clone().json();
+  if (data.code !== SUCCESS) {
+    message.error(data.message, MessageDuritain);
+  }
   return response;
 };
 

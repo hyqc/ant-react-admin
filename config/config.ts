@@ -74,5 +74,6 @@ export default defineConfig({
   define: {
     LoginPath: '/login',
     BaseAPI: '/api',
+    MessageDuritain: 1.5,
   },
 });

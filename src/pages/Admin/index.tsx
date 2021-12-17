@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Content, Search, Container } from '@/components/PageListContainer';
-import { Form, Input, Button, Select, Row, Col, Table, Avatar } from 'antd';
+import { Form, Input, Button, Select, Row, Col, Table, Avatar, Switch, message } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
 import { ColumnsType } from 'antd/lib/table';
-import { adminUserList } from '@/services/apis/admin';
+import { adminUserList, adminUserEdit } from '@/services/apis/admin';
+import type {
+  ResponseAdminUserListItemType,
+  RequestAdminUserListSearchParamsType,
+  RequestAdminUserEditParamsType,
+} from '@/services/apis/admin';
 import type {
   ResponseListDataType,
   ResponseListType,
   ResponsePageInfoDataType,
 } from '@/services/apis/types';
-import type { ResponseAdminUserListItemType } from '@/services/apis/admin';
 import { SUCCESS } from '@/services/apis/code';
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 
@@ -19,6 +23,7 @@ const FormSearchRowColSpan = 6;
 
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
   const [pageInfo, setPageInfo] = useState<ResponsePageInfoDataType>();
   const [adminUserListData, setAdminUserDataList] = useState<ResponseAdminUserListItemType[]>([]);
 
@@ -64,7 +69,17 @@ const Admin: React.FC = () => {
     },
     {
       title: '状态',
-      dataIndex: 'status_text',
+      dataIndex: 'status',
+      render(status, record) {
+        return (
+          <Switch
+            checkedChildren={'启用'}
+            unCheckedChildren={'禁用'}
+            checked={status === 1}
+            onClick={(value: boolean) => clickStatusBtn(value, record)}
+          />
+        );
+      },
     },
     {
       title: '操作',
@@ -74,8 +89,9 @@ const Admin: React.FC = () => {
     },
   ];
 
-  function getAdminUserList() {
-    adminUserList()
+  function getAdminUserList(data?: RequestAdminUserListSearchParamsType) {
+    setLoading(true);
+    adminUserList(data)
       .then((res: ResponseListType) => {
         if (res.code === SUCCESS) {
           const data: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
@@ -93,42 +109,66 @@ const Admin: React.FC = () => {
       .catch((err) => {
         console.log('error', err);
       })
-      .finally();
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  function clickStatusBtn(value: any, record: ResponseAdminUserListItemType) {
+    const updateData: RequestAdminUserEditParamsType = {
+      id: record.id,
+      status: value,
+    };
+    adminUserEdit(updateData).then((res) => {
+      if (res.code === SUCCESS) {
+        message.success(res.message, MessageDuritain, () => {
+          getAdminUserList();
+        });
+      }
+    });
+  }
+
+  function onSearchFinish(values: RequestAdminUserListSearchParamsType) {
+    getAdminUserList(values);
+  }
+
+  function onSearchReset() {
+    form.resetFields();
+    getAdminUserList();
   }
 
   useEffect(() => {
-    console.log('=========');
     getAdminUserList();
   }, []);
 
   return (
     <Container>
       <Search>
-        <Form form={form}>
+        <Form form={form} onFinish={onSearchFinish}>
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="名称">
+              <Form.Item label="名称" name="name" initialValue={''}>
                 <Input allowClear />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="昵称">
+              <Form.Item label="昵称" name="nick_name" initialValue={''}>
                 <Input allowClear />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="角色名">
+              <Form.Item label="角色名" name="role_name" initialValue={''}>
                 <Input allowClear />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="邮箱">
+              <Form.Item label="邮箱" name="email" initialValue={''}>
                 <Input allowClear />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="状态">
-                <Select defaultValue={'0'} style={{ offset: 0, width: '120' }}>
+              <Form.Item label="状态" name="status" initialValue={'0'}>
+                <Select style={{ offset: 0, width: '120' }}>
                   <Select.Option value="0">全部</Select.Option>
                   <Select.Option value="1">启用</Select.Option>
                   <Select.Option value="2">禁用</Select.Option>
@@ -142,7 +182,7 @@ const Admin: React.FC = () => {
                 <SearchOutlined />
                 查询
               </Button>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="button" onClick={onSearchReset}>
                 <ReloadOutlined />
                 清除
               </Button>
@@ -151,7 +191,12 @@ const Admin: React.FC = () => {
         </Form>
       </Search>
       <Content>
-        <Table rowKey="id" columns={columns} dataSource={adminUserListData}></Table>
+        <Table
+          rowKey="id"
+          loading={loading}
+          columns={columns}
+          dataSource={adminUserListData}
+        ></Table>
       </Content>
     </Container>
   );

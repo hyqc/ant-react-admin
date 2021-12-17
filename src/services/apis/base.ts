@@ -55,7 +55,7 @@ export async function logout(params?: RequestLogoutParamsType) {
 }
 
 export async function currentAdminInfo() {
-  return request(APIBase.logout.url, {
-    method: APIBase.logout.method,
+  return request(APIBase.admin.url, {
+    method: APIBase.admin.method,
   });
 }

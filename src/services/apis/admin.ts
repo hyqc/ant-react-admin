@@ -63,3 +63,10 @@ export async function adminUserList(params?: RequestAdminUserListSearchParamsTyp
     data: params,
   });
 }
+
+export async function adminUserEdit(params: RequestAdminUserEditParamsType) {
+  return request<ResponseType>(APIAdmin.edit.url, {
+    method: APIAdmin.edit.method,
+    data: params,
+  });
+}
