@@ -1,10 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Content, Search, Container } from '@/components/PageListContainer';
-import { Form, Input, Button, Select, Row, Col, Table, Avatar, Switch, message } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Row,
+  Col,
+  Table,
+  Avatar,
+  Switch,
+  message,
+  Tag,
+  Popconfirm,
+  Pagination,
+  Space,
+} from 'antd';
+import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
 import { ColumnsType } from 'antd/lib/table';
-import { adminUserList, adminUserEdit } from '@/services/apis/admin';
+import {
+  adminUserList,
+  adminUserEdit,
+  ResponseAdminUserListItemRolesItemType,
+} from '@/services/apis/admin';
 import type {
   ResponseAdminUserListItemType,
   RequestAdminUserListSearchParamsType,
@@ -17,6 +36,8 @@ import type {
 } from '@/services/apis/types';
 import { SUCCESS } from '@/services/apis/code';
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
+import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE, STATUS_INVALID, STATUS_VALID } from './common';
+import AdminAddModal, { NoticeModalPropsType } from './add';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 6;
@@ -26,69 +47,130 @@ const Admin: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [pageInfo, setPageInfo] = useState<ResponsePageInfoDataType>();
   const [adminUserListData, setAdminUserDataList] = useState<ResponseAdminUserListItemType[]>([]);
+  const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
+  const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
+  const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
 
   const columns: ColumnsType<any> = [
     {
       title: 'ID',
       dataIndex: 'id',
+      width: '4rem',
+      align: 'center',
       sorter: true,
     },
     {
+      title: '名称',
+      align: 'center',
+      dataIndex: 'name',
+      width: '8rem',
+    },
+    {
       title: '头像',
+      align: 'center',
       dataIndex: 'avatar',
+      width: '3rem',
       render: (avatar, record) => {
         return <Avatar src={avatar} />;
       },
     },
     {
-      title: '名称',
-      dataIndex: 'name',
-    },
-    {
       title: '邮箱',
+      align: 'center',
+      width: '14rem',
       dataIndex: 'email',
     },
     {
       title: '角色',
-      dataIndex: 'role_names',
+      width: '10rem',
+      dataIndex: 'roles',
+      render: (roles, record: ResponseAdminUserListItemType) => {
+        return roles?.map((item: ResponseAdminUserListItemRolesItemType) => {
+          return (
+            <Tag color="geekblue" style={{ cursor: 'default' }} key={item.id}>
+              {item.name}
+            </Tag>
+          );
+        });
+      },
     },
     {
       title: '登录次数',
+      align: 'center',
+      width: '6rem',
       dataIndex: 'total_login',
       sorter: true,
     },
     {
       title: '创建时间',
+      align: 'center',
+      width: '12rem',
       dataIndex: 'create_time',
       sorter: true,
     },
     {
       title: '更新时间',
+      align: 'center',
+      width: '12rem',
       dataIndex: 'modify_time',
       sorter: true,
     },
     {
       title: '状态',
+      width: '4rem',
+      align: 'center',
       dataIndex: 'status',
-      render(status, record) {
+      render(status: number, record: ResponseAdminUserListItemType) {
         return (
-          <Switch
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            checked={status === 1}
-            onClick={(value: boolean) => clickStatusBtn(value, record)}
-          />
+          <Popconfirm
+            title={`确实要${record.status_text}该管理员吗？`}
+            okText="确定"
+            cancelText="取消"
+            onConfirm={() => clickStatusBtn(record)}
+          >
+            <Switch
+              checkedChildren={'启用'}
+              unCheckedChildren={'禁用'}
+              checked={status === STATUS_VALID}
+            />
+          </Popconfirm>
         );
       },
     },
     {
       title: '操作',
-      render() {
-        return <Button>详情</Button>;
+      align: 'left',
+      width: '16rem',
+      render(text, record) {
+        return (
+          <>
+            <Button
+              type="primary"
+              style={{ marginRight: 4 }}
+              onClick={() => openDetailModal(record)}
+            >
+              详情
+            </Button>
+            <Button type="primary" style={{ marginRight: 4 }} onClick={() => openEditModal(record)}>
+              编辑
+            </Button>
+            <Popconfirm
+              title="确实要删除该管理员吗？"
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => onDeleteAdminUser(record)}
+            >
+              <Button type="primary" danger style={{ marginRight: 4 }}>
+                删除
+              </Button>
+            </Popconfirm>
+          </>
+        );
       },
     },
   ];
 
+  // 获取管理员列表
   function getAdminUserList(data?: RequestAdminUserListSearchParamsType) {
     setLoading(true);
     adminUserList(data)
@@ -114,27 +196,58 @@ const Admin: React.FC = () => {
       });
   }
 
-  function clickStatusBtn(value: any, record: ResponseAdminUserListItemType) {
+  // 管理员状态更新
+  function clickStatusBtn(record: ResponseAdminUserListItemType) {
     const updateData: RequestAdminUserEditParamsType = {
       id: record.id,
-      status: value,
+      status: record.status === STATUS_VALID ? STATUS_INVALID : STATUS_VALID,
     };
     adminUserEdit(updateData).then((res) => {
       if (res.code === SUCCESS) {
         message.success(res.message, MessageDuritain, () => {
-          getAdminUserList();
+          getAdminUserList({ ...pageInfo, ...form.getFieldsValue() });
         });
       }
     });
   }
 
+  // 管理员列表搜索
   function onSearchFinish(values: RequestAdminUserListSearchParamsType) {
-    getAdminUserList(values);
+    getAdminUserList({ ...values, ...pageInfo, pageNo: 1 });
   }
 
+  // 管理员搜索重置
   function onSearchReset() {
     form.resetFields();
     getAdminUserList();
+  }
+
+  // 管理员详情
+  function openDetailModal(record: ResponseAdminUserListItemType) {
+    setDetailModalStatus(true);
+  }
+
+  // 管理员编辑
+  function openEditModal(record: ResponseAdminUserListItemType) {
+    setEditModalStatus(true);
+  }
+
+  // 管理员添加
+  function openAddModal() {
+    setAddModalStatus(true);
+  }
+
+  function noticeAddModal(data: NoticeModalPropsType) {
+    console.log(data, '++++++++++++++++=');
+    setAddModalStatus(false);
+    if (data.reload) {
+      getAdminUserList({ ...pageInfo, ...form.getFieldsValue() });
+    }
+  }
+
+  // 删除管理员
+  function onDeleteAdminUser(record: ResponseAdminUserListItemType) {
+    console.log(record);
   }
 
   useEffect(() => {
@@ -191,13 +304,38 @@ const Admin: React.FC = () => {
         </Form>
       </Search>
       <Content>
+        {/* button */}
+        <Space style={{ marginBottom: '1rem' }}>
+          <Button type="primary" onClick={openAddModal}>
+            <PlusOutlined />
+            新建管理员
+          </Button>
+        </Space>
+
+        {/* table */}
         <Table
           rowKey="id"
+          scroll={{ x: 1500 }}
           loading={loading}
           columns={columns}
+          pagination={false}
           dataSource={adminUserListData}
         ></Table>
+        <Pagination
+          showQuickJumper
+          defaultCurrent={DEFAULT_PAGE_NO}
+          style={{ marginTop: '1rem', textAlign: 'right' }}
+          total={pageInfo?.total}
+          current={pageInfo?.pageNo || DEFAULT_PAGE_NO}
+          pageSize={pageInfo?.pageSize || DEFAULT_PAGE_SIZE}
+          showTotal={(total) => `共 ${total} 条数据`}
+          onChange={(pageNo) => getAdminUserList({ pageNo, ...form.getFieldsValue() })}
+          onShowSizeChange={(pageSize) => getAdminUserList({ pageSize, ...form.getFieldsValue() })}
+        />
       </Content>
+
+      {/* modal */}
+      <AdminAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
     </Container>
   );
 };

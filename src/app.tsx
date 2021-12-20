@@ -5,7 +5,7 @@ import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentAdminInfo } from './services/apis/base';
-import type { ReponseCurrentUserType } from '@/services/apis/base';
+import type { ReponseCurrentUserInfoType } from '@/services/apis/base';
 import { message } from 'antd';
 import type { ResponseType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
@@ -22,8 +22,8 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: ReponseCurrentUserType;
-  fetchUserInfo?: () => Promise<ReponseCurrentUserType | undefined>;
+  currentUser?: ReponseCurrentUserInfoType;
+  fetchUserInfo?: () => Promise<ReponseCurrentUserInfoType | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -36,11 +36,11 @@ export async function getInitialState(): Promise<{
   };
   // 如果是登录页面，不执行
   if (history.location.pathname !== LoginPath) {
-    const currentUser = await fetchUserInfo();
+    const currentUser: ReponseCurrentUserInfoType = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
-      settings: {},
+      settings: currentUser?.settings || {},
     };
   }
   return {
@@ -73,6 +73,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     // childrenRender: (children) => {
     //   if (initialState.loading) return <PageLoading />;
     //   return children;
+    // },
+    // menu: {
+    //   request: async (params, defaultMenuData) => {
+    //     return initialState?.menuData || {};
+    //   },
     // },
     ...initialState?.settings,
   };

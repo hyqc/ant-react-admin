@@ -2,14 +2,19 @@ import { request } from 'umi';
 import { APIAdmin } from './api';
 import type { ResponseType } from './types';
 
+export type ResponseAdminUserListItemRolesItemType = {
+  id: number;
+  name: string;
+  canEdit: boolean;
+};
+
 export type ResponseAdminUserListItemType = {
   id: number; // 管理员ID，唯一键
   name: string; // 管理员名称，唯一键
   nick_name: string; // 管理员昵称
   email: string; // 邮箱地址唯一键
   avatar: string; // 管理员头像
-  role_ids: string; // 管理员角色ID集合"1,2,3"
-  role_names: string; // 管理员角色名称集合 "a,b,c"
+  roles: ResponseAdminUserListItemRolesItemType[]; // 管理员角色ID集合"1,2,3"
   status: number; // 正常，管理员状态, 1正常，2禁用，
   status_text: string; //
   last_ip: string; // 最后一次登录的IP地址
@@ -26,15 +31,16 @@ export type RequestAdminUserListSearchParamsType = {
   email?: string; // 邮箱
   startDateTime?: string; // 2021-12-01 00:00:00 创建时间搜索
   endDateTime?: string;
+  pageNo?: number;
+  pageSize?: number;
 };
 
 export type RequestAdminUserAddParamsType = {
   name: string; // 管理员名称（账号）
   nick_name?: string; // 管理员昵称
-  role_ids?: string; // 角色ID，示例："1,2,3"
   avatar?: string;
   email?: string;
-  status?: number;
+  status: boolean;
 };
 
 export type RequestAdminUserEditParamsType = {
@@ -60,6 +66,13 @@ export type RequestAdminUserUpdatePasswordParamsType = {
 export async function adminUserList(params?: RequestAdminUserListSearchParamsType) {
   return request<ResponseType>(APIAdmin.list.url, {
     method: APIAdmin.list.method,
+    data: params,
+  });
+}
+
+export async function adminUserAdd(params: RequestAdminUserAddParamsType) {
+  return request<ResponseType>(APIAdmin.add.url, {
+    method: APIAdmin.add.method,
     data: params,
   });
 }

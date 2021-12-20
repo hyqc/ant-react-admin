@@ -1,14 +1,47 @@
+import type { ReponseCurrentUserInfoType } from '@/services/apis/base';
+import { MenuDataItem } from '@umijs/route-utils';
 import { Request, Response } from 'express';
 
-/**
- * 当前用户的权限，如果为空代表没登录
- * current user access， if is '', user need login
- * 如果是 pro 的预览，默认是有权限的
- */
-let access = 'admin';
+const menusData: MenuDataItem = [
+  {
+    path: '/login',
+    component: './Login',
+    layout: false,
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    icon: 'crown',
+    component: './Admin',
+    authority: 'admin',
+  },
+  {
+    path: '/',
+    redirect: '/admin',
+  },
+  {
+    component: './404',
+  },
+];
 
-const getAccess = () => {
-  return access;
+const currentAdminInfo: ReponseCurrentUserInfoType = {
+  id: 1,
+  name: 'Serati Ma',
+  nick_name: 'Serati Ma',
+  avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+  email: 'antdesign@alipay.com',
+  signature: '海纳百川，有容乃大',
+  permissions: {
+    AdminUserList: '/admin/user/list',
+    AdminUserEdit: '/admin/user/edit',
+    AdminUserAdd: '/admin/user/add',
+    AdminUserDelete: '/admin/user/delete',
+    AdminUserEnable: '/admin/user/enable',
+  },
+  menus: menusData,
+  settings: {
+    layout: 'side',
+  },
 };
 
 // 代码中会兼容本地 service mock 以及部署站点的静态数据
@@ -18,21 +51,7 @@ export default {
     res.send({
       code: 0,
       message: '成功',
-      data: {
-        name: 'Serati Ma',
-        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-        userid: '00000001',
-        email: 'antdesign@alipay.com',
-        signature: '海纳百川，有容乃大',
-        title: '交互专家',
-        group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
-        notifyCount: 12,
-        unreadCount: 11,
-        country: 'China',
-        access: getAccess(),
-        address: '西湖区工专路 77 号',
-        phone: '0752-268888888',
-      },
+      data: currentAdminInfo,
     });
   },
   'POST /api/admin/base/login': {

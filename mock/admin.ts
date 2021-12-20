@@ -10,8 +10,23 @@ const AdminUserList: ResponseAdminUserListItemType[] = [
     nick_name: '超管',
     email: '123@qq.com',
     avatar: defaultAvatarURL,
-    role_ids: '1,2,3',
-    role_names: '超管,运营,测试',
+    roles: [
+      {
+        id: 1,
+        name: '超管',
+        canEdit: false,
+      },
+      {
+        id: 2,
+        name: '运营',
+        canEdit: true,
+      },
+      {
+        id: 3,
+        name: '测试',
+        canEdit: true,
+      },
+    ],
     status: 1,
     status_text: '启用',
     last_ip: '127.0.0.1',
@@ -25,8 +40,18 @@ const AdminUserList: ResponseAdminUserListItemType[] = [
     nick_name: '管理员',
     email: '123456@qq.com',
     avatar: defaultAvatarURL,
-    role_ids: '2,3',
-    role_names: '运营,测试',
+    roles: [
+      {
+        id: 2,
+        name: '运营',
+        canEdit: true,
+      },
+      {
+        id: 3,
+        name: '测试',
+        canEdit: true,
+      },
+    ],
     status: 2,
     status_text: '禁用',
     last_ip: '127.0.0.1',

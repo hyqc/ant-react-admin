@@ -4,7 +4,7 @@ import { Card } from 'antd';
 // 列表页容器
 const Content: React.FC = (props: any) => {
   return (
-    <Card style={{ margin: '0 0 2rem', backgroundColor: '#FFF', ...props?.style }} bordered={false}>
+    <Card style={{ backgroundColor: '#FFF', ...props?.style }} bordered={false}>
       {props?.children}
     </Card>
   );

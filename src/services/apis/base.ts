@@ -1,3 +1,5 @@
+import { PureSettings } from '@ant-design/pro-layout/lib/defaultSettings';
+import { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { request } from 'umi';
 import { APIBase } from './api';
 import type { ResponseType } from './types';
@@ -19,25 +21,20 @@ export type RequestLogoutParamsType = {
   id: number;
 };
 
-export type ReponseCurrentUserType = {
-  name?: string;
-  avatar?: string;
-  userid?: string;
-  email?: string;
+export type CurrentUserPermissionsType = {
+  [key: string]: string; // 权限名称:权限对应的接口路径
+};
+
+export type ReponseCurrentUserInfoType = {
+  id: number;
+  name: string;
+  nick_name: string;
+  avatar: string;
+  email: string;
   signature?: string;
-  title?: string;
-  group?: string;
-  tags?: { key?: string; label?: string }[];
-  notifyCount?: number;
-  unreadCount?: number;
-  country?: string;
-  access?: string;
-  geographic?: {
-    province?: { label?: string; key?: string };
-    city?: { label?: string; key?: string };
-  };
-  address?: string;
-  phone?: string;
+  permissions: CurrentUserPermissionsType;
+  menus: MenuDataItem;
+  settings?: PureSettings;
 };
 
 export async function login(params: RequestLoginParamsType) {
