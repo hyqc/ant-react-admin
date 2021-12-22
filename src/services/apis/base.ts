@@ -37,6 +37,13 @@ export type ReponseCurrentUserInfoType = {
   settings?: PureSettings;
 };
 
+export type UploadImageFieldListItemType = {
+  uid: string;
+  name: string;
+  url: string;
+  status: string;
+};
+
 export async function login(params: RequestLoginParamsType) {
   return request<ResponseType>(APIBase.login.url, {
     method: APIBase.login.method,
@@ -54,5 +61,12 @@ export async function logout(params?: RequestLogoutParamsType) {
 export async function currentAdminInfo() {
   return request(APIBase.admin.url, {
     method: APIBase.admin.method,
+  });
+}
+
+export async function upload(data?: any) {
+  return request(APIBase.upload.url, {
+    method: APIBase.upload.method,
+    data: data,
   });
 }

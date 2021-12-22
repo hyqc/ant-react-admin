@@ -35,6 +35,21 @@ export type RequestAdminUserListSearchParamsType = {
   pageSize?: number;
 };
 
+export type ResponseAdminUserInfoType = {
+  id: number; // 管理员ID，唯一键
+  name: string; // 管理员名称，唯一键
+  nick_name: string; // 管理员昵称
+  email: string; // 邮箱地址唯一键
+  avatar: string; // 管理员头像
+  roles: ResponseAdminUserListItemRolesItemType[]; // 管理员角色ID集合"1,2,3"
+  status: number; // 正常，管理员状态, 1正常，2禁用，
+  status_text: string; //
+  last_ip: string; // 最后一次登录的IP地址
+  total_login: number; // 登录总次数
+  create_time: string; // 创建时间 "2021-12-01 12:23:21"
+  modify_time: string; // 最后更新时间
+};
+
 export type RequestAdminUserAddParamsType = {
   name: string; // 管理员名称（账号）
   nick_name?: string; // 管理员昵称
@@ -54,6 +69,10 @@ export type RequestAdminUserEditParamsType = {
 };
 
 export type RequestAdminUserDeleteParamsType = {
+  id: number;
+};
+
+export type RequestAdminUserInfoParamsType = {
   id: number;
 };
 
@@ -80,6 +99,13 @@ export async function adminUserAdd(params: RequestAdminUserAddParamsType) {
 export async function adminUserEdit(params: RequestAdminUserEditParamsType) {
   return request<ResponseType>(APIAdmin.edit.url, {
     method: APIAdmin.edit.method,
+    data: params,
+  });
+}
+
+export async function adminUserGet(params: RequestAdminUserInfoParamsType) {
+  return request<ResponseType>(APIAdmin.get.url, {
+    method: APIAdmin.get.method,
     data: params,
   });
 }

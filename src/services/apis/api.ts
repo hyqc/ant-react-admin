@@ -22,11 +22,19 @@ export const APIBase = {
     url: '/admin/base/info',
     method: POST,
   },
+  upload: {
+    url: '/admin/base/upload',
+    method: POST,
+  },
 };
 
 export const APIAdmin = {
   list: {
     url: '/admin/user/list',
+    method: POST,
+  },
+  get: {
+    url: '/admin/user/get',
     method: POST,
   },
   add: {

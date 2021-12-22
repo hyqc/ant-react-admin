@@ -1,4 +1,8 @@
-import { adminUserAdd, RequestAdminUserAddParamsType } from '@/services/apis/admin';
+import {
+  adminUserEdit,
+  RequestAdminUserEditParamsType,
+  ResponseAdminUserInfoType,
+} from '@/services/apis/admin';
 import { APIBase } from '@/services/apis/api';
 import { SUCCESS } from '@/services/apis/code';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
@@ -12,16 +16,17 @@ export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type AdminAddModalPropsType = {
+export type AdminEditModalPropsType = {
   modalStatus: boolean;
+  detailData: ResponseAdminUserInfoType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const AdminAddModal: React.FC<AdminAddModalPropsType> = (props) => {
+const AdminEditModal: React.FC<AdminEditModalPropsType> = (props) => {
   const [form] = Form.useForm();
-  const { modalStatus, noticeModal } = props;
+  const { modalStatus, detailData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-  const [fileList, setFielList] = useState<any[]>([]);
+  const [fileList, setFielList] = useState<any[]>();
   const [avatar, setAvatar] = useState<string>('');
 
   const rules = {
@@ -34,11 +39,11 @@ const AdminAddModal: React.FC<AdminAddModalPropsType> = (props) => {
     form
       .validateFields()
       .then((values) => {
-        const data: RequestAdminUserAddParamsType = {
+        const data: RequestAdminUserEditParamsType = {
           ...values,
           avatar,
         };
-        adminUserAdd(data)
+        adminUserEdit(data)
           .then((res) => {
             if (res.code === SUCCESS) {
               message.destroy();
@@ -64,7 +69,7 @@ const AdminAddModal: React.FC<AdminAddModalPropsType> = (props) => {
     if (data && data.fileList && data.fileList[0]?.response) {
       setAvatar(data.fileList[0]?.response?.data?.url || '');
     }
-    setFielList(data.fileList);
+    setFielList(data.fileList || []);
   }
 
   async function onPreview(file: any) {
@@ -83,16 +88,28 @@ const AdminAddModal: React.FC<AdminAddModalPropsType> = (props) => {
   }
 
   useEffect(() => {
+    form.resetFields();
+    form.setFieldsValue(detailData);
+    if (detailData && detailData.avatar) {
+      setFielList([
+        {
+          uid: '-1',
+          name: detailData.name,
+          url: detailData.avatar,
+          status: 'done',
+        },
+      ]);
+    }
     return () => {};
-  }, []);
+  }, [detailData]);
 
   return (
     <Modal
-      title="新建管理员"
+      title="编辑管理员"
       width={DefaultModalWidth}
       destroyOnClose={true}
-      getContainer={false}
       maskClosable={false}
+      getContainer={false}
       visible={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
@@ -101,16 +118,16 @@ const AdminAddModal: React.FC<AdminAddModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="name" initialValue={''} rules={rules.name}>
+        <Form.Item label="名称" name="name" rules={rules.name}>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="昵称" name="nick_name" initialValue={''}>
+        <Form.Item label="昵称" name="nick_name">
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email}>
+        <Form.Item label="邮箱" name="email" rules={rules.email}>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="状态" name="status" initialValue={true}>
+        <Form.Item label="状态" name="status">
           <Switch
             checkedChildren={'启用'}
             unCheckedChildren={'禁用'}
@@ -118,7 +135,7 @@ const AdminAddModal: React.FC<AdminAddModalPropsType> = (props) => {
             checked
           />
         </Form.Item>
-        <Form.Item label="头像" name="avatar" initialValue={''}>
+        <Form.Item label="头像" name="avatar" initialValue={true}>
           <ImgCrop rotate>
             <Upload
               maxCount={1}
@@ -139,4 +156,4 @@ const AdminAddModal: React.FC<AdminAddModalPropsType> = (props) => {
   );
 };
 
-export default AdminAddModal;
+export default AdminEditModal;

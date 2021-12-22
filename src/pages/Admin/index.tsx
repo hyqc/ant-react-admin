@@ -23,6 +23,7 @@ import {
   adminUserList,
   adminUserEdit,
   ResponseAdminUserListItemRolesItemType,
+  adminUserGet,
 } from '@/services/apis/admin';
 import type {
   ResponseAdminUserListItemType,
@@ -38,6 +39,7 @@ import { SUCCESS } from '@/services/apis/code';
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE, STATUS_INVALID, STATUS_VALID } from './common';
 import AdminAddModal, { NoticeModalPropsType } from './add';
+import AdminEditModal from './edit';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 6;
@@ -50,6 +52,7 @@ const Admin: React.FC = () => {
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
+  const [adminUserInfoData, setAdminUserInfoData] = useState<any>();
 
   const columns: ColumnsType<any> = [
     {
@@ -229,7 +232,12 @@ const Admin: React.FC = () => {
 
   // 管理员编辑
   function openEditModal(record: ResponseAdminUserListItemType) {
-    setEditModalStatus(true);
+    adminUserGet({ id: record.id }).then((res) => {
+      if (res.code === SUCCESS) {
+        setAdminUserInfoData(res.data);
+        setEditModalStatus(true);
+      }
+    });
   }
 
   // 管理员添加
@@ -238,8 +246,15 @@ const Admin: React.FC = () => {
   }
 
   function noticeAddModal(data: NoticeModalPropsType) {
-    console.log(data, '++++++++++++++++=');
     setAddModalStatus(false);
+    if (data.reload) {
+      getAdminUserList({ ...pageInfo, ...form.getFieldsValue() });
+    }
+  }
+
+  function noticeEditModal(data: NoticeModalPropsType) {
+    setAdminUserInfoData(undefined);
+    setEditModalStatus(false);
     if (data.reload) {
       getAdminUserList({ ...pageInfo, ...form.getFieldsValue() });
     }
@@ -336,6 +351,12 @@ const Admin: React.FC = () => {
 
       {/* modal */}
       <AdminAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
+
+      <AdminEditModal
+        modalStatus={editModalStatus}
+        detailData={adminUserInfoData}
+        noticeModal={noticeEditModal}
+      />
     </Container>
   );
 };

@@ -1,6 +1,10 @@
 import type { ReponseCurrentUserInfoType } from '@/services/apis/base';
 import { MenuDataItem } from '@umijs/route-utils';
-import { Request, Response } from 'express';
+import { success } from './common';
+// import { Request, Response } from 'express';
+
+const AvatarImage =
+  'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ffile02.16sucai.com%2Fd%2Ffile%2F2014%2F0829%2F372edfeb74c3119b666237bd4af92be5.jpg&refer=http%3A%2F%2Ffile02.16sucai.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642257738&t=d566e68c58bbcd05b4c89b647089a392';
 
 const menusData: MenuDataItem = [
   {
@@ -47,12 +51,10 @@ const currentAdminInfo: ReponseCurrentUserInfoType = {
 // 代码中会兼容本地 service mock 以及部署站点的静态数据
 export default {
   // 支持值为 Object 和 Array
-  'POST /api/admin/base/info': (req: Request, res: Response) => {
-    res.send({
-      code: 0,
-      message: '成功',
-      data: currentAdminInfo,
-    });
+  'POST /api/admin/base/info': {
+    code: 0,
+    message: '成功',
+    data: currentAdminInfo,
   },
   'POST /api/admin/base/login': {
     code: 0,
@@ -62,7 +64,12 @@ export default {
       expire: 86400,
     },
   },
-  'POST /api/admin/base/logout': (req: Request, res: Response) => {
-    res.send({ code: 0, message: '退出成功' });
+  'POST /api/admin/base/logout': success,
+  'POST /api/admin/base/upload': {
+    code: 0,
+    message: '上传成功',
+    data: {
+      url: AvatarImage,
+    },
   },
 };
