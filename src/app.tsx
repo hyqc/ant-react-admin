@@ -95,9 +95,9 @@ const interceptorsRequest = (url: string, options: any) => {
 // 响应拦截器：
 const interceptorsResponse = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
-  message.destroy();
   const data: ResponseType = await response.clone().json();
   if (data.code !== SUCCESS) {
+    message.destroy();
     message.error(data.message, MessageDuritain);
   }
   return response;

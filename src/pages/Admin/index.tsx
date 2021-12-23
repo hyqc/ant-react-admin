@@ -24,6 +24,7 @@ import {
   adminUserEdit,
   ResponseAdminUserListItemRolesItemType,
   adminUserGet,
+  adminUserDelete,
 } from '@/services/apis/admin';
 import type {
   ResponseAdminUserListItemType,
@@ -40,6 +41,8 @@ import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE, STATUS_INVALID, STATUS_VALID } from './common';
 import AdminAddModal, { NoticeModalPropsType } from './add';
 import AdminEditModal from './edit';
+import AdminDetailModal from './detail';
+import AdminAssignRolesModal from './assignRoles';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 6;
@@ -52,6 +55,7 @@ const Admin: React.FC = () => {
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
+  const [assignRolesModalStatus, setAssignRolesModalStatus] = useState<boolean>(false);
   const [adminUserInfoData, setAdminUserInfoData] = useState<any>();
 
   const columns: ColumnsType<any> = [
@@ -143,30 +147,48 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
-      width: '16rem',
-      render(text, record) {
+      render(text, record: ResponseAdminUserListItemType) {
         return (
           <>
-            <Button
-              type="primary"
-              style={{ marginRight: 4 }}
-              onClick={() => openDetailModal(record)}
-            >
-              详情
-            </Button>
-            <Button type="primary" style={{ marginRight: 4 }} onClick={() => openEditModal(record)}>
-              编辑
-            </Button>
-            <Popconfirm
-              title="确实要删除该管理员吗？"
-              okText="确定"
-              cancelText="取消"
-              onConfirm={() => onDeleteAdminUser(record)}
-            >
-              <Button type="primary" danger style={{ marginRight: 4 }}>
-                删除
+            <Space>
+              <Button
+                type="primary"
+                style={{ marginRight: 4 }}
+                onClick={() => openDetailModal(record)}
+              >
+                详情
               </Button>
-            </Popconfirm>
+              <Button
+                type="primary"
+                style={{ marginRight: 4 }}
+                onClick={() => openAssignRolesModal(record)}
+              >
+                分配角色
+              </Button>
+              <Button
+                type="primary"
+                style={{ marginRight: 4 }}
+                onClick={() => openEditModal(record)}
+              >
+                编辑
+              </Button>
+
+              {/* 禁用的才能删除 */}
+              {record.status === STATUS_VALID ? (
+                <Popconfirm
+                  title="确实要删除该管理员吗？"
+                  okText="确定"
+                  cancelText="取消"
+                  onConfirm={() => onDeleteAdminUser(record)}
+                >
+                  <Button type="primary" danger style={{ marginRight: 4 }}>
+                    删除
+                  </Button>
+                </Popconfirm>
+              ) : (
+                ''
+              )}
+            </Space>
           </>
         );
       },
@@ -225,9 +247,33 @@ const Admin: React.FC = () => {
     getAdminUserList();
   }
 
+  function tableChange(pagination: any, filters: any, sorter: any) {
+    getAdminUserList({
+      ...pageInfo,
+      ...form.getFieldsValue(),
+      sortField: sorter.field,
+      sortType: sorter.order,
+    });
+  }
+
   // 管理员详情
   function openDetailModal(record: ResponseAdminUserListItemType) {
-    setDetailModalStatus(true);
+    adminUserGet({ id: record.id }).then((res) => {
+      if (res.code === SUCCESS) {
+        setAdminUserInfoData(res.data);
+        setDetailModalStatus(true);
+      }
+    });
+  }
+
+  // 分配角色
+  function openAssignRolesModal(record: ResponseAdminUserListItemType) {
+    adminUserGet({ id: record.id }).then((res) => {
+      if (res.code === SUCCESS) {
+        setAdminUserInfoData(res.data);
+        setAssignRolesModalStatus(true);
+      }
+    });
   }
 
   // 管理员编辑
@@ -260,9 +306,30 @@ const Admin: React.FC = () => {
     }
   }
 
+  function noticeDetailModal(data: NoticeModalPropsType) {
+    setAdminUserInfoData(undefined);
+    setDetailModalStatus(false);
+    if (data.reload) {
+      getAdminUserList({ ...pageInfo, ...form.getFieldsValue() });
+    }
+  }
+
+  function noticeAssignRolesModal(data: NoticeModalPropsType) {
+    setAdminUserInfoData(undefined);
+    setAssignRolesModalStatus(false);
+    if (data.reload) {
+      getAdminUserList({ ...pageInfo, ...form.getFieldsValue() });
+    }
+  }
+
   // 删除管理员
   function onDeleteAdminUser(record: ResponseAdminUserListItemType) {
-    console.log(record);
+    adminUserDelete({ ...record }).then((res) => {
+      if (res.code === SUCCESS) {
+        message.success(res.message, MessageDuritain);
+        getAdminUserList({ ...pageInfo, ...form.getFieldsValue() });
+      }
+    });
   }
 
   useEffect(() => {
@@ -306,14 +373,16 @@ const Admin: React.FC = () => {
           </Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
-              <Button type="primary" htmlType="submit" style={{ marginRight: '2rem' }}>
-                <SearchOutlined />
-                查询
-              </Button>
-              <Button type="primary" htmlType="button" onClick={onSearchReset}>
-                <ReloadOutlined />
-                清除
-              </Button>
+              <Space>
+                <Button type="primary" htmlType="submit">
+                  <SearchOutlined />
+                  查询
+                </Button>
+                <Button type="primary" htmlType="button" onClick={onSearchReset}>
+                  <ReloadOutlined />
+                  清除
+                </Button>
+              </Space>
             </Col>
           </Row>
         </Form>
@@ -330,11 +399,12 @@ const Admin: React.FC = () => {
         {/* table */}
         <Table
           rowKey="id"
-          scroll={{ x: 1500 }}
+          scroll={{ x: 'auto' }}
           loading={loading}
           columns={columns}
           pagination={false}
           dataSource={adminUserListData}
+          onChange={tableChange}
         ></Table>
         <Pagination
           showQuickJumper
@@ -356,6 +426,18 @@ const Admin: React.FC = () => {
         modalStatus={editModalStatus}
         detailData={adminUserInfoData}
         noticeModal={noticeEditModal}
+      />
+
+      <AdminDetailModal
+        modalStatus={detailModalStatus}
+        detailData={adminUserInfoData}
+        noticeModal={noticeDetailModal}
+      />
+
+      <AdminAssignRolesModal
+        modalStatus={assignRolesModalStatus}
+        detailData={adminUserInfoData}
+        noticeModal={noticeAssignRolesModal}
       />
     </Container>
   );

@@ -89,6 +89,23 @@ const adminUserGetData: ResponseInfoType = {
     create_time: '2021-12-16 22:22:33',
     modify_time: '2021-12-16 22:22:33',
     total_login: 10,
+    roles: [
+      {
+        id: 1,
+        name: '超管',
+        canEdit: false,
+      },
+      {
+        id: 2,
+        name: '运营',
+        canEdit: true,
+      },
+      {
+        id: 3,
+        name: '测试',
+        canEdit: true,
+      },
+    ],
   },
 };
 
@@ -99,4 +116,6 @@ export default {
   'POST /api/admin/user/add': success,
   'POST /api/admin/user/edit': success,
   'POST /api/admin/user/get': adminUserGetData,
+  'POST /api/admin/user/delete': success,
+  'POST /api/admin/user/assignRoles': success,
 };

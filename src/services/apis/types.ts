@@ -37,3 +37,9 @@ export interface ResponseInfoType extends ResponseType {
   message: string;
   data?: ResponseInfoDataType;
 }
+
+export interface ResponseAllType extends ResponseType {
+  code: number;
+  message: string;
+  data?: ResponseInfoDataType[];
+}

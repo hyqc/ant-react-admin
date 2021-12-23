@@ -8,7 +8,7 @@
 2. 按照一个模块定义，以管理员管理页面示例
 
 ```javascript
-export const APIAdmin = {
+export const APIAdminUsers = {
   list: {
     url: '/admin/user/list',
     method: POST,
@@ -35,7 +35,7 @@ export const APIAdmin = {
 3. 导出的接口模块名称必须以 API 开头，大驼峰法命名，以管理员管理页面示例：
 
 ```javascript
-export const APIAdmin = {
+export const APIAdminUsers = {
   list: {
     url: '/admin/user/list',
     method: POST,

@@ -28,7 +28,7 @@ export const APIBase = {
   },
 };
 
-export const APIAdmin = {
+export const APIAdminUsers = {
   list: {
     url: '/admin/user/list',
     method: POST,
@@ -51,6 +51,41 @@ export const APIAdmin = {
   },
   enable: {
     url: '/admin/user/enable',
+    method: POST,
+  },
+  assignRoles: {
+    url: '/admin/user/assignRoles',
+    method: POST,
+  },
+};
+
+export const APIAdminRoles = {
+  list: {
+    url: '/admin/role/list',
+    method: POST,
+  },
+  get: {
+    url: '/admin/role/get',
+    method: POST,
+  },
+  add: {
+    url: '/admin/role/add',
+    method: POST,
+  },
+  delete: {
+    url: '/admin/role/delete',
+    method: POST,
+  },
+  edit: {
+    url: '/admin/role/edit',
+    method: POST,
+  },
+  enable: {
+    url: '/admin/role/enable',
+    method: POST,
+  },
+  all: {
+    url: '/admin/role/all',
     method: POST,
   },
 };
