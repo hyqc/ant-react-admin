@@ -89,3 +89,65 @@ export const APIAdminRoles = {
     method: POST,
   },
 };
+
+export const APIAdminMenus = {
+  list: {
+    url: '/admin/menu/list',
+    method: POST,
+  },
+  get: {
+    url: '/admin/menu/get',
+    method: POST,
+  },
+  add: {
+    url: '/admin/menu/add',
+    method: POST,
+  },
+  delete: {
+    url: '/admin/menu/delete',
+    method: POST,
+  },
+  edit: {
+    url: '/admin/menu/edit',
+    method: POST,
+  },
+  enable: {
+    url: '/admin/menu/enable',
+    method: POST,
+  },
+  all: {
+    url: '/admin/menu/all',
+    method: POST,
+  },
+};
+
+export const APIAdminPermissions = {
+  list: {
+    url: '/admin/permission/list',
+    method: POST,
+  },
+  get: {
+    url: '/admin/permission/get',
+    method: POST,
+  },
+  add: {
+    url: '/admin/permission/add',
+    method: POST,
+  },
+  delete: {
+    url: '/admin/permission/delete',
+    method: POST,
+  },
+  edit: {
+    url: '/admin/permission/edit',
+    method: POST,
+  },
+  enable: {
+    url: '/admin/permission/enable',
+    method: POST,
+  },
+  all: {
+    url: '/admin/permission/all',
+    method: POST,
+  },
+};

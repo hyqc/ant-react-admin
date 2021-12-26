@@ -1,6 +1,6 @@
 // adminUsers 管理员管理接口
 import { request } from 'umi';
-import { APIAdminUsers } from './api';
+import { APIAdminMenus } from './api';
 import type { ResponseType } from './types';
 
 export type ResponseAdminUserListItemRolesItemType = {

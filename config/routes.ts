@@ -2,17 +2,43 @@
   {
     path: '/login',
     component: './Login',
+    title: 'login',
     layout: false,
   },
   {
-    path: '/admin',
     name: 'admin',
     icon: 'crown',
-    component: './Admin',
+    routes: [
+      {
+        path: '/admin/user',
+        name: 'user',
+        icon: 'table',
+        component: './AdminUser',
+      },
+      {
+        path: '/admin/role',
+        name: 'role',
+        icon: 'crown',
+        component: './AdminRole',
+      },
+      {
+        path: '/admin/menu',
+        name: 'menu',
+        icon: 'crown',
+        component: './AdminMenu',
+      },
+      {
+        path: '/admin/api',
+        name: 'api',
+        icon: 'crown',
+        component: './AdminApi',
+      },
+    ],
   },
+
   {
     path: '/',
-    redirect: '/admin',
+    redirect: '/admin/user',
   },
   {
     component: './404',
