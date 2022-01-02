@@ -1,7 +1,7 @@
 import {
   adminUserEdit,
   RequestAdminUserEditParamsType,
-  ResponseAdminUserIDetailType,
+  ResponseAdminUserDetailType,
 } from '@/services/apis/admin';
 import { APIBase } from '@/services/apis/api';
 import { SUCCESS } from '@/services/apis/code';
@@ -18,7 +18,7 @@ export type NoticeModalPropsType = {
 
 export type AdminRoleEditModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminUserIDetailType;
+  detailData: ResponseAdminUserDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 

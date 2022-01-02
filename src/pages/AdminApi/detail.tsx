@@ -1,4 +1,4 @@
-import { ResponseAdminUserIDetailType } from '@/services/apis/admin';
+import { ResponseAdminUserDetailType } from '@/services/apis/admin';
 import { Form, Modal, Switch, Tag } from 'antd';
 import { useEffect } from 'react';
 import 'antd/es/modal/style';
@@ -12,7 +12,7 @@ export type NoticeModalPropsType = {
 
 export type AdminUserEditModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminUserIDetailType;
+  detailData: ResponseAdminUserDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 

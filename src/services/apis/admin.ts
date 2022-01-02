@@ -24,7 +24,7 @@ export type ResponseAdminUserListItemType = {
   modify_time: string; // 最后更新时间
 };
 
-export type ResponseAdminUserIDetailType = {
+export type ResponseAdminUserDetailType = {
   id: number; // 管理员ID，唯一键
   name: string; // 管理员名称，唯一键
   nick_name: string; // 管理员昵称
@@ -98,11 +98,11 @@ export async function adminUserEdit(params: RequestAdminUserEditParamsType) {
   });
 }
 
-export type RequestAdminUserInfoParamsType = {
+export type RequestAdminUserDetailParamsType = {
   id: number;
 };
 
-export async function adminUserGet(params: RequestAdminUserInfoParamsType) {
+export async function adminUserGet(params: RequestAdminUserDetailParamsType) {
   return request<ResponseType>(APIAdminUsers.get.url, {
     method: APIAdminUsers.get.method,
     data: params,

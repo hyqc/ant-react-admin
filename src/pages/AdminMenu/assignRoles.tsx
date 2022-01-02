@@ -1,7 +1,7 @@
 import {
   adminUserAssignRoles,
   RequestAdminUserAssignRolesParamsType,
-  ResponseAdminUserIDetailType,
+  ResponseAdminUserDetailType,
 } from '@/services/apis/admin';
 import { SUCCESS } from '@/services/apis/code';
 import { Form, Input, message, Modal, Select } from 'antd';
@@ -16,7 +16,7 @@ export type NoticeModalPropsType = {
 
 export type AdminUserAssignRolesModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminUserIDetailType;
+  detailData: ResponseAdminUserDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 

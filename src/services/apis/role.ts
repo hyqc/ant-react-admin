@@ -44,17 +44,21 @@ export async function adminRoleList(params?: RequestAdminRoleListParamsType) {
   });
 }
 
-export type RequestAdminRoleInfoParamsType = {
+export type RequestAdminRoleIDetailParamsType = {
   id: number;
 };
 
-export type ResponseAdminRoleInfoType = {
+export type ResponseAdminRoleDetailType = {
   id: number;
   name: string;
+  status?: number;
+  status_text?: string;
+  create_time?: string;
+  modify_time?: string;
   permission_ids: number[];
 };
 
-export async function adminRoleGet(params: RequestAdminRoleInfoParamsType) {
+export async function adminRoleGet(params: RequestAdminRoleIDetailParamsType) {
   return request<ResponseType>(APIAdminRoles.get.url, {
     method: APIAdminRoles.get.method,
     data: params,

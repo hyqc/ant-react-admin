@@ -1,4 +1,4 @@
-import { ResponseAdminUserIDetailType } from '@/services/apis/admin';
+import { ResponseAdminUserDetailType } from '@/services/apis/admin';
 import { Form, Modal, Switch, Tag } from 'antd';
 import { useEffect } from 'react';
 import 'antd/es/modal/style';
@@ -10,13 +10,13 @@ export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type AdminUserEditModalPropsType = {
+export type AdminUserDetailModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminUserIDetailType;
+  detailData: ResponseAdminUserDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const AdminUserDetailModal: React.FC<AdminUserEditModalPropsType> = (props) => {
+const AdminUserDetailModal: React.FC<AdminUserDetailModalPropsType> = (props) => {
   const { modalStatus, detailData, noticeModal } = props;
 
   function handleCancel() {

@@ -25,7 +25,7 @@ export type CurrentUserPermissionsType = {
   [key: string]: string; // 权限名称:权限对应的接口路径
 };
 
-export type ReponseCurrentUserInfoType = {
+export type ReponseCurrentUserDetailType = {
   id: number;
   name: string;
   nick_name: string;

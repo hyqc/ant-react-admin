@@ -1,4 +1,4 @@
-import type { ReponseCurrentUserInfoType } from '@/services/apis/base';
+import type { ReponseCurrentUserDetailType } from '@/services/apis/base';
 import { MenuDataItem } from '@umijs/route-utils';
 import { success } from './common';
 // import { Request, Response } from 'express';
@@ -28,7 +28,7 @@ const menusData: MenuDataItem = [
   },
 ];
 
-const currentAdminInfo: ReponseCurrentUserInfoType = {
+const currentAdminInfo: ReponseCurrentUserDetailType = {
   id: 1,
   name: 'Serati Ma',
   nick_name: 'Serati Ma',

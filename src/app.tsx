@@ -5,7 +5,7 @@ import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentAdminInfo } from './services/apis/base';
-import type { ReponseCurrentUserInfoType } from '@/services/apis/base';
+import type { ReponseCurrentUserDetailType } from '@/services/apis/base';
 import { message } from 'antd';
 import type { ResponseType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
@@ -22,8 +22,8 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: ReponseCurrentUserInfoType;
-  fetchUserInfo?: () => Promise<ReponseCurrentUserInfoType | undefined>;
+  currentUser?: ReponseCurrentUserDetailType;
+  fetchUserInfo?: () => Promise<ReponseCurrentUserDetailType | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -36,7 +36,7 @@ export async function getInitialState(): Promise<{
   };
   // 如果是登录页面，不执行
   if (history.location.pathname !== LoginPath) {
-    const currentUser: ReponseCurrentUserInfoType = await fetchUserInfo();
+    const currentUser: ReponseCurrentUserDetailType = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
