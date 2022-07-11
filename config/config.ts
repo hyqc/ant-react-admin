@@ -52,25 +52,12 @@ export default defineConfig({
   },
   // Fast Refresh 热更新
   fastRefresh: {},
-  openAPI: [
-    {
-      requestLibPath: "import { request } from 'umi'",
-      // 或者使用在线的版本
-      // schemaPath: "https://gw.alipayobjects.com/os/antfincdn/M%24jrzTTYJN/oneapi.json"
-      schemaPath: join(__dirname, 'oneapi.json'),
-      mock: false,
-    },
-    {
-      requestLibPath: "import { request } from 'umi'",
-      schemaPath: 'https://gw.alipayobjects.com/os/antfincdn/CA1dOm%2631B/openapi.json',
-      projectName: 'swagger',
-    },
-  ],
+  openAPI: [],
   nodeModulesTransform: { type: 'none' },
   mfsu: {},
   webpack5: {},
   exportStatic: {},
-  // mock: false,
+  mock: {},
   define: {
     LoginPath: '/login', // 登录页路径
     BaseAPI: '/api', // 请求接口的前缀

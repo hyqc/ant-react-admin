@@ -16,4 +16,5 @@ export default {
   'menu.admin.role': '角色管理',
   'menu.admin.menu': '菜单管理',
   'menu.admin.api': '接口管理',
+  'menu.admin.permission': '权限管理',
 };

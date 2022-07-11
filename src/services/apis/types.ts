@@ -2,6 +2,7 @@
 export interface ResponseType {
   code: number;
   message: string;
+  type?: string;
   data?: any;
 }
 

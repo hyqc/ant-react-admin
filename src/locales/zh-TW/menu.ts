@@ -11,9 +11,10 @@ export default {
   'menu.account.center': '個人中心',
   'menu.account.settings': '個人設置',
   'menu.account.logout': '退出登錄',
-  'menu.admin': '管理員管理',
+  'menu.menu.admin': '系统管理',
   'menu.admin.user': '賬號管理',
   'menu.admin.role': '角色管理',
   'menu.admin.menu': '菜單管理',
   'menu.admin.api': '接口管理',
+  'menu.admin.permission': '权限管理',
 };

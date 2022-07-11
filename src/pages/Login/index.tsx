@@ -12,42 +12,32 @@ import { ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
 import { useIntl, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import styles from './index.less';
-import { login } from '@/services/apis/base';
-import type { RequestLoginParamsType } from '@/services/apis/base';
-import { SUCCESS } from '@/services/apis/code';
+import { login } from '@/services/apis/account';
+import type { RequestLoginParamsType } from '@/services/apis/account';
 
 const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { setInitialState } = useModel('@@initialState');
 
   const intl = useIntl();
 
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      await setInitialState((s) => ({
-        ...s,
-        currentUser: userInfo,
-      }));
-    }
-  };
-
   const handleSubmit = async (values: RequestLoginParamsType) => {
     try {
-      // 登录
       const res = await login(values);
-      console.log(res);
-      if (res.code === SUCCESS) {
-        // 获取用户信息和菜单
-        await fetchUserInfo();
-        /** 此方法会跳转到 redirect 参数所在的位置 */
-        if (!history) return;
-        const { query } = history.location;
-        const { redirect } = query as { redirect: string };
-        history.push(redirect || '/');
-        return;
-      }
+      // 设置token
+      localStorage.setItem('token', res.data.token);
+      await setInitialState((s: any) => ({
+        ...s,
+        currentUser: res.data,
+      }));
+      /** 此方法会跳转到 redirect 参数所在的位置 */
+      if (!history) return;
+      const { query } = history.location;
+      const { redirect } = query as { redirect: string };
+      history.push(redirect || '/');
+      return;
     } catch (error) {
+      console.log(error);
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
         defaultMessage: '登录失败，请重试！',
@@ -91,13 +81,6 @@ const Login: React.FC = () => {
                 defaultMessage: '账户密码登录',
               })}
             />
-            <Tabs.TabPane
-              key="mobile"
-              tab={intl.formatMessage({
-                id: 'pages.login.phoneLogin.tab',
-                defaultMessage: '手机号登录',
-              })}
-            />
           </Tabs>
 
           {type === 'account' && (
@@ -110,7 +93,7 @@ const Login: React.FC = () => {
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.username.placeholder',
-                  defaultMessage: '用户名: admin or user',
+                  defaultMessage: '用户名: admin',
                 })}
                 rules={[
                   {
@@ -132,7 +115,7 @@ const Login: React.FC = () => {
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.password.placeholder',
-                  defaultMessage: '密码: ant.design',
+                  defaultMessage: '密码: 123456',
                 })}
                 rules={[
                   {

@@ -1,4 +1,4 @@
-import { ReponseCurrentUserDetailType } from '@/services/apis/base';
+import { ReponseCurrentAdminUserDetailType } from '@/services/apis/account';
 import { history } from 'umi';
 // import routes from '../config/routes';
 
@@ -6,7 +6,7 @@ import { history } from 'umi';
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function access(initialState: { currentUser?: ReponseCurrentUserDetailType }) {
+export default function access(initialState: { currentUser?: ReponseCurrentAdminUserDetailType }) {
   const { currentUser } = initialState || {};
   console.log('========', initialState);
   const permissions = currentUser?.permissions || {};

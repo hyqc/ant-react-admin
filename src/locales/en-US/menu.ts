@@ -14,6 +14,7 @@ export default {
   'menu.admin': 'Admin Manage',
   'menu.admin.user': 'Admin User',
   'menu.admin.role': 'Admin Role',
-  'menu.admin.menu': 'Admin Menu',
-  'menu.admin.api': 'Api Manager',
+  'menu.admin.menu': 'Menu',
+  'menu.admin.api': 'Resourse Api',
+  'menu.admin.permission': 'Permission Manager',
 };

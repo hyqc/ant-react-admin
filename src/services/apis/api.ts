@@ -1,4 +1,4 @@
-import { POST } from './config';
+import { POST, GET } from './config';
 
 export type APIItemType = {
   url: string;
@@ -9,21 +9,21 @@ export type APIType = {
   [key: string]: APIItemType;
 };
 
-export const APIBase = {
+export const APIAccount = {
   login: {
-    url: '/admin/base/login',
+    url: '/admin/account/login',
     method: POST,
   },
   logout: {
-    url: '/admin/base/logout',
+    url: '/admin/account/logout',
     method: POST,
   },
-  admin: {
-    url: '/admin/base/info',
-    method: POST,
+  detail: {
+    url: '/admin/account/detail',
+    method: GET,
   },
   upload: {
-    url: '/admin/base/upload',
+    url: '/admin/account/upload',
     method: POST,
   },
 };
@@ -33,8 +33,8 @@ export const APIAdminUsers = {
     url: '/admin/user/list',
     method: POST,
   },
-  get: {
-    url: '/admin/user/get',
+  detail: {
+    url: '/admin/user/detail',
     method: POST,
   },
   add: {
@@ -53,8 +53,8 @@ export const APIAdminUsers = {
     url: '/admin/user/enable',
     method: POST,
   },
-  assignRoles: {
-    url: '/admin/user/assignRoles',
+  bind: {
+    url: '/admin/user/bind',
     method: POST,
   },
 };

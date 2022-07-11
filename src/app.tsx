@@ -1,11 +1,11 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
-import type { RunTimeLayoutConfig, RequestConfig } from 'umi';
+import { RunTimeLayoutConfig, RequestConfig, Link } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentAdminInfo } from './services/apis/base';
-import type { ReponseCurrentUserDetailType } from '@/services/apis/base';
+import { currentAdminInfo } from './services/apis/account';
+import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/account';
 import { message } from 'antd';
 import type { ResponseType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
@@ -22,8 +22,8 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: ReponseCurrentUserDetailType;
-  fetchUserInfo?: () => Promise<ReponseCurrentUserDetailType | undefined>;
+  currentUser?: ReponseCurrentAdminUserDetailType;
+  fetchUserInfo?: () => Promise<ReponseCurrentAdminUserDetailType | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -36,7 +36,7 @@ export async function getInitialState(): Promise<{
   };
   // 如果是登录页面，不执行
   if (history.location.pathname !== LoginPath) {
-    const currentUser: ReponseCurrentUserDetailType = await fetchUserInfo();
+    const currentUser: ReponseCurrentAdminUserDetailType = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
@@ -66,6 +66,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       }
     },
     links: [],
+    menuItemRender: (menuItemProps, defaultDom) => {
+      if (menuItemProps.isUrl || !menuItemProps.path) {
+        return defaultDom;
+      }
+
+      // 支持二级菜单显示icon
+      return (
+        <Link to={menuItemProps.path}>
+          {menuItemProps.pro_layout_parentKeys &&
+            menuItemProps.pro_layout_parentKeys.length > 0 &&
+            menuItemProps.icon}
+          {defaultDom}
+        </Link>
+      );
+    },
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -85,7 +100,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 
 // 请求拦截器：
 const interceptorsRequest = (url: string, options: any) => {
-  isDev && console.log('请求拦截器：', url, options);
+  isDev && console.log('请求拦截器：', BaseAPI, url, options, `${BaseAPI}${url}`);
   return {
     url: `${BaseAPI}${url}`,
     options: { ...options, interceptors: true },
@@ -105,7 +120,16 @@ const interceptorsResponse = async (response: any, options: any) => {
 
 export const request: RequestConfig = {
   timeout: 6000,
-  errorConfig: {},
+  errorConfig: {
+    adaptor: (resData) => {
+      return {
+        ...resData,
+        success: resData.code === SUCCESS,
+        errorMessage: resData.message,
+        showType: resData.type,
+      };
+    },
+  },
   middlewares: [],
   requestInterceptors: [interceptorsRequest],
   responseInterceptors: [interceptorsResponse],

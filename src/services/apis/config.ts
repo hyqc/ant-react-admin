@@ -1,5 +1,7 @@
 export const POST = 'POST';
 export const GET = 'GET';
+export const PUT = 'PUT';
+export const DELETE = 'DELETE';
 export const DEFAULT_METHOD = POST;
 export const DEFAULT_PAGE_INFO = {
   total: 0,

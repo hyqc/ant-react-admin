@@ -65,9 +65,8 @@ export const APIAdminUsers = {
 
 ```javascript
 export type RequestLoginParamsType = {
-  name: string,
+  username: string,
   password: string,
-  vcode: string,
 };
 ```
 
