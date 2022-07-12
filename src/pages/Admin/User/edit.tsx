@@ -126,6 +126,7 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
 
   return (
     <Modal
+      forceRender
       title="编辑管理员"
       width={DefaultModalWidth}
       destroyOnClose={true}

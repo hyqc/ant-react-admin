@@ -84,6 +84,7 @@ const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = 
 
   return (
     <Modal
+      forceRender
       title="分配角色"
       width={DefaultModalWidth}
       destroyOnClose={true}

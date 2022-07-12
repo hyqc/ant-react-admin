@@ -28,6 +28,7 @@ const AdminUserDetailModal: React.FC<AdminUserDetailModalPropsType> = (props) =>
 
   return (
     <Drawer
+      forceRender
       title="管理员详情"
       footer={null}
       width={DefaultDrawerWidth}

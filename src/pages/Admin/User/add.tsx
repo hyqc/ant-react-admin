@@ -111,6 +111,7 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
 
   return (
     <Modal
+      forceRender
       title="新建管理员"
       width={DefaultModalWidth}
       destroyOnClose={true}
