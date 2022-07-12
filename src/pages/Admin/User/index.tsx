@@ -43,6 +43,7 @@ import AdminUserDetailModal from './detail';
 import AdminUserAssignRolesModal from './bind';
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from './common';
 import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
+import AdminUserEditPasswordModal from './password';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 6;
@@ -56,6 +57,7 @@ const Admin: React.FC = () => {
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
   const [bindModalStatus, setAssignRolesModalStatus] = useState<boolean>(false);
+  const [editPasswordModalStatus, setEditPasswordModalStatus] = useState<boolean>(false);
   const [adminUserInfoData, setAdminUserInfoData] = useState<any>();
   const [roleOptions, setRoleOptions] = useState<ResponseAdminRoleAllItemType[]>([]);
 
@@ -187,7 +189,14 @@ const Admin: React.FC = () => {
               >
                 编辑
               </Button>
-
+              {/* 非超管修改密码 */}
+              <Button
+                type="primary"
+                style={{ marginRight: 4 }}
+                onClick={() => openEditPasswordModal(record)}
+              >
+                修改密码
+              </Button>
               {/* 禁用的才能删除 */}
               {!record.enabled ? (
                 <Popconfirm
@@ -302,6 +311,13 @@ const Admin: React.FC = () => {
     setAddModalStatus(true);
   }
 
+  function openEditPasswordModal(record: ResponseAdminUserListItemType) {
+    getAdminUserDetail({ adminId: record.adminId }).then((res) => {
+      setAdminUserInfoData(res.data);
+      setEditPasswordModalStatus(true);
+    });
+  }
+
   function noticeAddModal(data: NoticeModalPropsType) {
     setAddModalStatus(false);
     if (data.reload) {
@@ -328,6 +344,14 @@ const Admin: React.FC = () => {
   function noticeAssignRolesModal(data: NoticeModalPropsType) {
     setAdminUserInfoData(undefined);
     setAssignRolesModalStatus(false);
+    if (data.reload) {
+      getRows({ ...pageInfo, ...form.getFieldsValue() });
+    }
+  }
+
+  function noticeEditPasswordModal(data: NoticeModalPropsType) {
+    setAdminUserInfoData(undefined);
+    setEditPasswordModalStatus(false);
     if (data.reload) {
       getRows({ ...pageInfo, ...form.getFieldsValue() });
     }
@@ -466,6 +490,12 @@ const Admin: React.FC = () => {
         modalStatus={bindModalStatus}
         detailData={adminUserInfoData}
         noticeModal={noticeAssignRolesModal}
+      />
+
+      <AdminUserEditPasswordModal
+        modalStatus={editPasswordModalStatus}
+        detailData={adminUserInfoData}
+        noticeModal={noticeEditPasswordModal}
       />
     </Container>
   );

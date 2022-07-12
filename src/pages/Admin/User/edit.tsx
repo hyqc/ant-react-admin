@@ -4,7 +4,6 @@ import {
   ResponseAdminUserDetailType,
 } from '@/services/apis/admin/admin';
 import { APIAccount } from '@/services/apis/api';
-import { SUCCESS } from '@/services/apis/code';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
@@ -115,7 +114,7 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
     if (detailData && detailData.avatar) {
       setFielList([
         {
-          adminId: '-1',
+          adminId: -1,
           nickname: detailData.nickname,
           url: detailData.avatar,
           enabled: detailData.enabled,
