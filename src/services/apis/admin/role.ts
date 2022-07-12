@@ -8,8 +8,8 @@ export type RequestAdminRoleAllParamsType = {
 };
 
 export type ResponseAdminRoleAllItemType = {
-  id: number;
-  name: string;
+  roleId: number;
+  roleName: string;
 };
 
 export async function adminRoleAll(params?: RequestAdminRoleAllParamsType) {

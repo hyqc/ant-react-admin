@@ -77,11 +77,13 @@ export async function adminUserList(params?: RequestAdminUserListParamsType) {
 }
 
 export type RequestAdminUserAddParamsType = {
-  name: string; // 管理员名称（账号）
-  nick_name?: string; // 管理员昵称
+  username: string; // 管理员名称（账号）
+  enabled: boolean;
+  passwrod: string;
+  confirmPassword: string;
+  nickname?: string; // 管理员昵称
   avatar?: string;
   email?: string;
-  status: boolean;
 };
 
 export async function adminUserAdd(params: RequestAdminUserAddParamsType) {
@@ -99,6 +101,8 @@ export type RequestAdminUserEditParamsType = {
   avatar?: string;
   email?: string;
   enabled?: boolean;
+  passwrod?: string;
+  confirmPassword?: string;
 };
 
 export async function adminUserEdit(params: RequestAdminUserEditParamsType) {
@@ -122,6 +126,9 @@ export async function getAdminUserDetail(params: RequestAdminUserDetailParamsTyp
   });
 }
 
+/**
+ * 彻底删除用户
+ */
 export type RequestAdminUserDeleteParamsType = {
   adminId: number;
   enabled: boolean;
@@ -134,14 +141,17 @@ export async function adminUserDelete(params: RequestAdminUserDeleteParamsType) 
   });
 }
 
+/**
+ * 绑定角色
+ */
 export type RequestAdminUserAssignRolesParamsType = {
-  id: number;
-  role_ids: string;
+  adminId: number;
+  roleIds: number[];
 };
 
 export async function adminUserAssignRoles(params: RequestAdminUserAssignRolesParamsType) {
-  return request<ResponseType>(APIAdminUsers.assignRoles.url, {
-    method: APIAdminUsers.assignRoles.method,
+  return request<ResponseType>(APIAdminUsers.bind.url, {
+    method: APIAdminUsers.bind.method,
     data: params,
   });
 }

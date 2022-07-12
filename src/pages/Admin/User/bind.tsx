@@ -28,7 +28,7 @@ const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = 
 
   const roleIdsValue: number[] =
     detailData?.roles.map((item) => {
-      return item.id;
+      return item.roleId;
     }) || [];
 
   function handleOk() {
@@ -37,8 +37,8 @@ const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = 
       .validateFields()
       .then((values) => {
         const data: RequestAdminUserAssignRolesParamsType = {
-          id: detailData.id,
-          role_ids: values.role_ids?.join(',') || [],
+          adminId: detailData.adminId,
+          roleIds: values.roleIds || [],
         };
         adminUserAssignRoles(data)
           .then((res) => {
@@ -76,8 +76,8 @@ const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = 
   useEffect(() => {
     fetchAdminRoles();
     form.resetFields();
-    if (detailData && detailData.name) {
-      form.setFieldsValue({ name: detailData?.name, role_ids: roleIdsValue });
+    if (detailData && detailData.username) {
+      form.setFieldsValue({ username: detailData?.username, roleIds: roleIdsValue });
     }
     return () => {};
   }, [detailData]);
@@ -97,22 +97,25 @@ const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = 
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="name">
+        <Form.Item label="名称" name="username">
           <Input disabled />
         </Form.Item>
-        <Form.Item label="角色" name="role_ids">
+        <Form.Item label="角色" name="roleIds">
           <Select
             allowClear
             showSearch
             maxTagCount={3}
             mode={'multiple'}
-            filterOption={false}
-            onSearch={fetchAdminRoles}
+            filterOption={(input, option) => {
+              return (option!.children as unknown as string)
+                .toLowerCase()
+                .includes(input.toLowerCase());
+            }}
           >
             {roleOptions?.map((item) => {
               return (
-                <Select.Option key={item.id} value={item.id}>
-                  {item.name}
+                <Select.Option key={item.roleId} value={item.roleId}>
+                  {item.roleName}
                 </Select.Option>
               );
             })}

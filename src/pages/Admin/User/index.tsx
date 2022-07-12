@@ -36,13 +36,13 @@ import type {
   ResponseListType,
   ResponsePageInfoDataType,
 } from '@/services/apis/types';
-import { SUCCESS } from '@/services/apis/code';
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import AdminUserAddModal, { NoticeModalPropsType } from './add';
 import AdminUserEditModal from './edit';
 import AdminUserDetailModal from './detail';
-import AdminUserAssignRolesModal from './assignRoles';
+import AdminUserAssignRolesModal from './bind';
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from './common';
+import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 6;
@@ -55,8 +55,9 @@ const Admin: React.FC = () => {
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
-  const [assignRolesModalStatus, setAssignRolesModalStatus] = useState<boolean>(false);
+  const [bindModalStatus, setAssignRolesModalStatus] = useState<boolean>(false);
   const [adminUserInfoData, setAdminUserInfoData] = useState<any>();
+  const [roleOptions, setRoleOptions] = useState<ResponseAdminRoleAllItemType[]>([]);
 
   const columns: ColumnsType<any> = [
     {
@@ -214,18 +215,15 @@ const Admin: React.FC = () => {
     setLoading(true);
     adminUserList(data)
       .then((res: ResponseListType) => {
-        if (res.code === SUCCESS) {
-          const data: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
-          const rows = data?.rows || [];
-          const pageInfo: ResponsePageInfoDataType = {
-            total: data.total,
-            pageSize: data.pageSize,
-            pageNo: data.pageNo,
-          };
-          setAdminUserDataList(rows);
-          setPageInfo(pageInfo);
-        }
-        console.log('result', res);
+        const data: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
+        const rows = data?.rows || [];
+        const pageInfo: ResponsePageInfoDataType = {
+          total: data.total,
+          pageSize: data.pageSize,
+          pageNo: data.pageNo,
+        };
+        setAdminUserDataList(rows);
+        setPageInfo(pageInfo);
       })
       .catch((err) => {
         console.log('error', err);
@@ -242,11 +240,9 @@ const Admin: React.FC = () => {
       enabled: !record.enabled,
     };
     adminUserEdit(updateData).then((res) => {
-      if (res.code === SUCCESS) {
-        message.success(res.message, MessageDuritain, () => {
-          getRows({ ...pageInfo, ...form.getFieldsValue() });
-        });
-      }
+      message.success(res.message, MessageDuritain, () => {
+        getRows({ ...pageInfo, ...form.getFieldsValue() });
+      });
     });
   }
 
@@ -259,6 +255,13 @@ const Admin: React.FC = () => {
   function onSearchReset() {
     form.resetFields();
     getRows();
+  }
+
+  function fetchAdminRoles(name?: string) {
+    adminRoleAll({ name }).then((res) => {
+      res.data.unshift({ roleId: 0, roleName: '全部' });
+      setRoleOptions(res.data || []);
+    });
   }
 
   function tableChange(pagination: any, filters: any, sorter: any) {
@@ -280,7 +283,7 @@ const Admin: React.FC = () => {
 
   // 分配角色
   function openAssignRolesModal(record: ResponseAdminUserListItemType) {
-    getAdminUserDetail({ id: record.adminId }).then((res) => {
+    getAdminUserDetail({ adminId: record.adminId }).then((res) => {
       setAdminUserInfoData(res.data);
       setAssignRolesModalStatus(true);
     });
@@ -288,7 +291,7 @@ const Admin: React.FC = () => {
 
   // 管理员编辑
   function openEditModal(record: ResponseAdminUserListItemType) {
-    getAdminUserDetail({ id: record.adminId }).then((res) => {
+    getAdminUserDetail({ adminId: record.adminId }).then((res) => {
       setAdminUserInfoData(res.data);
       setEditModalStatus(true);
     });
@@ -333,14 +336,13 @@ const Admin: React.FC = () => {
   // 删除管理员
   function onDeleteAdminUser(record: ResponseAdminUserListItemType) {
     adminUserDelete({ adminId: record.adminId, enabled: record.enabled }).then((res) => {
-      if (res.code === SUCCESS) {
-        message.success(res.message, MessageDuritain);
-        getRows({ ...pageInfo, ...form.getFieldsValue() });
-      }
+      message.success(res.message, MessageDuritain);
+      getRows({ ...pageInfo, ...form.getFieldsValue() });
     });
   }
 
   useEffect(() => {
+    fetchAdminRoles();
     getRows();
   }, []);
 
@@ -360,8 +362,25 @@ const Admin: React.FC = () => {
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="角色名" name="roleName" initialValue={''}>
-                <Input allowClear />
+              <Form.Item label="角色名" name="roleId" initialValue={0}>
+                <Select
+                  style={{ offset: 0, width: '120' }}
+                  allowClear
+                  showSearch
+                  filterOption={(input, option) => {
+                    return (option!.children as unknown as string)
+                      .toLowerCase()
+                      .includes(input.toLowerCase());
+                  }}
+                >
+                  {roleOptions?.map((item) => {
+                    return (
+                      <Select.Option key={item.roleId} value={item.roleId}>
+                        {item.roleName}
+                      </Select.Option>
+                    );
+                  })}
+                </Select>
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
@@ -370,11 +389,11 @@ const Admin: React.FC = () => {
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="状态" name="enabled" initialValue={'0'}>
+              <Form.Item label="状态" name="enabled" initialValue={0}>
                 <Select style={{ offset: 0, width: '120' }}>
-                  <Select.Option value="0">全部</Select.Option>
-                  <Select.Option value="1">启用</Select.Option>
-                  <Select.Option value="2">禁用</Select.Option>
+                  <Select.Option value={0}>全部</Select.Option>
+                  <Select.Option value={1}>启用</Select.Option>
+                  <Select.Option value={2}>禁用</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -444,7 +463,7 @@ const Admin: React.FC = () => {
       />
 
       <AdminUserAssignRolesModal
-        modalStatus={assignRolesModalStatus}
+        modalStatus={bindModalStatus}
         detailData={adminUserInfoData}
         noticeModal={noticeAssignRolesModal}
       />

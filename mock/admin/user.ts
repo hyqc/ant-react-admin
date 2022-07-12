@@ -22,7 +22,7 @@ const userListDataRows: ResponseAdminUserListItemType[] = [
         roleName: '运维',
       },
     ],
-    enabled: true,
+    enabled: false,
     enabledText: '启用',
     createTime: '2022-06-26 14:49:38',
     modifyTime: '2022-06-26 14:49:38',
@@ -81,4 +81,7 @@ export default {
   'POST /api/admin/user/detail': userDetailResponse,
   'POST /api/admin/user/add': success,
   'POST /api/admin/user/edit': success,
+  'POST /api/admin/user/delete': success,
+  'POST /api/admin/user/enable': success,
+  'POST /api/admin/user/bind': success,
 };
