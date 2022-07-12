@@ -74,9 +74,9 @@ const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = 
   }
 
   useEffect(() => {
-    fetchAdminRoles();
     form.resetFields();
     if (detailData && detailData.username) {
+      fetchAdminRoles();
       form.setFieldsValue({ username: detailData?.username, roleIds: roleIdsValue });
     }
     return () => {};
