@@ -272,7 +272,7 @@ const Admin: React.FC = () => {
 
   // 管理员详情
   function openDetailModal(record: ResponseAdminUserListItemType) {
-    getAdminUserDetail({ id: record.adminId }).then((res) => {
+    getAdminUserDetail({ adminId: record.adminId }).then((res) => {
       setAdminUserInfoData(res.data);
       setDetailModalStatus(true);
     });

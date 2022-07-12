@@ -27,3 +27,4 @@ declare const BaseAPI: string;
 declare const MessageDuritain: number;
 declare const UploadImageAccept: string;
 declare const DefaultModalWidth: number;
+declare const DefaultDrawerWidth: number;

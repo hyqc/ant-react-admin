@@ -3,6 +3,7 @@ import {
   ResponseAdminUserListItemType,
 } from '@/services/apis/admin/admin';
 import { ResponseInfoType, ResponseListType } from '@/services/apis/types';
+import { success } from '../common';
 
 const userListDataRows: ResponseAdminUserListItemType[] = [
   {
@@ -70,11 +71,14 @@ const userDetail: ResponseAdminUserDetailType = {
 
 const userDetailResponse: ResponseInfoType = {
   code: 0,
-  message: 'success',
+  message: '成功',
   type: 'SUCCESS',
   data: userDetail,
 };
+
 export default {
   'POST /api/admin/user/list': userListResponse,
   'POST /api/admin/user/detail': userDetailResponse,
+  'POST /api/admin/user/add': success,
+  'POST /api/admin/user/edit': success,
 };

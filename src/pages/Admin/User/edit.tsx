@@ -11,6 +11,7 @@ import ImgCrop from 'antd-img-crop';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
+import { AdminUserPassword } from '@/services/common/pattern';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -29,9 +30,34 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
   const [fileList, setFielList] = useState<any[]>();
   const [avatar, setAvatar] = useState<string>('');
 
-  const rules = {
-    name: [{ required: true, message: '请输入管理员名称!' }],
+  const rules: any = {
+    username: [{ required: true, type: 'string', message: '请输入管理员名称!' }],
     email: [{ type: 'email', message: '邮箱格式错误!' }],
+    password: [
+      { required: true, type: 'string', message: '密码不能为空' },
+      {
+        required: true,
+        pattern: AdminUserPassword,
+        message: '',
+      },
+    ],
+    confirmPassword: [
+      { required: true, type: 'string', message: '密码不能为空' },
+      {
+        required: true,
+        pattern: AdminUserPassword,
+        message: '',
+      },
+      {
+        required: true,
+        validator: (rule: any, value: string) => {
+          if (form.getFieldValue('password') !== value) {
+            return Promise.reject(new Error('两次输入的密码不一致'));
+          }
+          return Promise.resolve();
+        },
+      },
+    ],
   };
 
   function handleOk() {
@@ -43,18 +69,11 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
           ...values,
           avatar,
         };
-        adminUserEdit(data)
-          .then((res) => {
-            if (res.code === SUCCESS) {
-              message.destroy();
-              message.success(res.message, MessageDuritain, () => {
-                noticeModal({ reload: true });
-              });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
+        adminUserEdit(data).then((res) => {
+          message.success(res.message, MessageDuritain, () => {
+            noticeModal({ reload: true });
           });
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -96,10 +115,10 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
     if (detailData && detailData.avatar) {
       setFielList([
         {
-          uid: '-1',
-          name: detailData.name,
+          adminId: '-1',
+          nickname: detailData.nickname,
           url: detailData.avatar,
-          status: 'done',
+          enabled: detailData.enabled,
         },
       ]);
     }
@@ -121,16 +140,16 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="name" rules={rules.name}>
+        <Form.Item label="名称" name="username" rules={rules.username}>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="昵称" name="nick_name">
+        <Form.Item label="昵称" name="nickname" rules={rules.nickname}>
           <Input allowClear />
         </Form.Item>
         <Form.Item label="邮箱" name="email" rules={rules.email}>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="状态" name="status">
+        <Form.Item label="状态" name="enabled">
           <Switch
             checkedChildren={'启用'}
             unCheckedChildren={'禁用'}

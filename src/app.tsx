@@ -113,7 +113,6 @@ const interceptorsResponse = async (response: any, options: any) => {
   const data: ResponseType = await response.clone().json();
   if (data.code !== SUCCESS) {
     message.destroy();
-    message.error(data.message, MessageDuritain);
   }
   return response;
 };
@@ -121,7 +120,7 @@ const interceptorsResponse = async (response: any, options: any) => {
 export const request: RequestConfig = {
   timeout: 6000,
   errorConfig: {
-    adaptor: (resData) => {
+    adaptor: (resData: { code: number; message: any; type: any }) => {
       return {
         ...resData,
         success: resData.code === SUCCESS,

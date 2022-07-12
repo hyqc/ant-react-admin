@@ -7,6 +7,7 @@ import ImgCrop from 'antd-img-crop';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
+import { AdminUserPassword } from '@/services/common/pattern';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -23,10 +24,34 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   const [fileList, setFielList] = useState<any[]>([]);
   const [avatar, setAvatar] = useState<string>('');
-
-  const rules = {
-    name: [{ required: true, message: '请输入管理员名称!' }],
+  const rules: any = {
+    username: [{ required: true, type: 'string', message: '请输入管理员名称!' }],
     email: [{ type: 'email', message: '邮箱格式错误!' }],
+    password: [
+      { required: true, type: 'string', message: '密码不能为空' },
+      {
+        required: true,
+        pattern: AdminUserPassword,
+        message: '',
+      },
+    ],
+    confirmPassword: [
+      { required: true, type: 'string', message: '密码不能为空' },
+      {
+        required: true,
+        pattern: AdminUserPassword,
+        message: '',
+      },
+      {
+        required: true,
+        validator: (rule: any, value: string) => {
+          if (form.getFieldValue('password') !== value) {
+            return Promise.reject(new Error('两次输入的密码不一致'));
+          }
+          return Promise.resolve();
+        },
+      },
+    ],
   };
 
   function handleOk() {
@@ -38,18 +63,12 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
           ...values,
           avatar,
         };
-        adminUserAdd(data)
-          .then((res) => {
-            if (res.code === SUCCESS) {
-              message.destroy();
-              message.success(res.message, MessageDuritain, () => {
-                noticeModal({ reload: true });
-              });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
+        adminUserAdd(data).then((res) => {
+          message.success(res.message, MessageDuritain, () => {
+            noticeModal({ reload: true });
+            form.resetFields();
           });
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -60,6 +79,7 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
   }
 
   function handleCancel() {
+    form.resetFields();
     noticeModal({ reload: false });
   }
 
@@ -104,16 +124,41 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="name" initialValue={''} rules={rules.name}>
+        <Form.Item
+          label="名称"
+          name="username"
+          initialValue={''}
+          hasFeedback
+          rules={rules.username}
+        >
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="昵称" name="nick_name" initialValue={''}>
+        <Form.Item label="昵称" name="nickname" initialValue={''} hasFeedback>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email}>
+        <Form.Item
+          label="密码"
+          name="password"
+          initialValue={''}
+          rules={rules.password}
+          hasFeedback
+        >
+          <Input.Password allowClear />
+        </Form.Item>
+        <Form.Item
+          label="确认密码"
+          name="confirmPassword"
+          initialValue={''}
+          dependencies={['password']}
+          hasFeedback
+          rules={rules.confirmPassword}
+        >
+          <Input.Password allowClear />
+        </Form.Item>
+        <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email} hasFeedback>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="状态" name="status" initialValue={true}>
+        <Form.Item label="状态" name="enabled" initialValue={true}>
           <Switch
             checkedChildren={'启用'}
             unCheckedChildren={'禁用'}

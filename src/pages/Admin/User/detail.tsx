@@ -1,10 +1,9 @@
 import { ResponseAdminUserDetailType } from '@/services/apis/admin/admin';
-import { Form, Modal, Switch, Tag } from 'antd';
+import { Drawer, Form, Switch, Tag } from 'antd';
 import { useEffect } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import Avatar from 'antd/lib/avatar/avatar';
-import { STATUS_VALID } from './common';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -19,7 +18,7 @@ export type AdminUserDetailModalPropsType = {
 const AdminUserDetailModal: React.FC<AdminUserDetailModalPropsType> = (props) => {
   const { modalStatus, detailData, noticeModal } = props;
 
-  function handleCancel() {
+  function onClose() {
     noticeModal({ reload: false });
   }
 
@@ -28,61 +27,67 @@ const AdminUserDetailModal: React.FC<AdminUserDetailModalPropsType> = (props) =>
   }, [detailData]);
 
   return (
-    <Modal
+    <Drawer
       title="管理员详情"
       footer={null}
-      width={DefaultModalWidth}
+      width={DefaultDrawerWidth}
       destroyOnClose={true}
       getContainer={false}
       visible={modalStatus}
-      onCancel={handleCancel}
+      onClose={onClose}
     >
       <Form labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="ID" name="id">
-          <span>{detailData?.id}</span>
+        <Form.Item label="ID" name="adminId">
+          <span>{detailData?.adminId}</span>
         </Form.Item>
-        <Form.Item label="名称" name="name">
-          <span>{detailData?.name}</span>
+        <Form.Item label="名称" name="username">
+          <span>{detailData?.username}</span>
         </Form.Item>
         <Form.Item label="头像" name="avatar" initialValue={true}>
           <Avatar size={64} src={detailData?.avatar} />
         </Form.Item>
-        <Form.Item label="昵称" name="nick_name">
-          <span>{detailData?.nick_name}</span>
+        <Form.Item label="昵称" name="nickname">
+          <span>{detailData?.nickname}</span>
         </Form.Item>
         <Form.Item label="邮箱" name="email">
           <span>{detailData?.email}</span>
         </Form.Item>
-        <Form.Item label="角色" name="email">
+        <Form.Item label="角色" name="roles">
           <span>
             {detailData?.roles?.map((item) => {
               return (
-                <Tag key={item.id} color="blue">
-                  {item.name}
+                <Tag key={item.roleId} color="blue">
+                  {item.roleName}
                 </Tag>
               );
             })}
           </span>
         </Form.Item>
-        <Form.Item label="状态" name="status">
+        <Form.Item label="状态" name="enabled">
           <Switch
             disabled
             checkedChildren={'启用'}
             unCheckedChildren={'禁用'}
-            checked={detailData?.status === STATUS_VALID}
+            checked={detailData?.enabled}
           />
         </Form.Item>
-        <Form.Item label="登录次数" name="email">
-          <span>{detailData?.total_login}</span>
+        <Form.Item label="登录次数" name="totalLogin">
+          <span>{detailData?.totalLogin}</span>
         </Form.Item>
-        <Form.Item label="创建时间" name="email">
-          <span>{detailData?.create_time}</span>
+        <Form.Item label="最后登录IP" name="lastLoginIp">
+          <span>{detailData?.lastLoginIp}</span>
         </Form.Item>
-        <Form.Item label="更新时间" name="email">
-          <span>{detailData?.modify_time}</span>
+        <Form.Item label="最后登录时间" name="lastLoginTime">
+          <span>{detailData?.lastLoginTime}</span>
+        </Form.Item>
+        <Form.Item label="创建时间" name="createTime">
+          <span>{detailData?.createTime}</span>
+        </Form.Item>
+        <Form.Item label="更新时间" name="modifyTime">
+          <span>{detailData?.modifyTime}</span>
         </Form.Item>
       </Form>
-    </Modal>
+    </Drawer>
   );
 };
 

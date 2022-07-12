@@ -108,8 +108,11 @@ export async function adminUserEdit(params: RequestAdminUserEditParamsType) {
   });
 }
 
+/**
+ * 管理员详情参数
+ */
 export type RequestAdminUserDetailParamsType = {
-  id: number;
+  adminId: number;
 };
 
 export async function getAdminUserDetail(params: RequestAdminUserDetailParamsType) {
