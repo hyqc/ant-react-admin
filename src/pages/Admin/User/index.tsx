@@ -44,7 +44,7 @@ import AdminUserAssignRolesModal from './bind';
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from './common';
 import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
 import AdminUserEditPasswordModal from './password';
-import PermissionButton from '@/components/PermissionButton';
+import Authorization from '@/components/Autuorization';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 6;
@@ -169,7 +169,7 @@ const Admin: React.FC = () => {
         return (
           <>
             <Space>
-              <PermissionButton>
+              <Authorization>
                 <Button
                   type="primary"
                   style={{ marginRight: 4 }}
@@ -177,7 +177,7 @@ const Admin: React.FC = () => {
                 >
                   详情
                 </Button>
-              </PermissionButton>
+              </Authorization>
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
