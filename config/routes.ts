@@ -35,11 +35,6 @@
       },
     ],
   },
-
-  {
-    path: '/',
-    redirect: '/admin/user',
-  },
   {
     component: './404',
   },

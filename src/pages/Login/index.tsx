@@ -1,25 +1,27 @@
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MobileOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
-import { message, Tabs } from 'antd';
+import { Button, Card, Checkbox, Form, Input, message } from 'antd';
 import React, { useState } from 'react';
-import { ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
-import { useIntl, history, FormattedMessage, SelectLang, useModel } from 'umi';
-import Footer from '@/components/Footer';
+import { useIntl, history, SelectLang, useModel } from 'umi';
 import styles from './index.less';
 import { login } from '@/services/apis/account';
 import type { RequestLoginParamsType } from '@/services/apis/account';
+import { AdminUserPassword } from '@/services/common/pattern';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
 const Login: React.FC = () => {
-  const [type, setType] = useState<string>('account');
   const { setInitialState } = useModel('@@initialState');
-
   const intl = useIntl();
+
+  const rules: any = {
+    username: [{ required: true, type: 'string', message: '请输入用户名!' }],
+    password: [
+      { required: true, type: 'string', message: '密码不能为空' },
+      {
+        required: true,
+        pattern: AdminUserPassword,
+        message: '',
+      },
+    ],
+  };
 
   const handleSubmit = async (values: RequestLoginParamsType) => {
     try {
@@ -51,141 +53,45 @@ const Login: React.FC = () => {
       <div className={styles.lang} data-lang>
         {SelectLang && <SelectLang />}
       </div>
-      <div className={styles.content}>
-        <LoginForm
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
-          initialValues={{
-            autoLogin: true,
-          }}
-          actions={[
-            <FormattedMessage
-              key="loginWith"
-              id="pages.login.loginWith"
-              defaultMessage="其他登录方式"
-            />,
-            <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
-            <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
-            <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
-          ]}
-          onFinish={async (values) => {
-            await handleSubmit(values as RequestLoginParamsType);
-          }}
-        >
-          <Tabs activeKey={type} onChange={setType}>
-            <Tabs.TabPane
-              key="account"
-              tab={intl.formatMessage({
-                id: 'pages.login.accountLogin.tab',
-                defaultMessage: '账户密码登录',
-              })}
-            />
-          </Tabs>
-
-          {type === 'account' && (
-            <>
-              <ProFormText
-                name="username"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined className={styles.prefixIcon} />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.username.placeholder',
-                  defaultMessage: '用户名: admin',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.username.required"
-                        defaultMessage="请输入用户名!"
-                      />
-                    ),
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                  defaultMessage: '密码: 123456',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                        defaultMessage="请输入密码！"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
-          )}
-
-          {type === 'mobile' && (
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <MobileOutlined className={styles.prefixIcon} />,
-                }}
-                name="mobile"
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.phoneNumber.placeholder',
-                  defaultMessage: '手机号',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.phoneNumber.required"
-                        defaultMessage="请输入手机号！"
-                      />
-                    ),
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.phoneNumber.invalid"
-                        defaultMessage="手机号格式错误！"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
-          )}
-          <div
-            style={{
-              marginBottom: 24,
-            }}
+      <div className={styles.login}>
+        <Card>
+          <Form
+            name="login"
+            className={styles.loginForm}
+            initialValues={{ remember: true }}
+            onFinish={handleSubmit}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
-            </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-            >
-              <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
-            </a>
-          </div>
-        </LoginForm>
+            <Form.Item>
+              <p className={styles.title}>
+                <img className={styles.logo} src="/9d8e8a2487205a32c402584efe583012.ico" />
+                <span>管理后台</span>
+              </p>
+            </Form.Item>
+            <Form.Item name="username" rules={rules.username}>
+              <Input className={styles.loginInput} prefix={<UserOutlined />} placeholder="账号" />
+            </Form.Item>
+            <Form.Item name="password" rules={rules.password}>
+              <Input
+                className={styles.loginInput}
+                prefix={<LockOutlined />}
+                type="password"
+                placeholder="密码"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Checkbox>自动登录</Checkbox>
+              </Form.Item>
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className={styles.loginButton}>
+                登录
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
       </div>
-      <Footer />
     </div>
   );
 };

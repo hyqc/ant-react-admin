@@ -47,7 +47,7 @@ import AdminUserEditPasswordModal from './password';
 import Authorization from '@/components/Autuorization';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
-const FormSearchRowColSpan = 6;
+const FormSearchRowColSpan = 5.2;
 
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
@@ -389,6 +389,11 @@ const Admin: React.FC = () => {
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
+              <Form.Item label="邮箱" name="email" initialValue={''}>
+                <Input allowClear />
+              </Form.Item>
+            </Col>
+            <Col span={FormSearchRowColSpan}>
               <Form.Item label="角色名" name="roleId" initialValue={0}>
                 <Select
                   style={{ offset: 0, width: '120' }}
@@ -408,11 +413,6 @@ const Admin: React.FC = () => {
                     );
                   })}
                 </Select>
-              </Form.Item>
-            </Col>
-            <Col span={FormSearchRowColSpan}>
-              <Form.Item label="邮箱" name="email" initialValue={''}>
-                <Input allowClear />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>

@@ -1,13 +1,12 @@
 import { adminUserAdd, RequestAdminUserAddParamsType } from '@/services/apis/admin/admin';
 import { APIAccount } from '@/services/apis/api';
-import { SUCCESS } from '@/services/apis/code';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
-import ImgCrop from 'antd-img-crop';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { AdminUserPassword } from '@/services/common/pattern';
+import ImgCrop from 'antd-img-crop';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
