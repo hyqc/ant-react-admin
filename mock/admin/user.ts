@@ -1,8 +1,8 @@
 import {
   ResponseAdminUserDetailType,
   ResponseAdminUserListItemType,
-} from '@/services/apis/admin/admin';
-import { ResponseInfoType, ResponseListType } from '@/services/apis/types';
+} from '@/services/apis/admin/user';
+import { ResponseDetailType, ResponseListType } from '@/services/apis/types';
 import { success } from '../common';
 
 const userListDataRows: ResponseAdminUserListItemType[] = [
@@ -37,7 +37,7 @@ const userListResponse: ResponseListType = {
   type: 'success',
   message: '成功',
   data: {
-    total: 1,
+    total: 15,
     pageNo: 1,
     pageSize: 10,
     rows: userListDataRows,
@@ -69,7 +69,7 @@ const userDetail: ResponseAdminUserDetailType = {
   lastLoginTime: '2022-06-26 14:49:38',
 };
 
-const userDetailResponse: ResponseInfoType = {
+const userDetailResponse: ResponseDetailType = {
   code: 0,
   message: '成功',
   type: 'SUCCESS',

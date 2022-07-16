@@ -2,7 +2,7 @@ import {
   adminUserEdit,
   RequestAdminUserEditParamsType,
   ResponseAdminUserDetailType,
-} from '@/services/apis/admin/admin';
+} from '@/services/apis/admin/user';
 import { Form, Input, message, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';

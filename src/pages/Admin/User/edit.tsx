@@ -2,7 +2,7 @@ import {
   adminUserEdit,
   RequestAdminUserEditParamsType,
   ResponseAdminUserDetailType,
-} from '@/services/apis/admin/admin';
+} from '@/services/apis/admin/user';
 import { APIAccount } from '@/services/apis/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
@@ -16,13 +16,13 @@ export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type AdminUserEditModalPropsType = {
+export type EditModalPropsType = {
   modalStatus: boolean;
   detailData: ResponseAdminUserDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
+const EditModal: React.FC<EditModalPropsType> = (props) => {
   const [form] = Form.useForm();
   const { modalStatus, detailData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
@@ -109,7 +109,12 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
   }
 
   useEffect(() => {
-    form.resetFields();
+    return () => {
+      form.resetFields();
+    };
+  });
+
+  useEffect(() => {
     form.setFieldsValue(detailData);
     if (detailData && detailData.avatar) {
       setFielList([
@@ -121,8 +126,7 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
         },
       ]);
     }
-    return () => {};
-  }, [detailData]);
+  });
 
   return (
     <Modal
@@ -178,4 +182,4 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
   );
 };
 
-export default AdminUserEditModal;
+export default EditModal;

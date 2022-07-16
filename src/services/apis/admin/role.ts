@@ -1,10 +1,103 @@
 // adminRoles 管理员角色接口
 import { request } from 'umi';
 import { APIAdminRoles } from '../api';
-import type { ResponseType } from '../types';
+import { ResponseBodyType } from '../types';
 
+/************************************************************/
+/**
+ * 列表
+ */
+export type RequestAdminRoleListParamsType = {
+  roleName?: string;
+  enabled?: number;
+  pageNum?: number;
+  pageSize?: number;
+  sortField?: string;
+  sortType?: string;
+};
+
+export type ResponseAdminRoleListItemType = {
+  roleId: number;
+  roleName: string;
+  enabled: boolean;
+  enabledText: string;
+  createTime: string;
+  modifyTime: string;
+};
+
+export async function adminRoleList(params?: RequestAdminRoleListParamsType) {
+  return request<ResponseBodyType>(APIAdminRoles.list.url, {
+    method: APIAdminRoles.list.method,
+    data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 新增
+ */
+export type RequestAdminRoleAddParamsType = {
+  roleName: string;
+  enabled?: boolean;
+  permissionIds?: string;
+};
+
+export async function adminRoleAdd(params: RequestAdminRoleAddParamsType) {
+  return request<ResponseBodyType>(APIAdminRoles.add.url, {
+    method: APIAdminRoles.add.method,
+    data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 详情
+ */
+export type RequestAdminRoleIDetailParamsType = {
+  roleId: number;
+};
+
+export type ResponseAdminRoleDetailType = {
+  roleId: number;
+  roleName: string;
+  enabled?: boolean;
+  enabledText?: string;
+  createTime?: string;
+  modifyTime?: string;
+  permissionIds: number[];
+};
+
+export async function adminRoleDetail(params: RequestAdminRoleIDetailParamsType) {
+  return request<ResponseBodyType>(APIAdminRoles.detail.url, {
+    method: APIAdminRoles.detail.method,
+    data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 编辑
+ */
+export type RequestAdminRoleEditParamsType = {
+  roleId: number;
+  roleName?: string;
+  enabled?: boolean;
+  permissionIds?: string;
+};
+
+export async function adminRoleEdit(params: RequestAdminRoleEditParamsType) {
+  return request<ResponseBodyType>(APIAdminRoles.edit.url, {
+    method: APIAdminRoles.edit.method,
+    data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 全部
+ */
 export type RequestAdminRoleAllParamsType = {
-  name?: string; // 角色名称
+  roleName?: string; // 角色名称
 };
 
 export type ResponseAdminRoleAllItemType = {
@@ -13,91 +106,24 @@ export type ResponseAdminRoleAllItemType = {
 };
 
 export async function adminRoleAll(params?: RequestAdminRoleAllParamsType) {
-  return request<ResponseType>(APIAdminRoles.all.url, {
+  return request<ResponseBodyType>(APIAdminRoles.all.url, {
     method: APIAdminRoles.all.method,
     data: params,
   });
 }
 
-export type RequestAdminRoleListParamsType = {
-  name?: string;
-  status?: number;
-  pageNo?: number;
-  pageSize?: number;
-  sortField?: string;
-  sortType?: string;
-};
-
-export type ResponseAdminRoleListItemType = {
-  id: number;
-  name: string;
-  status: number;
-  status_text: string;
-  create_time: string;
-  modify_time: string;
-};
-
-export async function adminRoleList(params?: RequestAdminRoleListParamsType) {
-  return request<ResponseType>(APIAdminRoles.list.url, {
-    method: APIAdminRoles.list.method,
-    data: params,
-  });
-}
-
-export type RequestAdminRoleIDetailParamsType = {
-  id: number;
-};
-
-export type ResponseAdminRoleDetailType = {
-  id: number;
-  name: string;
-  status?: number;
-  status_text?: string;
-  create_time?: string;
-  modify_time?: string;
-  permission_ids: number[];
-};
-
-export async function adminRoleGet(params: RequestAdminRoleIDetailParamsType) {
-  return request<ResponseType>(APIAdminRoles.get.url, {
-    method: APIAdminRoles.get.method,
-    data: params,
-  });
-}
-
-export type RequestAdminRoleAddParamsType = {
-  name: string;
-  status?: number;
-  permission_ids?: string;
-};
-
-export async function adminRoleAdd(params: RequestAdminRoleAddParamsType) {
-  return request<ResponseType>(APIAdminRoles.add.url, {
-    method: APIAdminRoles.add.method,
-    data: params,
-  });
-}
-
-export type RequestAdminRoleEditParamsType = {
-  id: number;
-  name?: string;
-  status?: number;
-  permission_ids?: string;
-};
-
-export async function adminRoleEdit(params: RequestAdminRoleEditParamsType) {
-  return request<ResponseType>(APIAdminRoles.edit.url, {
-    method: APIAdminRoles.edit.method,
-    data: params,
-  });
-}
+/************************************************************/
+/**
+ * 删除
+ */
 
 export type RequestAdminRoleDeleteParamsType = {
-  id: number;
+  roleId: number;
+  enabled: boolean;
 };
 
 export async function adminRoleDelete(params: RequestAdminRoleDeleteParamsType) {
-  return request<ResponseType>(APIAdminRoles.delete.url, {
+  return request<ResponseBodyType>(APIAdminRoles.delete.url, {
     method: APIAdminRoles.delete.method,
     data: params,
   });

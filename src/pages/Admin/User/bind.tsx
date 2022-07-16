@@ -2,32 +2,33 @@ import {
   adminUserAssignRoles,
   RequestAdminUserAssignRolesParamsType,
   ResponseAdminUserDetailType,
-} from '@/services/apis/admin/admin';
+} from '@/services/apis/admin/user';
 import { SUCCESS } from '@/services/apis/code';
 import { Form, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
+import { ResponseAdminUserListItemRolesItemType } from '@/services/apis/admin/user';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type AdminUserAssignRolesModalPropsType = {
+export type BindModalPropsType = {
   modalStatus: boolean;
   detailData: ResponseAdminUserDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = (props) => {
+const BindModal: React.FC<BindModalPropsType> = (props) => {
   const [form] = Form.useForm();
   const { modalStatus, detailData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   const [roleOptions, setRoleOptions] = useState<ResponseAdminRoleAllItemType[]>([]);
 
   const roleIdsValue: number[] =
-    detailData?.roles.map((item) => {
+    detailData?.roles.map((item: ResponseAdminUserListItemRolesItemType) => {
       return item.roleId;
     }) || [];
 
@@ -65,8 +66,8 @@ const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = 
     noticeModal({ reload: false });
   }
 
-  function fetchAdminRoles(name?: string) {
-    adminRoleAll({ name }).then((res) => {
+  function fetchAdminRoles(roleName?: string) {
+    adminRoleAll({ roleName }).then((res) => {
       if (res.code === SUCCESS) {
         setRoleOptions(res.data || []);
       }
@@ -127,4 +128,4 @@ const AdminUserAssignRolesModal: React.FC<AdminUserAssignRolesModalPropsType> = 
   );
 };
 
-export default AdminUserAssignRolesModal;
+export default BindModal;

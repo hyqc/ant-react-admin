@@ -23,15 +23,16 @@ import {
   adminUserList,
   adminUserEdit,
   ResponseAdminUserListItemRolesItemType,
-  getAdminUserDetail,
+  adminUserDetail,
   adminUserDelete,
-} from '@/services/apis/admin/admin';
+} from '@/services/apis/admin/user';
 import type {
   ResponseAdminUserListItemType,
   RequestAdminUserListParamsType,
   RequestAdminUserEditParamsType,
-} from '@/services/apis/admin/admin';
+} from '@/services/apis/admin/user';
 import type {
+  ResponseBodyType,
   ResponseListDataType,
   ResponseListType,
   ResponsePageInfoDataType,
@@ -40,10 +41,10 @@ import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import AdminUserAddModal, { NoticeModalPropsType } from './add';
 import AdminUserEditModal from './edit';
 import AdminUserDetailModal from './detail';
-import AdminUserAssignRolesModal from './bind';
+import AdminUserBindRolesModal from './bind';
+import AdminUserEditPasswordModal from './password';
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from './common';
 import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
-import AdminUserEditPasswordModal from './password';
 import Authorization from '@/components/Autuorization';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
@@ -53,13 +54,13 @@ const Admin: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const [pageInfo, setPageInfo] = useState<ResponsePageInfoDataType>();
-  const [adminUserListData, setAdminUserDataList] = useState<ResponseAdminUserListItemType[]>([]);
+  const [rowsData, setRowsData] = useState<ResponseAdminUserListItemType[]>([]);
+  const [detailData, setDetailData] = useState<any>();
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
-  const [bindModalStatus, setAssignRolesModalStatus] = useState<boolean>(false);
+  const [bindModalStatus, setBindRolesModalStatus] = useState<boolean>(false);
   const [editPasswordModalStatus, setEditPasswordModalStatus] = useState<boolean>(false);
-  const [adminUserInfoData, setAdminUserInfoData] = useState<any>();
   const [roleOptions, setRoleOptions] = useState<ResponseAdminRoleAllItemType[]>([]);
 
   const columns: ColumnsType<any> = [
@@ -151,14 +152,16 @@ const Admin: React.FC = () => {
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminUserListItemType) {
         return (
-          <Popconfirm
-            title={`确实要${record.enabledText}该管理员吗？`}
-            okText="确定"
-            cancelText="取消"
-            onConfirm={() => updateEnabled(record)}
-          >
-            <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
-          </Popconfirm>
+          <Authorization>
+            <Popconfirm
+              title={`确实要${record.enabledText}该管理员吗？`}
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => updateEnabled(record)}
+            >
+              <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
+            </Popconfirm>
+          </Authorization>
         );
       },
     },
@@ -167,24 +170,28 @@ const Admin: React.FC = () => {
       align: 'left',
       render(text, record: ResponseAdminUserListItemType) {
         return (
-          <>
-            <Space>
-              <Authorization>
-                <Button
-                  type="primary"
-                  style={{ marginRight: 4 }}
-                  onClick={() => openDetailModal(record)}
-                >
-                  详情
-                </Button>
-              </Authorization>
+          <Space>
+            <Authorization>
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
-                onClick={() => openAssignRolesModal(record)}
+                onClick={() => openDetailModal(record)}
+              >
+                详情
+              </Button>
+            </Authorization>
+
+            <Authorization>
+              <Button
+                type="primary"
+                style={{ marginRight: 4 }}
+                onClick={() => openBindRolesModal(record)}
               >
                 分配角色
               </Button>
+            </Authorization>
+
+            <Authorization>
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -192,6 +199,9 @@ const Admin: React.FC = () => {
               >
                 编辑
               </Button>
+            </Authorization>
+
+            <Authorization>
               {/* 非超管修改密码 */}
               <Button
                 type="primary"
@@ -200,13 +210,16 @@ const Admin: React.FC = () => {
               >
                 修改密码
               </Button>
-              {/* 禁用的才能删除 */}
+            </Authorization>
+
+            {/* 禁用的才能删除 */}
+            <Authorization>
               {!record.enabled ? (
                 <Popconfirm
                   title="确实要删除该管理员吗？"
                   okText="确定"
                   cancelText="取消"
-                  onConfirm={() => onDeleteAdminUser(record)}
+                  onConfirm={() => onDelete(record)}
                 >
                   <Button type="primary" danger style={{ marginRight: 4 }}>
                     删除
@@ -215,8 +228,8 @@ const Admin: React.FC = () => {
               ) : (
                 ''
               )}
-            </Space>
-          </>
+            </Authorization>
+          </Space>
         );
       },
     },
@@ -234,7 +247,7 @@ const Admin: React.FC = () => {
           pageSize: data.pageSize,
           pageNo: data.pageNo,
         };
-        setAdminUserDataList(rows);
+        setRowsData(rows);
         setPageInfo(pageInfo);
       })
       .catch((err) => {
@@ -260,7 +273,7 @@ const Admin: React.FC = () => {
 
   // 管理员列表搜索
   function onSearchFinish(values: RequestAdminUserListParamsType) {
-    getRows({ ...values, ...pageInfo, pageNo: 1 });
+    getRows({ ...values, ...pageInfo, pageNum: 1 });
   }
 
   // 管理员搜索重置
@@ -269,11 +282,21 @@ const Admin: React.FC = () => {
     getRows();
   }
 
-  function fetchAdminRoles(name?: string) {
-    adminRoleAll({ name }).then((res) => {
+  function fetchAdminRoles(roleName?: string) {
+    adminRoleAll({ roleName }).then((res) => {
       res.data.unshift({ roleId: 0, roleName: '全部' });
       setRoleOptions(res.data || []);
     });
+  }
+
+  // 删除管理员
+  function onDelete(record: ResponseAdminUserListItemType) {
+    adminUserDelete({ adminId: record.adminId, enabled: record.enabled }).then(
+      (res: ResponseBodyType) => {
+        message.success(res.message, MessageDuritain);
+        getRows({ ...pageInfo, ...form.getFieldsValue() });
+      },
+    );
   }
 
   function tableChange(pagination: any, filters: any, sorter: any) {
@@ -287,24 +310,24 @@ const Admin: React.FC = () => {
 
   // 管理员详情
   function openDetailModal(record: ResponseAdminUserListItemType) {
-    getAdminUserDetail({ adminId: record.adminId }).then((res) => {
-      setAdminUserInfoData(res.data);
+    adminUserDetail({ adminId: record.adminId }).then((res) => {
+      setDetailData(res.data);
       setDetailModalStatus(true);
     });
   }
 
   // 分配角色
-  function openAssignRolesModal(record: ResponseAdminUserListItemType) {
-    getAdminUserDetail({ adminId: record.adminId }).then((res) => {
-      setAdminUserInfoData(res.data);
-      setAssignRolesModalStatus(true);
+  function openBindRolesModal(record: ResponseAdminUserListItemType) {
+    adminUserDetail({ adminId: record.adminId }).then((res) => {
+      setDetailData(res.data);
+      setBindRolesModalStatus(true);
     });
   }
 
   // 管理员编辑
   function openEditModal(record: ResponseAdminUserListItemType) {
-    getAdminUserDetail({ adminId: record.adminId }).then((res) => {
-      setAdminUserInfoData(res.data);
+    adminUserDetail({ adminId: record.adminId }).then((res) => {
+      setDetailData(res.data);
       setEditModalStatus(true);
     });
   }
@@ -315,8 +338,8 @@ const Admin: React.FC = () => {
   }
 
   function openEditPasswordModal(record: ResponseAdminUserListItemType) {
-    getAdminUserDetail({ adminId: record.adminId }).then((res) => {
-      setAdminUserInfoData(res.data);
+    adminUserDetail({ adminId: record.adminId }).then((res) => {
+      setDetailData(res.data);
       setEditPasswordModalStatus(true);
     });
   }
@@ -329,7 +352,7 @@ const Admin: React.FC = () => {
   }
 
   function noticeEditModal(data: NoticeModalPropsType) {
-    setAdminUserInfoData(undefined);
+    setDetailData(undefined);
     setEditModalStatus(false);
     if (data.reload) {
       getRows({ ...pageInfo, ...form.getFieldsValue() });
@@ -337,39 +360,34 @@ const Admin: React.FC = () => {
   }
 
   function noticeDetailModal(data: NoticeModalPropsType) {
-    setAdminUserInfoData(undefined);
+    setDetailData(undefined);
     setDetailModalStatus(false);
     if (data.reload) {
       getRows({ ...pageInfo, ...form.getFieldsValue() });
     }
   }
 
-  function noticeAssignRolesModal(data: NoticeModalPropsType) {
-    setAdminUserInfoData(undefined);
-    setAssignRolesModalStatus(false);
+  function noticeBindRolesModal(data: NoticeModalPropsType) {
+    setDetailData(undefined);
+    setBindRolesModalStatus(false);
     if (data.reload) {
       getRows({ ...pageInfo, ...form.getFieldsValue() });
     }
   }
 
   function noticeEditPasswordModal(data: NoticeModalPropsType) {
-    setAdminUserInfoData(undefined);
+    setDetailData(undefined);
     setEditPasswordModalStatus(false);
     if (data.reload) {
       getRows({ ...pageInfo, ...form.getFieldsValue() });
     }
   }
 
-  // 删除管理员
-  function onDeleteAdminUser(record: ResponseAdminUserListItemType) {
-    adminUserDelete({ adminId: record.adminId, enabled: record.enabled }).then((res) => {
-      message.success(res.message, MessageDuritain);
-      getRows({ ...pageInfo, ...form.getFieldsValue() });
-    });
-  }
-
   useEffect(() => {
     fetchAdminRoles();
+  }, []);
+
+  useEffect(() => {
     getRows();
   }, []);
 
@@ -441,6 +459,7 @@ const Admin: React.FC = () => {
           </Row>
         </Form>
       </Search>
+
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
@@ -457,7 +476,7 @@ const Admin: React.FC = () => {
           loading={loading}
           columns={columns}
           pagination={false}
-          dataSource={adminUserListData}
+          dataSource={rowsData}
           onChange={tableChange}
         ></Table>
         <Pagination
@@ -479,25 +498,25 @@ const Admin: React.FC = () => {
 
       <AdminUserDetailModal
         modalStatus={detailModalStatus}
-        detailData={adminUserInfoData}
+        detailData={detailData}
         noticeModal={noticeDetailModal}
       />
 
       <AdminUserEditModal
         modalStatus={editModalStatus}
-        detailData={adminUserInfoData}
+        detailData={detailData}
         noticeModal={noticeEditModal}
       />
 
-      <AdminUserAssignRolesModal
+      <AdminUserBindRolesModal
         modalStatus={bindModalStatus}
-        detailData={adminUserInfoData}
-        noticeModal={noticeAssignRolesModal}
+        detailData={detailData}
+        noticeModal={noticeBindRolesModal}
       />
 
       <AdminUserEditPasswordModal
         modalStatus={editPasswordModalStatus}
-        detailData={adminUserInfoData}
+        detailData={detailData}
         noticeModal={noticeEditPasswordModal}
       />
     </Container>

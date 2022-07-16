@@ -1,4 +1,4 @@
-import { adminUserAdd, RequestAdminUserAddParamsType } from '@/services/apis/admin/admin';
+import { adminUserAdd, RequestAdminUserAddParamsType } from '@/services/apis/admin/user';
 import { APIAccount } from '@/services/apis/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
@@ -12,12 +12,12 @@ export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type AdminUserAddModalPropsType = {
+export type AddModalPropsType = {
   modalStatus: boolean;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
+const AddModal: React.FC<AddModalPropsType> = (props) => {
   const [form] = Form.useForm();
   const { modalStatus, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
@@ -105,8 +105,10 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
   }
 
   useEffect(() => {
-    return () => {};
-  }, []);
+    return () => {
+      form.resetFields();
+    };
+  });
 
   return (
     <Modal
@@ -187,4 +189,4 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
   );
 };
 
-export default AdminUserAddModal;
+export default AddModal;

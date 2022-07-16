@@ -1,21 +1,25 @@
-import { ResponseAdminUserDetailType } from '@/services/apis/admin/admin';
-import { Drawer, Form, Switch, Tag } from 'antd';
-import { useEffect } from 'react';
+import { ResponseAdminUserDetailType } from '@/services/apis/admin/user';
+import { INPUT_STYLE } from '@/services/apis/config';
+import { Drawer, Form, Input, Switch, Tag } from 'antd';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import Avatar from 'antd/lib/avatar/avatar';
+import { useEffect } from 'react';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type AdminUserDetailModalPropsType = {
+export type DetailModalPropsType = {
   modalStatus: boolean;
   detailData: ResponseAdminUserDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const AdminUserDetailModal: React.FC<AdminUserDetailModalPropsType> = (props) => {
+const inputStyle = INPUT_STYLE;
+
+const DetailModal: React.FC<DetailModalPropsType> = (props) => {
+  const [form] = Form.useForm();
   const { modalStatus, detailData, noticeModal } = props;
 
   function onClose() {
@@ -23,8 +27,8 @@ const AdminUserDetailModal: React.FC<AdminUserDetailModalPropsType> = (props) =>
   }
 
   useEffect(() => {
-    return () => {};
-  }, [detailData]);
+    form.setFieldsValue(detailData);
+  });
 
   return (
     <Drawer
@@ -37,21 +41,21 @@ const AdminUserDetailModal: React.FC<AdminUserDetailModalPropsType> = (props) =>
       visible={modalStatus}
       onClose={onClose}
     >
-      <Form labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+      <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="ID" name="adminId">
-          <span>{detailData?.adminId}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="名称" name="username">
-          <span>{detailData?.username}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="头像" name="avatar" initialValue={true}>
           <Avatar size={64} src={detailData?.avatar} />
         </Form.Item>
         <Form.Item label="昵称" name="nickname">
-          <span>{detailData?.nickname}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="邮箱" name="email">
-          <span>{detailData?.email}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="角色" name="roles">
           <span>
@@ -73,23 +77,23 @@ const AdminUserDetailModal: React.FC<AdminUserDetailModalPropsType> = (props) =>
           />
         </Form.Item>
         <Form.Item label="登录次数" name="totalLogin">
-          <span>{detailData?.totalLogin}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="最后登录IP" name="lastLoginIp">
-          <span>{detailData?.lastLoginIp}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="最后登录时间" name="lastLoginTime">
-          <span>{detailData?.lastLoginTime}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="创建时间" name="createTime">
-          <span>{detailData?.createTime}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="更新时间" name="modifyTime">
-          <span>{detailData?.modifyTime}</span>
+          <Input disabled style={inputStyle} />
         </Form.Item>
       </Form>
     </Drawer>
   );
 };
 
-export default AdminUserDetailModal;
+export default DetailModal;

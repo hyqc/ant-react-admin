@@ -1,7 +1,33 @@
 // adminUsers 管理员管理接口
 import { request } from 'umi';
 import { APIAdminUsers } from '../api';
-import type { ResponseType } from '../types';
+import { ResponseBodyType } from '../types';
+
+/************************************************************/
+/**
+ * 管理员列表参数
+ */
+export type RequestAdminUserListParamsType = {
+  username?: string; // 管理员名称
+  nickname?: string; // 管理员昵称
+  enabled?: number; // 管理员状态，0全部，1正常，2禁用
+  roleName?: string; // 角色名称
+  email?: string; // 邮箱
+  createStartTime?: string; // 2021-12-01 00:00:00 创建时间搜索
+  createEndTime?: string;
+  pageNum?: number;
+  pageSize?: number;
+  sortField?: string;
+  sortType?: string;
+};
+
+/**
+ * 管理员列表的角色列表元素
+ */
+export type ResponseAdminUserListItemRolesItemType = {
+  roleId: number; // 角色ID
+  roleName: string; // 角色名称
+};
 
 /**
  * 管理员列表元素
@@ -22,12 +48,40 @@ export type ResponseAdminUserListItemType = {
   lastLoginTime: string; // 最后登录时间
 };
 
+export async function adminUserList(params?: RequestAdminUserListParamsType) {
+  return request<ResponseBodyType>(APIAdminUsers.list.url, {
+    method: APIAdminUsers.list.method,
+    data: params,
+  });
+}
+
+/************************************************************/
 /**
- * 管理员列表的角色列表元素
+ * 新增
  */
-export type ResponseAdminUserListItemRolesItemType = {
-  roleId: number; // 角色ID
-  roleName: string; // 角色名称
+export type RequestAdminUserAddParamsType = {
+  username: string; // 管理员名称（账号）
+  enabled: boolean;
+  passwrod: string;
+  confirmPassword: string;
+  nickname?: string; // 管理员昵称
+  avatar?: string;
+  email?: string;
+};
+
+export async function adminUserAdd(params: RequestAdminUserAddParamsType) {
+  return request<ResponseBodyType>(APIAdminUsers.add.url, {
+    method: APIAdminUsers.add.method,
+    data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 管理员详情参数
+ */
+export type RequestAdminUserDetailParamsType = {
+  adminId: number;
 };
 
 /**
@@ -49,50 +103,17 @@ export type ResponseAdminUserDetailType = {
   lastLoginTime: string; // 最后登录时间
 };
 
-export type RequestAdminUserUpdatePasswordParamsType = {
-  id: number;
-  new_password: string;
-  confirm_password: string;
-};
-
-export type RequestAdminUserListParamsType = {
-  name?: string; // 管理员名称
-  nick_name?: string; // 管理员昵称
-  status?: number; // 管理员状态，0全部，1正常，2禁用
-  role_name?: string; // 角色名称
-  email?: string; // 邮箱
-  startDateTime?: string; // 2021-12-01 00:00:00 创建时间搜索
-  endDateTime?: string;
-  pageNo?: number;
-  pageSize?: number;
-  sortField?: string;
-  sortType?: string;
-};
-
-export async function adminUserList(params?: RequestAdminUserListParamsType) {
-  return request<ResponseType>(APIAdminUsers.list.url, {
-    method: APIAdminUsers.list.method,
+export async function adminUserDetail(params: RequestAdminUserDetailParamsType) {
+  return request<ResponseBodyType>(APIAdminUsers.detail.url, {
+    method: APIAdminUsers.detail.method,
     data: params,
   });
 }
 
-export type RequestAdminUserAddParamsType = {
-  username: string; // 管理员名称（账号）
-  enabled: boolean;
-  passwrod: string;
-  confirmPassword: string;
-  nickname?: string; // 管理员昵称
-  avatar?: string;
-  email?: string;
-};
-
-export async function adminUserAdd(params: RequestAdminUserAddParamsType) {
-  return request<ResponseType>(APIAdminUsers.add.url, {
-    method: APIAdminUsers.add.method,
-    data: params,
-  });
-}
-
+/************************************************************/
+/**
+ * 编辑
+ */
 export type RequestAdminUserEditParamsType = {
   adminId: number;
   username?: string; // 管理员名称（账号）
@@ -106,26 +127,13 @@ export type RequestAdminUserEditParamsType = {
 };
 
 export async function adminUserEdit(params: RequestAdminUserEditParamsType) {
-  return request<ResponseType>(APIAdminUsers.edit.url, {
+  return request<ResponseBodyType>(APIAdminUsers.edit.url, {
     method: APIAdminUsers.edit.method,
     data: params,
   });
 }
 
-/**
- * 管理员详情参数
- */
-export type RequestAdminUserDetailParamsType = {
-  adminId: number;
-};
-
-export async function getAdminUserDetail(params: RequestAdminUserDetailParamsType) {
-  return request<ResponseType>(APIAdminUsers.detail.url, {
-    method: APIAdminUsers.detail.method,
-    data: params,
-  });
-}
-
+/************************************************************/
 /**
  * 彻底删除用户
  */
@@ -135,12 +143,13 @@ export type RequestAdminUserDeleteParamsType = {
 };
 
 export async function adminUserDelete(params: RequestAdminUserDeleteParamsType) {
-  return request<ResponseType>(APIAdminUsers.delete.url, {
+  return request<ResponseBodyType>(APIAdminUsers.delete.url, {
     method: APIAdminUsers.delete.method,
     data: params,
   });
 }
 
+/************************************************************/
 /**
  * 绑定角色
  */
@@ -150,7 +159,7 @@ export type RequestAdminUserAssignRolesParamsType = {
 };
 
 export async function adminUserAssignRoles(params: RequestAdminUserAssignRolesParamsType) {
-  return request<ResponseType>(APIAdminUsers.bind.url, {
+  return request<ResponseBodyType>(APIAdminUsers.bind.url, {
     method: APIAdminUsers.bind.method,
     data: params,
   });

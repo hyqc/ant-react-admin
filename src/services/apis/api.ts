@@ -64,8 +64,8 @@ export const APIAdminRoles = {
     url: '/admin/role/list',
     method: POST,
   },
-  get: {
-    url: '/admin/role/get',
+  detail: {
+    url: '/admin/role/detail',
     method: POST,
   },
   add: {
@@ -95,8 +95,8 @@ export const APIAdminMenus = {
     url: '/admin/menu/list',
     method: POST,
   },
-  get: {
-    url: '/admin/menu/get',
+  detail: {
+    url: '/admin/menu/detail',
     method: POST,
   },
   add: {
@@ -126,8 +126,8 @@ export const APIAdminPermissions = {
     url: '/admin/permission/list',
     method: POST,
   },
-  get: {
-    url: '/admin/permission/get',
+  detail: {
+    url: '/admin/permission/detail',
     method: POST,
   },
   add: {

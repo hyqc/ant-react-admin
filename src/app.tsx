@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import { currentAdminInfo } from './services/apis/account';
 import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/account';
 import { message } from 'antd';
-import type { ResponseType } from '@/services/apis/types';
+import type { ResponseBodyType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -109,7 +109,7 @@ const interceptorsRequest = (url: string, options: any) => {
 // 响应拦截器：
 const interceptorsResponse = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
-  const data: ResponseType = await response.clone().json();
+  const data: ResponseBodyType = await response.clone().json();
   if (data.code !== SUCCESS) {
     message.destroy();
   }

@@ -9,3 +9,4 @@ export const DEFAULT_PAGE_INFO = {
   pageNo: 1,
   rows: [],
 };
+export const INPUT_STYLE = { fontWeight: 400, color: 'black' };
