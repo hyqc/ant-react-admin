@@ -17,4 +17,7 @@ export default {
   'menu.admin.menu': 'Menu',
   'menu.admin.api': 'Resourse Api',
   'menu.admin.permission': 'Permission Manager',
+  'menu.doc': 'Document',
+  'menu.doc.menu': 'Menu Document',
+  'menu.demo': 'Demo',
 };

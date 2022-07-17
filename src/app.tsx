@@ -70,16 +70,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       if (menuItemProps.isUrl || !menuItemProps.path) {
         return defaultDom;
       }
-      if (menuItemProps.path?.startsWith('/doc/')) {
-        return (
-          <a href={menuItemProps.path}>
-            {menuItemProps.pro_layout_parentKeys &&
-              menuItemProps.pro_layout_parentKeys.length > 0 &&
-              menuItemProps.icon}
-            {defaultDom}
-          </a>
-        );
-      }
       // 支持二级菜单显示icon
       return (
         <Link to={menuItemProps.path}>

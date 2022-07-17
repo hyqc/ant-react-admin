@@ -7,6 +7,7 @@
   },
   {
     name: 'admin',
+    path: '/admin',
     icon: 'setting',
     routes: [
       {
@@ -42,19 +43,17 @@
     ],
   },
   {
-    name: 'doc',
+    name: 'demo',
+    path: '/demo',
     icon: 'book',
-    layout: false,
-    routes: [
-      {
-        path: '/doc/adminMenu.md',
-        layout: false,
-        name: 'menu',
-        icon: 'UserOutlined',
-      },
-    ],
+    component: './Demo',
   },
   {
+    path: '/',
+    redirect: '/admin/user',
+  },
+  {
+    path: '*',
     component: './404',
   },
 ];
