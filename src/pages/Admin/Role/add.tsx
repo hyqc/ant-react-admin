@@ -49,12 +49,6 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
     noticeModal({ reload: false });
   }
 
-  useEffect(() => {
-    return () => {
-      form.resetFields();
-    };
-  });
-
   return (
     <Modal
       forceRender

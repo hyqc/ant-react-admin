@@ -109,12 +109,6 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
   }
 
   useEffect(() => {
-    return () => {
-      form.resetFields();
-    };
-  });
-
-  useEffect(() => {
     form.setFieldsValue(detailData);
     if (detailData && detailData.avatar) {
       setFielList([

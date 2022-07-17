@@ -31,7 +31,7 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
   return (
     <Drawer
       forceRender
-      title="角色详情"
+      title="菜单详情"
       footer={null}
       width={DefaultDrawerWidth}
       destroyOnClose={true}
@@ -42,6 +42,45 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="名称" name="roleName">
           <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="路由" name="path">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="键名" name="key">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="图标" name="icon">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="描述" name="describe">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="重定向路由" name="redirect">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="创建时间" name="createTime">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="最后更新时间" name="modifyTime">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="菜单中隐藏" name="hideInMenu">
+          <Switch
+            disabled
+            checkedChildren={'隐藏'}
+            unCheckedChildren={'显示'}
+            defaultChecked={false}
+            checked
+          />
+        </Form.Item>
+        <Form.Item label="菜单中隐藏子菜单" name="hideChildrenInMenu">
+          <Switch
+            disabled
+            checkedChildren={'隐藏'}
+            unCheckedChildren={'显示'}
+            defaultChecked={false}
+            checked
+          />
         </Form.Item>
         <Form.Item label="状态" name="enabled">
           <Switch

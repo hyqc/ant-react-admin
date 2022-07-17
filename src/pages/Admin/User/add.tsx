@@ -104,12 +104,6 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
     imgWindow?.document.write(image.outerHTML);
   }
 
-  useEffect(() => {
-    return () => {
-      form.resetFields();
-    };
-  });
-
   return (
     <Modal
       forceRender

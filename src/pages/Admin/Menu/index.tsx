@@ -32,6 +32,7 @@ import Authorization from '@/components/Autuorization';
 import AdminMenuAddModal, { NoticeModalPropsType } from './add';
 import AdminMenuEditModal from './edit';
 import AdminMenuDetailModal from './detail';
+import { menuTreeData } from './components/MenuTreeSelect';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -44,6 +45,7 @@ const Admin: React.FC = () => {
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
+  const [menuTreeSelectData, setMenuTreeSelectData] = useState<ResponseAdminMenuListItemType[]>([]);
 
   const columns: ColumnsType<any> = [
     {
@@ -131,6 +133,9 @@ const Admin: React.FC = () => {
       title: '操作',
       align: 'left',
       render(text, record: ResponseAdminMenuListItemType) {
+        if (record.path == '/') {
+          return <></>;
+        }
         return (
           <Space>
             <Authorization>
@@ -140,6 +145,15 @@ const Admin: React.FC = () => {
                 onClick={() => openDetailModal(record)}
               >
                 详情
+              </Button>
+            </Authorization>
+            <Authorization>
+              <Button
+                type="primary"
+                style={{ marginRight: 4 }}
+                onClick={() => openDetailModal(record)}
+              >
+                添加子菜单
               </Button>
             </Authorization>
             <Authorization>
@@ -182,6 +196,7 @@ const Admin: React.FC = () => {
       .then((res: ResponseListType) => {
         const resData: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
         setRowsData(resData.rows);
+        setMenuTreeSelectData(menuTreeData(resData.rows));
       })
       .catch((err) => {
         console.log('error', err);
@@ -348,7 +363,11 @@ const Admin: React.FC = () => {
 
       {/* modal */}
 
-      <AdminMenuAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
+      <AdminMenuAddModal
+        menuTreeData={menuTreeSelectData}
+        modalStatus={addModalStatus}
+        noticeModal={noticeAddModal}
+      />
 
       <AdminMenuDetailModal
         modalStatus={detailModalStatus}

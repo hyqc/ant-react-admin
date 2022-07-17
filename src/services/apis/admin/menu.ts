@@ -45,6 +45,7 @@ export type ResponseAdminMenuListItemType = {
   enabledText: string; //
   createTime: string; // 创建时间 "2021-12-01 12:23:21"
   modifyTime: string; // 最后更新时间
+  describe?: string; // 描述
   authority?: string; // 数据库中不设置
   children?: ResponseAdminMenuListItemType[];
   icon?: string;

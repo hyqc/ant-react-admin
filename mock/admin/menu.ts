@@ -1,5 +1,5 @@
 import { ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
-import { ResponseListType } from '@/services/apis/types';
+import { ResponseDetailType, ResponseListType } from '@/services/apis/types';
 import { success } from '../common';
 
 const menuTreeData: ResponseAdminMenuListItemType[] = [
@@ -20,6 +20,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
         menuId: 1,
         name: '系统管理',
         path: '/setting',
+        key: 'Setting',
         parentId: 0,
         redirect: '/',
         hideInMenu: false,
@@ -33,6 +34,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             menuId: 2,
             name: '账号管理',
             path: '/admin/user',
+            key: 'AdminUser',
             parentId: 1,
             redirect: '/',
             hideInMenu: false,
@@ -46,6 +48,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             menuId: 3,
             name: '角色管理',
             path: '/admin/role',
+            key: 'AdminRole',
             parentId: 1,
             redirect: '/',
             hideInMenu: false,
@@ -59,6 +62,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             menuId: 4,
             name: '菜单管理',
             path: '/admin/menu',
+            key: 'AdminMenu',
             parentId: 1,
             redirect: '/',
             hideInMenu: false,
@@ -72,6 +76,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             menuId: 5,
             name: '权限管理',
             path: '/admin/permission',
+            key: 'AdminPermission',
             parentId: 1,
             redirect: '/',
             hideInMenu: false,
@@ -85,6 +90,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             menuId: 6,
             name: '接口管理',
             path: '/admin/api',
+            key: 'AdminApi',
             parentId: 1,
             redirect: '/',
             hideInMenu: false,
@@ -111,10 +117,32 @@ const menuTree: ResponseListType = {
     rows: menuTreeData,
   },
 };
+
+const menuDetail: ResponseDetailType = {
+  code: 0,
+  message: 'success',
+  type: 'SUCCESS',
+  data: {
+    menuId: 1,
+    name: '系统管理',
+    path: '/setting',
+    key: 'Setting',
+    parentId: 0,
+    redirect: '/',
+    hideInMenu: false,
+    hideChildrenInMenu: false,
+    enabled: true,
+    enabledText: '启用',
+    createTime: '',
+    modifyTime: '',
+  },
+};
+
 export default {
   'POST /api/admin/menu/tree': menuTree,
   'POST /api/admin/menu/add': success,
   'POST /api/admin/menu/edit': success,
   'POST /api/admin/menu/enable': success,
   'POST /api/admin/menu/delete': success,
+  'POST /api/admin/menu/detail': menuDetail,
 };
