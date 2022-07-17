@@ -128,3 +128,19 @@ export async function adminRoleDelete(params: RequestAdminRoleDeleteParamsType) 
     data: params,
   });
 }
+
+/************************************************************/
+/**
+ * 启用禁用
+ */
+export type RequestAdminRoleEnableParamsType = {
+  roleId: number;
+  enabled: boolean;
+};
+
+export async function adminRoleEnable(params: RequestAdminRoleEnableParamsType) {
+  return request<ResponseBodyType>(APIAdminRoles.enable.url, {
+    method: APIAdminRoles.enable.method,
+    data: params,
+  });
+}

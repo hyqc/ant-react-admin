@@ -9,34 +9,29 @@ import {
   Col,
   Space,
   Table,
-  Pagination,
   message,
   Popconfirm,
   Switch,
 } from 'antd';
 import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
+import { ResponseListDataType, ResponseListType } from '@/services/apis/types';
 import {
-  ResponseListDataType,
-  ResponseListType,
-  ResponsePageInfoDataType,
-} from '@/services/apis/types';
-import {
-  adminRoleDelete,
-  adminRoleDetail,
-  adminRoleEnable,
-  adminRoleList,
-  RequestAdminRoleEnableParamsType,
-  RequestAdminRoleListParamsType,
-  ResponseAdminRoleListItemType,
-} from '@/services/apis/admin/role';
+  adminMenuDelete,
+  adminMenuDetail,
+  adminMenuEnable,
+  adminMenuTree,
+  RequestAdminMenuEnableParamsType,
+  RequestAdminMenuListParamsType,
+  RequestAdminMenuTreeParamsType,
+  ResponseAdminMenuListItemType,
+} from '@/services/apis/admin/menu';
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import { ColumnsType } from 'antd/lib/table';
 import Authorization from '@/components/Autuorization';
-import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from './common';
-import AdminRoleAddModal, { NoticeModalPropsType } from './add';
-import AdminRoleEditModal from './edit';
-import AdminRoleDetailModal from './detail';
+import AdminMenuAddModal, { NoticeModalPropsType } from './add';
+import AdminMenuEditModal from './edit';
+import AdminMenuDetailModal from './detail';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -44,51 +39,88 @@ const FormSearchRowColSpan = 5.2;
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
-  const [pageInfo, setPageInfo] = useState<ResponsePageInfoDataType>();
   const [detailData, setDetailData] = useState<any>();
-  const [rowsData, setRowsData] = useState<ResponseAdminRoleListItemType[]>([]);
+  const [rowsData, setRowsData] = useState<ResponseAdminMenuListItemType[]>([]);
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
 
   const columns: ColumnsType<any> = [
     {
-      title: 'ID',
-      dataIndex: 'roleId',
-      width: '6rem',
-      align: 'center',
-      sorter: true,
+      title: '名称',
+      align: 'left',
+      dataIndex: 'name',
+      width: '20rem',
     },
     {
-      title: '名称',
-      align: 'center',
-      dataIndex: 'roleName',
+      title: '路由',
+      align: 'left',
+      dataIndex: 'path',
       width: '12rem',
     },
     {
-      title: '创建时间',
-      align: 'center',
-      dataIndex: 'createTime',
-      sorter: true,
+      title: '菜单',
+      width: '6rem',
+      align: 'left',
+      dataIndex: 'hideInMenu',
+      render(enabled: boolean, record: ResponseAdminMenuListItemType) {
+        if (record.path == '/') {
+          return <></>;
+        }
+        return (
+          <Popconfirm
+            title={`确定在菜单中${record.hideInMenu ? '显示' : '隐藏'}该项吗？`}
+            okText="确定"
+            cancelText="取消"
+            onConfirm={() => updateMenuStatus(record, 'hideInMenu')}
+          >
+            <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} checked={enabled} />
+          </Popconfirm>
+        );
+      },
+    },
+    {
+      title: '子菜单',
+      width: '6rem',
+      align: 'left',
+      dataIndex: 'hideChildrenInMenu',
+      render(enabled: boolean, record: ResponseAdminMenuListItemType) {
+        if (record.path == '/') {
+          return <></>;
+        }
+        return (
+          <Popconfirm
+            title={`确定在菜单中${record.hideInMenu ? '显示' : '隐藏'}其子菜单项吗？`}
+            okText="确定"
+            cancelText="取消"
+            onConfirm={() => updateMenuStatus(record, 'hideChildrenInMenu')}
+          >
+            <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} checked={enabled} />
+          </Popconfirm>
+        );
+      },
     },
     {
       title: '更新时间',
-      align: 'center',
+      width: '12rem',
+      align: 'left',
       dataIndex: 'modifyTime',
-      sorter: true,
     },
     {
       title: '状态',
       width: '6rem',
       align: 'center',
       dataIndex: 'enabled',
-      render(enabled: boolean, record: ResponseAdminRoleListItemType) {
+      render(enabled: boolean, record: ResponseAdminMenuListItemType) {
+        if (record.path == '/') {
+          return <></>;
+        }
         return (
           <Popconfirm
-            title={`确定要${record.enabled ? '禁用' : '启用'}该角色吗？`}
+            title={`确定要${record.enabled ? '禁用' : '启用'}该菜单吗？`}
             okText="确定"
             cancelText="取消"
-            onConfirm={() => updateEnabled(record)}
+            onConfirm={() => updateMenuStatus(record, 'enabled')}
           >
             <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
           </Popconfirm>
@@ -98,7 +130,7 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
-      render(text, record: ResponseAdminRoleListItemType) {
+      render(text, record: ResponseAdminMenuListItemType) {
         return (
           <Space>
             <Authorization>
@@ -124,7 +156,7 @@ const Admin: React.FC = () => {
             <Authorization>
               {!record.enabled ? (
                 <Popconfirm
-                  title="确定要删除该角色吗？"
+                  title="确定要删除该菜单吗？"
                   okText="确定"
                   cancelText="取消"
                   onConfirm={() => onDelete(record)}
@@ -143,20 +175,13 @@ const Admin: React.FC = () => {
     },
   ];
 
-  // 获取角色列表
-  function getRows(data?: RequestAdminRoleListParamsType) {
+  // 获取菜单列表
+  function getRows(data?: RequestAdminMenuTreeParamsType) {
     setLoading(true);
-    adminRoleList(data)
+    adminMenuTree(data)
       .then((res: ResponseListType) => {
-        const data: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
-        const rows = data?.rows || [];
-        const pageInfo: ResponsePageInfoDataType = {
-          total: data.total,
-          pageSize: data.pageSize,
-          pageNo: data.pageNo,
-        };
-        setRowsData(rows);
-        setPageInfo(pageInfo);
+        const resData: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
+        setRowsData(resData.rows);
       })
       .catch((err) => {
         console.log('error', err);
@@ -168,43 +193,40 @@ const Admin: React.FC = () => {
 
   function tableChange(pagination: any, filters: any, sorter: any) {
     getRows({
-      ...pageInfo,
       ...form.getFieldsValue(),
-      sortField: sorter.field,
-      sortType: sorter.order,
     });
   }
 
-  // 角色状态更新
-  function updateEnabled(record: ResponseAdminRoleListItemType) {
-    const updateData: RequestAdminRoleEnableParamsType = {
-      roleId: record.roleId,
-      enabled: !record.enabled,
+  // 菜单状态更新
+  function updateMenuStatus(record: ResponseAdminMenuListItemType, field: string) {
+    const updateData: RequestAdminMenuEnableParamsType = {
+      menuId: record.menuId,
     };
-    adminRoleEnable(updateData).then((res) => {
+    updateData[field] = !record[field];
+    adminMenuEnable(updateData).then((res) => {
       message.success(res.message, MessageDuritain, () => {
-        getRows({ ...pageInfo, ...form.getFieldsValue() });
+        getRows({ ...form.getFieldsValue() });
       });
     });
   }
 
-  // 角色详情
-  function openDetailModal(record: ResponseAdminRoleListItemType) {
-    adminRoleDetail({ roleId: record.roleId }).then((res) => {
+  // 菜单详情
+  function openDetailModal(record: ResponseAdminMenuListItemType) {
+    adminMenuDetail({ menuId: record.menuId }).then((res) => {
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
   }
 
-  // 角色编辑
-  function openEditModal(record: ResponseAdminRoleListItemType) {
-    adminRoleDetail({ roleId: record.roleId }).then((res) => {
+  // 菜单编辑
+  function openEditModal(record: ResponseAdminMenuListItemType) {
+    adminMenuDetail({ menuId: record.menuId }).then((res) => {
       setDetailData(res.data);
       setEditModalStatus(true);
     });
   }
 
-  // 角色添加
+  // 菜单添加
   function openAddModal() {
     setAddModalStatus(true);
   }
@@ -212,7 +234,7 @@ const Admin: React.FC = () => {
   function noticeAddModal(data: NoticeModalPropsType) {
     setAddModalStatus(false);
     if (data.reload) {
-      getRows({ ...pageInfo, ...form.getFieldsValue() });
+      getRows({ ...form.getFieldsValue() });
     }
   }
 
@@ -220,7 +242,7 @@ const Admin: React.FC = () => {
     setDetailData(undefined);
     setDetailModalStatus(false);
     if (data.reload) {
-      getRows({ ...pageInfo, ...form.getFieldsValue() });
+      getRows({ ...form.getFieldsValue() });
     }
   }
 
@@ -228,21 +250,21 @@ const Admin: React.FC = () => {
     setDetailData(undefined);
     setEditModalStatus(false);
     if (data.reload) {
-      getRows({ ...pageInfo, ...form.getFieldsValue() });
+      getRows({ ...form.getFieldsValue() });
     }
   }
 
-  // 删除角色
-  function onDelete(record: ResponseAdminRoleListItemType) {
-    adminRoleDelete({ roleId: record.roleId, enabled: record.enabled }).then((res) => {
+  // 删除菜单
+  function onDelete(record: ResponseAdminMenuListItemType) {
+    adminMenuDelete({ menuId: record.menuId, enabled: record.enabled }).then((res) => {
       message.success(res.message, MessageDuritain);
-      getRows({ ...pageInfo, ...form.getFieldsValue() });
+      getRows({ ...form.getFieldsValue() });
     });
   }
 
   // 管理员列表搜索
-  function onSearchFinish(values: RequestAdminRoleListParamsType) {
-    getRows({ ...values, ...pageInfo, pageNum: 1 });
+  function onSearchFinish(values: RequestAdminMenuListParamsType) {
+    getRows({ ...values });
   }
 
   // 管理员搜索重置
@@ -297,45 +319,44 @@ const Admin: React.FC = () => {
         <Space style={{ marginBottom: '1rem' }}>
           <Button type="primary" onClick={openAddModal}>
             <PlusOutlined />
-            新建角色
+            新建菜单
           </Button>
         </Space>
 
         {/* table */}
-        <Table
-          sticky
-          rowKey="roleId"
-          scroll={{ x: 'auto' }}
-          loading={loading}
-          columns={columns}
-          pagination={false}
-          dataSource={rowsData}
-          onChange={tableChange}
-        ></Table>
-        <Pagination
-          showQuickJumper
-          defaultCurrent={DEFAULT_PAGE_NO}
-          style={{ marginTop: '1rem', textAlign: 'right' }}
-          total={pageInfo?.total}
-          current={pageInfo?.pageNo || DEFAULT_PAGE_NO}
-          pageSize={pageInfo?.pageSize || DEFAULT_PAGE_SIZE}
-          showTotal={(total) => `共 ${total} 条数据`}
-          onChange={(pageNo) => getRows({ pageNo, ...form.getFieldsValue() })}
-          onShowSizeChange={(pageSize) => getRows({ pageSize, ...form.getFieldsValue() })}
-        />
+        {rowsData !== undefined && rowsData.length > 0 ? (
+          <Table
+            sticky
+            key={'menuId'}
+            rowKey="menuId"
+            scroll={{ x: 'auto' }}
+            expandable={{
+              defaultExpandAllRows: true,
+              fixed: 'left',
+              indentSize: 24,
+            }}
+            loading={loading}
+            columns={columns}
+            pagination={false}
+            dataSource={rowsData}
+            onChange={tableChange}
+          ></Table>
+        ) : (
+          <></>
+        )}
       </Content>
 
       {/* modal */}
 
-      <AdminRoleAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
+      <AdminMenuAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
 
-      <AdminRoleDetailModal
+      <AdminMenuDetailModal
         modalStatus={detailModalStatus}
         detailData={detailData}
         noticeModal={noticeDetailModal}
       />
 
-      <AdminRoleEditModal
+      <AdminMenuEditModal
         modalStatus={editModalStatus}
         detailData={detailData}
         noticeModal={noticeEditModal}

@@ -21,15 +21,15 @@ import type { Gutter } from 'antd/lib/grid/row';
 import { ColumnsType } from 'antd/lib/table';
 import {
   adminUserList,
-  adminUserEdit,
   ResponseAdminUserListItemRolesItemType,
   adminUserDetail,
   adminUserDelete,
+  adminUserEnable,
+  RequestAdminUserEnableParamsType,
 } from '@/services/apis/admin/user';
 import type {
   ResponseAdminUserListItemType,
   RequestAdminUserListParamsType,
-  RequestAdminUserEditParamsType,
 } from '@/services/apis/admin/user';
 import type {
   ResponseBodyType,
@@ -147,14 +147,14 @@ const Admin: React.FC = () => {
     },
     {
       title: '状态',
-      width: '4rem',
+      width: '6rem',
       align: 'center',
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminUserListItemType) {
         return (
           <Authorization>
             <Popconfirm
-              title={`确实要${record.enabledText}该管理员吗？`}
+              title={`确定要${record.enabled ? '禁用' : '启用'}该管理员吗？`}
               okText="确定"
               cancelText="取消"
               onConfirm={() => updateEnabled(record)}
@@ -216,7 +216,7 @@ const Admin: React.FC = () => {
             <Authorization>
               {!record.enabled ? (
                 <Popconfirm
-                  title="确实要删除该管理员吗？"
+                  title="确定要删除该管理员吗？"
                   okText="确定"
                   cancelText="取消"
                   onConfirm={() => onDelete(record)}
@@ -260,11 +260,11 @@ const Admin: React.FC = () => {
 
   // 管理员状态更新
   function updateEnabled(record: ResponseAdminUserListItemType) {
-    const updateData: RequestAdminUserEditParamsType = {
+    const updateData: RequestAdminUserEnableParamsType = {
       adminId: record.adminId,
       enabled: !record.enabled,
     };
-    adminUserEdit(updateData).then((res) => {
+    adminUserEnable(updateData).then((res) => {
       message.success(res.message, MessageDuritain, () => {
         getRows({ ...pageInfo, ...form.getFieldsValue() });
       });
@@ -471,6 +471,7 @@ const Admin: React.FC = () => {
 
         {/* table */}
         <Table
+          sticky
           rowKey="adminId"
           scroll={{ x: 'auto' }}
           loading={loading}

@@ -22,6 +22,12 @@
         component: './Admin/Role',
       },
       {
+        path: '/admin/menu',
+        name: 'menu',
+        icon: 'UnlockOutlined',
+        component: './Admin/Menu',
+      },
+      {
         path: '/admin/permission',
         name: 'permission',
         icon: 'UnlockOutlined',
@@ -32,6 +38,19 @@
         name: 'api',
         icon: 'ApiOutlined',
         component: './Admin/Api',
+      },
+    ],
+  },
+  {
+    name: 'doc',
+    icon: 'book',
+    layout: false,
+    routes: [
+      {
+        path: '/doc/adminMenu.md',
+        layout: false,
+        name: 'menu',
+        icon: 'UserOutlined',
       },
     ],
   },

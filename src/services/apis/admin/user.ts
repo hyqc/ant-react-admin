@@ -164,3 +164,19 @@ export async function adminUserAssignRoles(params: RequestAdminUserAssignRolesPa
     data: params,
   });
 }
+
+/************************************************************/
+/**
+ * 启用禁用
+ */
+export type RequestAdminUserEnableParamsType = {
+  adminId: number;
+  enabled: boolean;
+};
+
+export async function adminUserEnable(params: RequestAdminUserEnableParamsType) {
+  return request<ResponseBodyType>(APIAdminUsers.enable.url, {
+    method: APIAdminUsers.enable.method,
+    data: params,
+  });
+}

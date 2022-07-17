@@ -91,6 +91,10 @@ export const APIAdminRoles = {
 };
 
 export const APIAdminMenus = {
+  tree: {
+    url: '/admin/menu/tree',
+    method: POST,
+  },
   list: {
     url: '/admin/menu/list',
     method: POST,
