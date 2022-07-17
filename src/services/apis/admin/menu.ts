@@ -45,6 +45,7 @@ export type ResponseAdminMenuListItemType = {
   enabledText: string; //
   createTime: string; // 创建时间 "2021-12-01 12:23:21"
   modifyTime: string; // 最后更新时间
+  level?: number; // 菜单层级，/ 为0
   describe?: string; // 描述
   authority?: string; // 数据库中不设置
   children?: ResponseAdminMenuListItemType[];
@@ -96,8 +97,8 @@ export type RequestAdminMenuDetailParamsType = {
 };
 
 export type ResponseAdminMenuDetailType = {
-  id: number; // 菜单ID，唯一键
-  pid: number; // 父菜单ID
+  menuId: number; // 菜单ID，唯一键
+  parentId: number; // 父菜单ID
   name: string; // 菜单名称，唯一键
   path: string; // 菜单路由
   redirect: string; // 重定向路由
@@ -106,8 +107,8 @@ export type ResponseAdminMenuDetailType = {
   hideChildrenInMenu?: boolean;
   enabled: boolean; // 菜单状态, true：启用，false：禁用，
   enabledText: string; //
-  create_time: string; // 创建时间 "2021-12-01 12:23:21"
-  modify_time: string; // 最后更新时间
+  createTime: string; // 创建时间 "2021-12-01 12:23:21"
+  modifyTime: string; // 最后更新时间
   icon?: string;
   locale?: string;
   [key: string]: any;

@@ -70,14 +70,16 @@ const Admin: React.FC = () => {
           return <></>;
         }
         return (
-          <Popconfirm
-            title={`确定在菜单中${record.hideInMenu ? '显示' : '隐藏'}该项吗？`}
-            okText="确定"
-            cancelText="取消"
-            onConfirm={() => updateMenuStatus(record, 'hideInMenu')}
-          >
-            <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} checked={enabled} />
-          </Popconfirm>
+          <Authorization>
+            <Popconfirm
+              title={`确定在菜单中${record.hideInMenu ? '显示' : '隐藏'}该项吗？`}
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => updateMenuStatus(record, 'hideInMenu')}
+            >
+              <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} checked={enabled} />
+            </Popconfirm>
+          </Authorization>
         );
       },
     },
@@ -91,14 +93,16 @@ const Admin: React.FC = () => {
           return <></>;
         }
         return (
-          <Popconfirm
-            title={`确定在菜单中${record.hideInMenu ? '显示' : '隐藏'}其子菜单项吗？`}
-            okText="确定"
-            cancelText="取消"
-            onConfirm={() => updateMenuStatus(record, 'hideChildrenInMenu')}
-          >
-            <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} checked={enabled} />
-          </Popconfirm>
+          <Authorization>
+            <Popconfirm
+              title={`确定在菜单中${record.hideInMenu ? '显示' : '隐藏'}其子菜单项吗？`}
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => updateMenuStatus(record, 'hideChildrenInMenu')}
+            >
+              <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} checked={enabled} />
+            </Popconfirm>
+          </Authorization>
         );
       },
     },
@@ -118,14 +122,16 @@ const Admin: React.FC = () => {
           return <></>;
         }
         return (
-          <Popconfirm
-            title={`确定要${record.enabled ? '禁用' : '启用'}该菜单吗？`}
-            okText="确定"
-            cancelText="取消"
-            onConfirm={() => updateMenuStatus(record, 'enabled')}
-          >
-            <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
-          </Popconfirm>
+          <Authorization>
+            <Popconfirm
+              title={`确定要${record.enabled ? '禁用' : '启用'}该菜单吗？`}
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => updateMenuStatus(record, 'enabled')}
+            >
+              <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
+            </Popconfirm>
+          </Authorization>
         );
       },
     },
@@ -151,7 +157,7 @@ const Admin: React.FC = () => {
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
+                onClick={() => openAddModal(record)}
               >
                 添加子菜单
               </Button>
@@ -242,7 +248,12 @@ const Admin: React.FC = () => {
   }
 
   // 菜单添加
-  function openAddModal() {
+  function openAddModal(record?: ResponseAdminMenuListItemType) {
+    if (record !== undefined) {
+      setDetailData({ menuId: record.menuId });
+    } else {
+      setDetailData(undefined);
+    }
     setAddModalStatus(true);
   }
 
@@ -332,7 +343,7 @@ const Admin: React.FC = () => {
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
-          <Button type="primary" onClick={openAddModal}>
+          <Button type="primary" onClick={() => openAddModal()}>
             <PlusOutlined />
             新建菜单
           </Button>
@@ -365,6 +376,7 @@ const Admin: React.FC = () => {
 
       <AdminMenuAddModal
         menuTreeData={menuTreeSelectData}
+        parentId={detailData?.menuId}
         modalStatus={addModalStatus}
         noticeModal={noticeAddModal}
       />

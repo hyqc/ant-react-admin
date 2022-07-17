@@ -15,13 +15,14 @@ export type NoticeModalPropsType = {
 
 export type AddModalPropsType = {
   modalStatus: boolean;
+  parentId?: number;
   menuTreeData: ResponseAdminMenuListItemType[];
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
 const AddModal: React.FC<AddModalPropsType> = (props) => {
   const [form] = Form.useForm();
-  const { modalStatus, menuTreeData, noticeModal } = props;
+  const { modalStatus, parentId, menuTreeData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   const rules: any = {
     name: [{ required: true, type: 'string', message: '请输入菜单名称!' }],
@@ -57,6 +58,10 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
     noticeModal({ reload: false });
   }
 
+  useEffect(() => {
+    form.resetFields();
+  }, [parentId]);
+
   return (
     <Modal
       forceRender
@@ -73,8 +78,8 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="父级菜单" name="pid" initialValue={0} hasFeedback>
-          <MenuTreeSelect data={menuTreeData} />
+        <Form.Item label="父级菜单" name="pid" initialValue={parentId || 0} hasFeedback>
+          <MenuTreeSelect data={menuTreeData} disabled={parentId !== undefined && parentId > 0} />
         </Form.Item>
         <Form.Item label="名称" name="name" initialValue={''} hasFeedback rules={rules.name}>
           <Input allowClear />
