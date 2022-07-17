@@ -147,13 +147,8 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
         <Form.Item label="邮箱" name="email" rules={rules.email}>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="状态" name="enabled">
-          <Switch
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            defaultChecked={true}
-            checked
-          />
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
         <Form.Item label="头像" name="avatar" initialValue={true}>
           <ImgCrop rotate>

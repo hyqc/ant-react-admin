@@ -40,7 +40,7 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
       onClose={onClose}
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="roleName">
+        <Form.Item label="名称" name="name">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="路由" name="path">
@@ -64,32 +64,14 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
         <Form.Item label="最后更新时间" name="modifyTime">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="菜单中隐藏" name="hideInMenu">
-          <Switch
-            disabled
-            checkedChildren={'隐藏'}
-            unCheckedChildren={'显示'}
-            defaultChecked={false}
-            checked
-          />
+        <Form.Item label="菜单中隐藏" name="hideInMenu" valuePropName="checked">
+          <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
         </Form.Item>
-        <Form.Item label="菜单中隐藏子菜单" name="hideChildrenInMenu">
-          <Switch
-            disabled
-            checkedChildren={'隐藏'}
-            unCheckedChildren={'显示'}
-            defaultChecked={false}
-            checked
-          />
+        <Form.Item label="菜单中隐藏子菜单" name="hideChildrenInMenu" valuePropName="checked">
+          <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
         </Form.Item>
-        <Form.Item label="状态" name="enabled">
-          <Switch
-            disabled
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            defaultChecked={true}
-            checked
-          />
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
       </Form>
     </Drawer>

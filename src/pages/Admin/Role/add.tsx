@@ -74,13 +74,8 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
         >
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="状态" name="enabled" initialValue={true}>
-          <Switch
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            defaultChecked={true}
-            checked
-          />
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
       </Form>
     </Modal>

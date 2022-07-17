@@ -93,29 +93,14 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
         <Form.Item label="描述" name="describe" initialValue={''} hasFeedback>
           <Input.TextArea allowClear />
         </Form.Item>
-        <Form.Item label="菜单中隐藏" name="hideInMenu" initialValue={true}>
-          <Switch
-            checkedChildren={'隐藏'}
-            unCheckedChildren={'显示'}
-            defaultChecked={false}
-            checked
-          />
+        <Form.Item label="菜单中隐藏" name="hideInMenu" valuePropName="checked">
+          <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
         </Form.Item>
-        <Form.Item label="菜单中隐藏子菜单" name="hideChildrenInMenu" initialValue={true}>
-          <Switch
-            checkedChildren={'隐藏'}
-            unCheckedChildren={'显示'}
-            defaultChecked={false}
-            checked
-          />
+        <Form.Item label="菜单中隐藏子菜单" name="hideChildrenInMenu" valuePropName="checked">
+          <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
         </Form.Item>
-        <Form.Item label="状态" name="enabled" initialValue={true}>
-          <Switch
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            defaultChecked={false}
-            checked
-          />
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
       </Form>
     </Modal>

@@ -202,7 +202,6 @@ const Admin: React.FC = () => {
       .then((res: ResponseListType) => {
         const resData: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
         setRowsData(resData.rows);
-        setMenuTreeSelectData(menuTreeData(resData.rows));
       })
       .catch((err) => {
         console.log('error', err);
@@ -234,6 +233,7 @@ const Admin: React.FC = () => {
   // 菜单详情
   function openDetailModal(record: ResponseAdminMenuListItemType) {
     adminMenuDetail({ menuId: record.menuId }).then((res) => {
+      setMenuTreeSelectData(menuTreeData(rowsData));
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
@@ -242,6 +242,7 @@ const Admin: React.FC = () => {
   // 菜单编辑
   function openEditModal(record: ResponseAdminMenuListItemType) {
     adminMenuDetail({ menuId: record.menuId }).then((res) => {
+      setMenuTreeSelectData(menuTreeData(rowsData, record.menuId));
       setDetailData(res.data);
       setEditModalStatus(true);
     });
@@ -249,6 +250,7 @@ const Admin: React.FC = () => {
 
   // 菜单添加
   function openAddModal(record?: ResponseAdminMenuListItemType) {
+    setMenuTreeSelectData(menuTreeData(rowsData));
     if (record !== undefined) {
       setDetailData({ menuId: record.menuId });
     } else {
@@ -388,6 +390,7 @@ const Admin: React.FC = () => {
       />
 
       <AdminMenuEditModal
+        menuTreeData={menuTreeSelectData}
         modalStatus={editModalStatus}
         detailData={detailData}
         noticeModal={noticeEditModal}

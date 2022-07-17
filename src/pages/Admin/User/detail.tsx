@@ -68,13 +68,8 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
             })}
           </span>
         </Form.Item>
-        <Form.Item label="状态" name="enabled">
-          <Switch
-            disabled
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            checked={detailData?.enabled}
-          />
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
         <Form.Item label="登录次数" name="totalLogin">
           <Input disabled style={inputStyle} />

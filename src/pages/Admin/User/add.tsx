@@ -154,13 +154,8 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
         <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email} hasFeedback>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="状态" name="enabled" initialValue={true}>
-          <Switch
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            defaultChecked={true}
-            checked
-          />
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
         <Form.Item label="头像" name="avatar" initialValue={''}>
           <ImgCrop rotate>

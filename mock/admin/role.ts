@@ -73,7 +73,7 @@ const rolesList: ResponseListType = {
 const roleDetailData: ResponseAdminRoleListItemType = {
   roleId: 2,
   roleName: '管理员',
-  enabled: false,
+  enabled: true,
   enabledText: '启用',
   createTime: '2022-07-16 12:34:56',
   modifyTime: '2022-07-16 12:34:56',
