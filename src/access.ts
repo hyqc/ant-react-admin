@@ -1,4 +1,4 @@
-import { ReponseCurrentAdminUserDetailType } from '@/services/apis/account';
+import { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
 import { history } from 'umi';
 // import routes from '../config/routes';
 

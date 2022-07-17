@@ -1,6 +1,6 @@
 // adminUsers 管理员管理接口
 import { request } from 'umi';
-import { APIAdminUsers } from '../api';
+import { APIAdminUsers } from './api';
 import { ResponseBodyType } from '../types';
 
 /************************************************************/

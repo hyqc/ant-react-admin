@@ -3,7 +3,7 @@ import {
   RequestAdminUserEditParamsType,
   ResponseAdminUserDetailType,
 } from '@/services/apis/admin/user';
-import { APIAccount } from '@/services/apis/api';
+import { APIAccount } from '@/services/apis/admin/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';

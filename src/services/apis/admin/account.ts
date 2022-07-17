@@ -2,7 +2,6 @@ import { PureSettings } from '@ant-design/pro-layout/lib/defaultSettings';
 import { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { request } from 'umi';
 import { APIAccount } from './api';
-import type { ResponseType } from './types';
 
 // 当前登录返回的用户详情
 export type ReponseCurrentAdminUserDetailType = {

@@ -4,7 +4,7 @@
 
 ### 接口路径定义规则
 
-1. 统一在 src/services/apis/api.ts 中定义
+1. 统一在 src/services/apis/admin/api.ts 中定义
 2. 按照一个模块定义，以管理员管理页面示例
 
 ```javascript

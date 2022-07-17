@@ -2,8 +2,8 @@ import { Button, Card, Checkbox, Form, Input, message } from 'antd';
 import React, { useState } from 'react';
 import { useIntl, history, SelectLang, useModel } from 'umi';
 import styles from './index.less';
-import { login } from '@/services/apis/account';
-import type { RequestLoginParamsType } from '@/services/apis/account';
+import { login } from '@/services/apis/admin/account';
+import type { RequestLoginParamsType } from '@/services/apis/admin/account';
 import { AdminUserPassword } from '@/services/common/pattern';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 

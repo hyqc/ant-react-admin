@@ -1,7 +1,7 @@
 // adminMenus 菜单管理接口
 import { request } from 'umi';
-import { APIAdminMenus } from '../api';
-import type { ResponseType } from '../types';
+import { APIAdminMenus } from './api';
+import type { ResponseBodyType } from '../types';
 
 export type ResponseAdminMenuListItemType = {
   id: number; // 菜单ID，唯一键
@@ -50,7 +50,7 @@ export type RequestAdminMenuListParamsType = {
 };
 
 export async function adminMenuList(params?: RequestAdminMenuListParamsType) {
-  return request<ResponseType>(APIAdminMenus.list.url, {
+  return request<ResponseBodyType>(APIAdminMenus.list.url, {
     method: APIAdminMenus.list.method,
     data: params,
   });
@@ -71,7 +71,7 @@ export type RequestAdminMenuAddParamsType = {
 };
 
 export async function adminMenuAdd(params: RequestAdminMenuAddParamsType) {
-  return request<ResponseType>(APIAdminMenus.add.url, {
+  return request<ResponseBodyType>(APIAdminMenus.add.url, {
     method: APIAdminMenus.add.method,
     data: params,
   });
@@ -93,7 +93,7 @@ export type RequestAdminMenuEditParamsType = {
 };
 
 export async function adminMenuEdit(params: RequestAdminMenuEditParamsType) {
-  return request<ResponseType>(APIAdminMenus.edit.url, {
+  return request<ResponseBodyType>(APIAdminMenus.edit.url, {
     method: APIAdminMenus.edit.method,
     data: params,
   });
@@ -104,7 +104,7 @@ export type RequestAdminMenuDetailParamsType = {
 };
 
 export async function adminMenuGet(params: RequestAdminMenuDetailParamsType) {
-  return request<ResponseType>(APIAdminMenus.get.url, {
+  return request<ResponseBodyType>(APIAdminMenus.get.url, {
     method: APIAdminMenus.get.method,
     data: params,
   });
@@ -115,7 +115,7 @@ export type RequestAdminMenuDeleteParamsType = {
 };
 
 export async function adminMenuDelete(params: RequestAdminMenuDeleteParamsType) {
-  return request<ResponseType>(APIAdminMenus.delete.url, {
+  return request<ResponseBodyType>(APIAdminMenus.delete.url, {
     method: APIAdminMenus.delete.method,
     data: params,
   });

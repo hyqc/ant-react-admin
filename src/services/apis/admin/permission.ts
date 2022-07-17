@@ -1,10 +1,10 @@
 // adminPermissions 管理员管理接口
 import { request } from 'umi';
-import { APIAdminPermissions } from '../api';
-import type { ResponseType } from '../types';
+import { APIAdminPermissions } from './api';
+import type { ResponseBodyType } from '../types';
 
 export async function adminPermissionAll() {
-  return request<ResponseType>(APIAdminPermissions.all.url, {
+  return request<ResponseBodyType>(APIAdminPermissions.all.url, {
     method: APIAdminPermissions.all.method,
     data: {},
   });
@@ -15,7 +15,7 @@ export type RequestAdminPermissionListParamsType = {
 };
 
 export async function adminPermissionList(params?: RequestAdminPermissionListParamsType) {
-  return request<ResponseType>(APIAdminPermissions.list.url, {
+  return request<ResponseBodyType>(APIAdminPermissions.list.url, {
     method: APIAdminPermissions.list.method,
     data: params,
   });
@@ -27,7 +27,7 @@ export type RequestAdminPermissionAddParamsType = {
 };
 
 export async function adminPermissionAdd(params: RequestAdminPermissionAddParamsType) {
-  return request<ResponseType>(APIAdminPermissions.add.url, {
+  return request<ResponseBodyType>(APIAdminPermissions.add.url, {
     method: APIAdminPermissions.add.method,
     data: params,
   });

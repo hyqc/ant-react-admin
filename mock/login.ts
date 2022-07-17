@@ -1,4 +1,4 @@
-import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/account';
+import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
 import { MenuDataItem } from '@umijs/route-utils';
 
 const AvatarImage =

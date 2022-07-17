@@ -1,6 +1,6 @@
 // adminRoles 管理员角色接口
 import { request } from 'umi';
-import { APIAdminRoles } from '../api';
+import { APIAdminRoles } from './api';
 import { ResponseBodyType } from '../types';
 
 /************************************************************/

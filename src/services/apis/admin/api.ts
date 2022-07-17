@@ -1,4 +1,4 @@
-import { POST, GET } from './config';
+import { POST, GET } from '../config';
 
 export type APIItemType = {
   url: string;
