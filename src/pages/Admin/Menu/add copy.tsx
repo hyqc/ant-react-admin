@@ -1,10 +1,10 @@
-import { adminMenuEdit } from '@/services/apis/admin/menu';
 import { Form, Input, message, Modal, Switch } from 'antd';
 import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import {
-  ResponseAdminMenuDetailType,
+  adminMenuAdd,
+  RequestAdminMenuAddParamsType,
   ResponseAdminMenuListItemType,
 } from '@/services/apis/admin/menu';
 import MenuTreeSelect from './components/MenuTreeSelect';
@@ -13,18 +13,17 @@ export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type EditModalPropsType = {
+export type AddModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminMenuDetailType;
+  parentId?: number;
   menuTreeData: ResponseAdminMenuListItemType[];
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const EditModal: React.FC<EditModalPropsType> = (props) => {
+const AddModal: React.FC<AddModalPropsType> = (props) => {
   const [form] = Form.useForm();
-  const { modalStatus, detailData, menuTreeData, noticeModal } = props;
+  const { modalStatus, parentId, menuTreeData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-
   const rules: any = {
     name: [{ required: true, type: 'string', message: '请输入菜单名称!' }],
     path: [{ required: true, type: 'string', message: '请输入菜单路由!' }],
@@ -36,9 +35,13 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
     form
       .validateFields()
       .then((values) => {
-        adminMenuEdit({ ...values, menuId: detailData.menuId }).then((res) => {
+        const data: RequestAdminMenuAddParamsType = {
+          ...values,
+        };
+        adminMenuAdd(data).then((res) => {
           message.success(res.message, MessageDuritain, () => {
             noticeModal({ reload: true });
+            form.resetFields();
           });
         });
       })
@@ -51,21 +54,22 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
   }
 
   function handleCancel() {
+    form.resetFields();
     noticeModal({ reload: false });
   }
 
   useEffect(() => {
-    form.setFieldsValue(detailData);
-  }, [detailData]);
+    form.resetFields();
+  }, [parentId]);
 
   return (
     <Modal
       forceRender
-      title="编辑菜单"
+      title="新建菜单"
       width={DefaultModalWidth}
       destroyOnClose={true}
-      maskClosable={false}
       getContainer={false}
+      maskClosable={false}
       visible={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
@@ -74,25 +78,25 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="父级菜单" name="parentId" hasFeedback>
-          <MenuTreeSelect data={menuTreeData} />
+        <Form.Item label="父级菜单" name="parentId" initialValue={parentId || 0} hasFeedback>
+          <MenuTreeSelect data={menuTreeData} disabled={parentId !== undefined && parentId > 0} />
         </Form.Item>
-        <Form.Item label="名称" name="name" hasFeedback rules={rules.name}>
+        <Form.Item label="名称" name="name" initialValue={''} hasFeedback rules={rules.name}>
           <Input />
         </Form.Item>
-        <Form.Item label="路由" name="path" hasFeedback rules={rules.path}>
+        <Form.Item label="路由" name="path" initialValue={''} hasFeedback rules={rules.path}>
           <Input />
         </Form.Item>
-        <Form.Item label="键名" name="key" hasFeedback rules={rules.key}>
+        <Form.Item label="键名" name="key" initialValue={''} hasFeedback rules={rules.key}>
           <Input />
         </Form.Item>
-        <Form.Item label="描述" name="describe" hasFeedback>
+        <Form.Item label="描述" name="describe" initialValue={''} hasFeedback>
           <Input.TextArea />
         </Form.Item>
         <Form.Item label="菜单中隐藏" name="hideInMenu" valuePropName="checked">
           <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
         </Form.Item>
-        <Form.Item label="隐藏子菜单" name="hideChildrenInMenu" valuePropName="checked">
+        <Form.Item label="菜单中隐藏子菜单" name="hideChildrenInMenu" valuePropName="checked">
           <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
@@ -103,4 +107,4 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
   );
 };
 
-export default EditModal;
+export default AddModal;

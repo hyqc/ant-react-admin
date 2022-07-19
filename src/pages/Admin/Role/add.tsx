@@ -72,7 +72,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           hasFeedback
           rules={rules.roleName}
         >
-          <Input allowClear />
+          <Input  />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />

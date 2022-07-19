@@ -33,7 +33,6 @@ import AdminMenuAddModal, { NoticeModalPropsType } from './add';
 import AdminMenuEditModal from './edit';
 import AdminMenuDetailModal from './detail';
 import { menuTreeData } from './components/MenuTreeSelect';
-import { history } from 'umi';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -106,6 +105,12 @@ const Admin: React.FC = () => {
           </Authorization>
         );
       },
+    },
+    {
+      title: '更新时间',
+      width: '12rem',
+      align: 'left',
+      dataIndex: 'modifyTime',
     },
     {
       title: '状态',
@@ -252,7 +257,6 @@ const Admin: React.FC = () => {
       setDetailData(undefined);
     }
     setAddModalStatus(true);
-    history.push('/admin/menu/add');
   }
 
   function noticeAddModal(data: NoticeModalPropsType) {
@@ -371,6 +375,13 @@ const Admin: React.FC = () => {
       </Content>
 
       {/* modal */}
+
+      <AdminMenuAddModal
+        menuTreeData={menuTreeSelectData}
+        parentId={detailData?.menuId}
+        modalStatus={addModalStatus}
+        noticeModal={noticeAddModal}
+      />
 
       <AdminMenuDetailModal
         modalStatus={detailModalStatus}

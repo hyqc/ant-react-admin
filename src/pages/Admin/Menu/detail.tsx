@@ -52,26 +52,29 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
         <Form.Item label="图标" name="icon">
           <Input disabled style={inputStyle} />
         </Form.Item>
+        <Form.Item label="排序值" name="sort">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
         <Form.Item label="描述" name="describe">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="重定向路由" name="redirect">
           <Input disabled style={inputStyle} />
         </Form.Item>
+        <Form.Item label="菜单中隐藏" name="hideInMenu" valuePropName="checked">
+          <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
+        </Form.Item>
+        <Form.Item label="隐藏子菜单" name="hideChildrenInMenu" valuePropName="checked">
+          <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
+        </Form.Item>
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
+        </Form.Item>
         <Form.Item label="创建时间" name="createTime">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="最后更新时间" name="modifyTime">
           <Input disabled style={inputStyle} />
-        </Form.Item>
-        <Form.Item label="菜单中隐藏" name="hideInMenu" valuePropName="checked">
-          <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
-        </Form.Item>
-        <Form.Item label="菜单中隐藏子菜单" name="hideChildrenInMenu" valuePropName="checked">
-          <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
-        </Form.Item>
-        <Form.Item label="状态" name="enabled" valuePropName="checked">
-          <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
       </Form>
     </Drawer>

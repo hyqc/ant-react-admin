@@ -262,7 +262,7 @@ const Admin: React.FC = () => {
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="名称" name="roleName" initialValue={''}>
-                <Input allowClear />
+                <Input  />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>

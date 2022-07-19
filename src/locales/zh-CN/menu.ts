@@ -15,10 +15,8 @@ export default {
   'menu.admin.user': '账号管理',
   'menu.admin.role': '角色管理',
   'menu.admin.menu': '菜单管理',
+  'menu.admin.menu.add': '新建菜单',
   'menu.admin.api': '接口管理',
   'menu.admin.permission': '权限管理',
-  'menu.doc': '文档',
-  'menu.doc.menu': '菜单接口',
   'menu.demo': '示例',
-  'menu.demo.demo': '示例',
 };

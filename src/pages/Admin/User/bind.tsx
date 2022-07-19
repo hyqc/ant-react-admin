@@ -104,7 +104,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
         </Form.Item>
         <Form.Item label="角色" name="roleIds">
           <Select
-            allowClear
+            
             showSearch
             maxTagCount={3}
             mode={'multiple'}
