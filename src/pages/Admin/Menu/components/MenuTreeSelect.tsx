@@ -2,39 +2,6 @@ import { ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
 import { Select } from 'antd';
 import { useState } from 'react';
 
-export function menuTreeItemMake(item: ResponseAdminMenuListItemType, level: number) {
-  const data = {
-    ...item,
-    level: level,
-    hasChildren: item.children !== undefined && item.children.length > 0,
-  };
-  data.children = [];
-  return data;
-}
-
-export function menuTreeMake(
-  result: ResponseAdminMenuListItemType[],
-  data: ResponseAdminMenuListItemType[],
-  level: number,
-  menuId?: number,
-) {
-  data.map((item: ResponseAdminMenuListItemType) => {
-    if (menuId !== undefined && item.menuId === menuId) {
-      return;
-    }
-    result.push(menuTreeItemMake(item, level));
-    if (item.children !== undefined && item.children.length > 0) {
-      menuTreeMake(result, item.children, level + 1, menuId);
-    }
-  });
-  return result;
-}
-
-export function menuTreeData(data: ResponseAdminMenuListItemType[], menuId?: number) {
-  const result: ResponseAdminMenuListItemType[] = [];
-  return menuTreeMake(result, data, 0, menuId);
-}
-
 export type AddModalPropsType = {
   data: ResponseAdminMenuListItemType[];
   value?: number;

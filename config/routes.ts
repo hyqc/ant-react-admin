@@ -41,6 +41,13 @@
         key: 'AdminMenuAdd',
       },
       {
+        path: '/admin/menu/edit',
+        name: 'menu.edit',
+        component: './Admin/Menu/edit',
+        hideInMenu: true,
+        key: 'AdminMenuEdit',
+      },
+      {
         path: '/admin/permission',
         name: 'permission',
         icon: 'UnlockOutlined',

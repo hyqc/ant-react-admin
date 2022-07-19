@@ -1,43 +1,29 @@
 import { Button, Col, Form, Input, message, Row, Switch } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import {
   adminMenuAdd,
+  adminMenuTree,
   RequestAdminMenuAddParamsType,
   ResponseAdminMenuListItemType,
 } from '@/services/apis/admin/menu';
 import MenuTreeSelect from './components/MenuTreeSelect';
+import { FORM_RULES, makeMenuSpreadTreeData } from './components/common';
 import { Container, Content } from '@/components/PageListContainer';
 import { Gutter } from 'antd/lib/grid/row';
 import { history } from 'umi';
 
-export type NoticeModalPropsType = {
-  reload?: boolean;
-};
-
-export type AddModalPropsType = {
-  modalStatus: boolean;
-  parentId?: number;
-  menuTreeData: ResponseAdminMenuListItemType[];
-  noticeModal: (data: NoticeModalPropsType) => void;
-};
-
+const ButtonStyles = { marginRight: '2rem' };
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 10;
 
-const AddModal: React.FC<AddModalPropsType> = (props) => {
+const AddModal: React.FC = () => {
   const [form] = Form.useForm();
-  const { parentId, menuTreeData, noticeModal } = props;
-  const rules: any = {
-    name: [{ required: true, type: 'string', message: '请输入菜单名称!' }],
-    path: [{ required: true, type: 'string', message: '请输入菜单路由!' }],
-    key: [{ required: true, type: 'string', message: '请输入菜单键名!' }],
-  };
+  const [menuData, setMenuData] = useState<ResponseAdminMenuListItemType[]>([]);
+  const [parentId, setParentId] = useState<number>(0);
 
-  const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-  };
+  const rules: any = FORM_RULES;
 
   function handleOk() {
     form
@@ -48,8 +34,8 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
         };
         adminMenuAdd(data).then((res) => {
           message.success(res.message, MessageDuritain, () => {
-            noticeModal({ reload: true });
             form.resetFields();
+            handleCancel();
           });
         });
       })
@@ -67,6 +53,19 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
   }
 
   useEffect(() => {
+    let menuId: any = history.location.query?.menuId;
+    menuId = (menuId as number) || 0;
+    setParentId(parseInt(menuId));
+  });
+
+  useEffect(() => {
+    adminMenuTree().then((res) => {
+      const { rows } = res.data;
+      setMenuData(makeMenuSpreadTreeData(rows));
+    });
+  }, []);
+
+  useEffect(() => {
     form.resetFields();
   }, [parentId]);
 
@@ -75,42 +74,43 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
       <Content>
         <Form
           form={form}
-          labelCol={{ span: 12 }}
+          labelCol={{ span: 6 }}
           wrapperCol={{ span: 12 }}
           labelAlign="left"
           labelWrap
-          layout="vertical"
         >
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="父级菜单" name="parentId" initialValue={parentId || 0} hasFeedback>
-                <MenuTreeSelect
-                  data={menuTreeData}
-                  disabled={parentId !== undefined && parentId > 0}
-                />
+              <Form.Item
+                label="父级菜单"
+                name="parentId"
+                initialValue={parentId}
+                rules={rules.parentId}
+              >
+                <MenuTreeSelect data={menuData} disabled={parentId > 0} />
               </Form.Item>
-              <Form.Item label="名称" name="name" initialValue={''} hasFeedback rules={rules.name}>
+              <Form.Item label="名称" name="name" initialValue={''} rules={rules.name}>
                 <Input />
               </Form.Item>
-              <Form.Item label="路由" name="path" initialValue={''} hasFeedback rules={rules.path}>
+              <Form.Item label="路由" name="path" initialValue={''} rules={rules.path}>
                 <Input />
               </Form.Item>
-              <Form.Item label="键名" name="key" initialValue={''} hasFeedback rules={rules.key}>
+              <Form.Item label="唯一键名" name="key" initialValue={''} rules={rules.key}>
                 <Input />
               </Form.Item>
-              <Form.Item label="图标" name="icon" initialValue={''} hasFeedback>
-                <Input />
+              <Form.Item label="排序值" name="sort" initialValue={0} rules={rules.sort}>
+                <Input min={0} />
               </Form.Item>
-              <Form.Item label="重定向地址" name="redirect" initialValue={'/'} hasFeedback>
+              <Form.Item label="图标" name="icon" initialValue={''}>
                 <Input />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="描述" name="describe" initialValue={''} hasFeedback>
-                <Input.TextArea />
+              <Form.Item label="重定向地址" name="redirect" initialValue={'/'}>
+                <Input />
               </Form.Item>
-              <Form.Item label="排序值" name="sort" initialValue={0} hasFeedback>
-                <Input min={0} />
+              <Form.Item label="描述" name="describe" initialValue={''}>
+                <Input.TextArea />
               </Form.Item>
               <Form.Item label="菜单中隐藏" name="hideInMenu" valuePropName="checked">
                 <Switch checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
@@ -125,25 +125,14 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           </Row>
           <Row gutter={[12, 24]}>
             <Col span={24}>
-              <Form.Item {...tailLayout} style={{ marginTop: '2rem' }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  onClick={handleCancel}
-                  style={{ marginLeft: '2rem' }}
-                >
-                  取消
+              <Form.Item style={{ marginTop: '2rem' }}>
+                <Button type="primary" onClick={handleCancel} style={ButtonStyles}>
+                  返回
                 </Button>
-                <Button htmlType="button" onClick={handleReset} style={{ marginLeft: '2rem' }}>
+                <Button htmlType="button" type="primary" onClick={handleReset} style={ButtonStyles}>
                   重置
                 </Button>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  danger
-                  onClick={handleOk}
-                  style={{ marginLeft: '2rem' }}
-                >
+                <Button htmlType="submit" type="primary" onClick={handleOk} style={ButtonStyles}>
                   保存
                 </Button>
               </Form.Item>

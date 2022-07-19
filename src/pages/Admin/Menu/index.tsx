@@ -29,10 +29,7 @@ import {
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import { ColumnsType } from 'antd/lib/table';
 import Authorization from '@/components/Autuorization';
-import AdminMenuAddModal, { NoticeModalPropsType } from './add';
-import AdminMenuEditModal from './edit';
-import AdminMenuDetailModal from './detail';
-import { menuTreeData } from './components/MenuTreeSelect';
+import AdminMenuDetailModal, { NoticeModalPropsType } from './detail';
 import { history } from 'umi';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
@@ -44,9 +41,6 @@ const Admin: React.FC = () => {
   const [detailData, setDetailData] = useState<any>();
   const [rowsData, setRowsData] = useState<ResponseAdminMenuListItemType[]>([]);
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
-  const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
-  const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
-  const [menuTreeSelectData, setMenuTreeSelectData] = useState<ResponseAdminMenuListItemType[]>([]);
 
   const columns: ColumnsType<any> = [
     {
@@ -228,7 +222,6 @@ const Admin: React.FC = () => {
   // 菜单详情
   function openDetailModal(record: ResponseAdminMenuListItemType) {
     adminMenuDetail({ menuId: record.menuId }).then((res) => {
-      setMenuTreeSelectData(menuTreeData(rowsData));
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
@@ -236,43 +229,21 @@ const Admin: React.FC = () => {
 
   // 菜单编辑
   function openEditModal(record: ResponseAdminMenuListItemType) {
-    adminMenuDetail({ menuId: record.menuId }).then((res) => {
-      setMenuTreeSelectData(menuTreeData(rowsData, record.menuId));
-      setDetailData(res.data);
-      setEditModalStatus(true);
-    });
+    history.push(`/admin/menu/edit?menuId=${record.menuId}`);
   }
 
   // 菜单添加
   function openAddModal(record?: ResponseAdminMenuListItemType) {
-    setMenuTreeSelectData(menuTreeData(rowsData));
-    if (record !== undefined) {
-      setDetailData({ menuId: record.menuId });
-    } else {
-      setDetailData(undefined);
+    if (record?.menuId) {
+      history.push(`/admin/menu/add?menuId=${record.menuId}`);
+      return;
     }
-    setAddModalStatus(true);
     history.push('/admin/menu/add');
-  }
-
-  function noticeAddModal(data: NoticeModalPropsType) {
-    setAddModalStatus(false);
-    if (data.reload) {
-      getRows({ ...form.getFieldsValue() });
-    }
   }
 
   function noticeDetailModal(data: NoticeModalPropsType) {
     setDetailData(undefined);
     setDetailModalStatus(false);
-    if (data.reload) {
-      getRows({ ...form.getFieldsValue() });
-    }
-  }
-
-  function noticeEditModal(data: NoticeModalPropsType) {
-    setDetailData(undefined);
-    setEditModalStatus(false);
     if (data.reload) {
       getRows({ ...form.getFieldsValue() });
     }
@@ -303,41 +274,6 @@ const Admin: React.FC = () => {
 
   return (
     <Container>
-      <Search>
-        <Form form={form} onFinish={onSearchFinish}>
-          <Row gutter={FormSearchRowGutter}>
-            <Col span={FormSearchRowColSpan}>
-              <Form.Item label="名称" name="roleName" initialValue={''}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={FormSearchRowColSpan}>
-              <Form.Item label="状态" name="enabled" initialValue={0}>
-                <Select style={{ offset: 0, width: '120' }}>
-                  <Select.Option value={0}>全部</Select.Option>
-                  <Select.Option value={1}>启用</Select.Option>
-                  <Select.Option value={2}>禁用</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
-              <Space>
-                <Button type="primary" htmlType="submit">
-                  <SearchOutlined />
-                  查询
-                </Button>
-                <Button type="primary" htmlType="button" onClick={onSearchReset}>
-                  <ReloadOutlined />
-                  清除
-                </Button>
-              </Space>
-            </Col>
-          </Row>
-        </Form>
-      </Search>
-
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
@@ -376,13 +312,6 @@ const Admin: React.FC = () => {
         modalStatus={detailModalStatus}
         detailData={detailData}
         noticeModal={noticeDetailModal}
-      />
-
-      <AdminMenuEditModal
-        menuTreeData={menuTreeSelectData}
-        modalStatus={editModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditModal}
       />
     </Container>
   );

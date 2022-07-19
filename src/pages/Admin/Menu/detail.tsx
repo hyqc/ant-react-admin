@@ -39,14 +39,17 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
       visible={modalStatus}
       onClose={onClose}
     >
-      <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+      <Form form={form} labelAlign="left" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+        <Form.Item label="菜单ID" name="menuId">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
         <Form.Item label="名称" name="name">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="路由" name="path">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="键名" name="key">
+        <Form.Item label="唯一键名" name="key">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="图标" name="icon">
