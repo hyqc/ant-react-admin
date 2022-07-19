@@ -2,8 +2,8 @@ import {
   adminUserEdit,
   RequestAdminUserEditParamsType,
   ResponseAdminUserDetailType,
-} from '@/services/apis/admin/admin';
-import { APIAccount } from '@/services/apis/api';
+} from '@/services/apis/admin/user';
+import { APIAccount } from '@/services/apis/admin/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
@@ -16,13 +16,13 @@ export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type AdminUserEditModalPropsType = {
+export type EditModalPropsType = {
   modalStatus: boolean;
   detailData: ResponseAdminUserDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
+const EditModal: React.FC<EditModalPropsType> = (props) => {
   const [form] = Form.useForm();
   const { modalStatus, detailData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
@@ -109,7 +109,6 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
   }
 
   useEffect(() => {
-    form.resetFields();
     form.setFieldsValue(detailData);
     if (detailData && detailData.avatar) {
       setFielList([
@@ -121,8 +120,7 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
         },
       ]);
     }
-    return () => {};
-  }, [detailData]);
+  });
 
   return (
     <Modal
@@ -149,13 +147,8 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
         <Form.Item label="邮箱" name="email" rules={rules.email}>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="状态" name="enabled">
-          <Switch
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            defaultChecked={true}
-            checked
-          />
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
         <Form.Item label="头像" name="avatar" initialValue={true}>
           <ImgCrop rotate>
@@ -178,4 +171,4 @@ const AdminUserEditModal: React.FC<AdminUserEditModalPropsType> = (props) => {
   );
 };
 
-export default AdminUserEditModal;
+export default EditModal;

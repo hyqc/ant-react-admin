@@ -1,14 +1,15 @@
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { RunTimeLayoutConfig, RequestConfig, Link } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentAdminInfo } from './services/apis/account';
-import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/account';
+import { currentAdminInfo } from './services/apis/admin/account';
+import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
 import { message } from 'antd';
-import type { ResponseType } from '@/services/apis/types';
+import type { ResponseBodyType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
+import defaultSettings from '../config/defaultSettings';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -34,28 +35,28 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-  // 如果是登录页面，不执行
+  // 如果不是登录页面，执行
   if (history.location.pathname !== LoginPath) {
     const currentUser: ReponseCurrentAdminUserDetailType = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
-      settings: currentUser?.settings || {},
+      settings: { ...defaultSettings, ...currentUser?.settings },
     };
   }
   return {
     fetchUserInfo,
-    settings: {},
+    settings: defaultSettings,
   };
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      // content: initialState?.currentUser?.name,
+      content: '',
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -70,7 +71,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       if (menuItemProps.isUrl || !menuItemProps.path) {
         return defaultDom;
       }
-
       // 支持二级菜单显示icon
       return (
         <Link to={menuItemProps.path}>
@@ -94,6 +94,27 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     //     return initialState?.menuData || {};
     //   },
     // },
+    childrenRender: (children, props) => {
+      // if (initialState?.loading) return <PageLoading />;
+      return (
+        <>
+          {children}
+          {!props.location?.pathname?.includes('/login') && (
+            <SettingDrawer
+              disableUrlParams
+              enableDarkTheme
+              settings={initialState?.settings}
+              onSettingChange={(settings) => {
+                setInitialState((preInitialState) => ({
+                  ...preInitialState,
+                  settings,
+                }));
+              }}
+            />
+          )}
+        </>
+      );
+    },
     ...initialState?.settings,
   };
 };
@@ -110,7 +131,7 @@ const interceptorsRequest = (url: string, options: any) => {
 // 响应拦截器：
 const interceptorsResponse = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
-  const data: ResponseType = await response.clone().json();
+  const data: ResponseBodyType = await response.clone().json();
   if (data.code !== SUCCESS) {
     message.destroy();
   }

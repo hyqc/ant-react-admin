@@ -7,6 +7,7 @@
   },
   {
     name: 'admin',
+    path: '/admin',
     icon: 'setting',
     routes: [
       {
@@ -22,6 +23,12 @@
         component: './Admin/Role',
       },
       {
+        path: '/admin/menu',
+        name: 'menu',
+        icon: 'UnlockOutlined',
+        component: './Admin/Menu',
+      },
+      {
         path: '/admin/permission',
         name: 'permission',
         icon: 'UnlockOutlined',
@@ -35,12 +42,18 @@
       },
     ],
   },
-
+  {
+    name: 'demo',
+    path: '/demo',
+    icon: 'book',
+    component: './Demo',
+  },
   {
     path: '/',
     redirect: '/admin/user',
   },
   {
+    path: '*',
     component: './404',
   },
 ];

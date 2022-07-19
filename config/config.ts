@@ -1,7 +1,5 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
-import { join } from 'path';
-
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
@@ -39,6 +37,7 @@ export default defineConfig({
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
     'primary-color': defaultSettings.primaryColor,
+    'primary-color-hover': defaultSettings.primaryColor,
     'root-entry-name': 'default',
   },
   // esbuild is father build tools

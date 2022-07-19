@@ -1,4 +1,4 @@
-import { POST, GET } from './config';
+import { POST, GET } from '../config';
 
 export type APIItemType = {
   url: string;
@@ -64,8 +64,8 @@ export const APIAdminRoles = {
     url: '/admin/role/list',
     method: POST,
   },
-  get: {
-    url: '/admin/role/get',
+  detail: {
+    url: '/admin/role/detail',
     method: POST,
   },
   add: {
@@ -91,12 +91,16 @@ export const APIAdminRoles = {
 };
 
 export const APIAdminMenus = {
+  tree: {
+    url: '/admin/menu/tree',
+    method: POST,
+  },
   list: {
     url: '/admin/menu/list',
     method: POST,
   },
-  get: {
-    url: '/admin/menu/get',
+  detail: {
+    url: '/admin/menu/detail',
     method: POST,
   },
   add: {
@@ -126,8 +130,8 @@ export const APIAdminPermissions = {
     url: '/admin/permission/list',
     method: POST,
   },
-  get: {
-    url: '/admin/permission/get',
+  detail: {
+    url: '/admin/permission/detail',
     method: POST,
   },
   add: {

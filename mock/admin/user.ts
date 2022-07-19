@@ -1,8 +1,8 @@
 import {
   ResponseAdminUserDetailType,
   ResponseAdminUserListItemType,
-} from '@/services/apis/admin/admin';
-import { ResponseInfoType, ResponseListType } from '@/services/apis/types';
+} from '@/services/apis/admin/user';
+import { ResponseDetailType, ResponseListType } from '@/services/apis/types';
 import { success } from '../common';
 
 const userListDataRows: ResponseAdminUserListItemType[] = [
@@ -30,6 +30,30 @@ const userListDataRows: ResponseAdminUserListItemType[] = [
     lastLoginIp: '127.0.0.1',
     lastLoginTime: '2022-06-26 14:49:38',
   },
+  {
+    adminId: 2,
+    username: 'wll',
+    nickname: 'wll',
+    email: '1074966185@qq.com',
+    avatar: '',
+    roles: [
+      {
+        roleId: 1,
+        roleName: '管理员',
+      },
+      {
+        roleId: 2,
+        roleName: '运维',
+      },
+    ],
+    enabled: true,
+    enabledText: '启用',
+    createTime: '2022-06-26 14:49:38',
+    modifyTime: '2022-06-26 14:49:38',
+    totalLogin: 10,
+    lastLoginIp: '127.0.0.1',
+    lastLoginTime: '2022-06-26 14:49:38',
+  },
 ];
 
 const userListResponse: ResponseListType = {
@@ -37,7 +61,7 @@ const userListResponse: ResponseListType = {
   type: 'success',
   message: '成功',
   data: {
-    total: 1,
+    total: 15,
     pageNo: 1,
     pageSize: 10,
     rows: userListDataRows,
@@ -60,7 +84,7 @@ const userDetail: ResponseAdminUserDetailType = {
       roleName: '运维',
     },
   ],
-  enabled: true,
+  enabled: false,
   enabledText: '启用',
   createTime: '2022-06-26 14:49:38',
   modifyTime: '2022-06-26 14:49:38',
@@ -69,7 +93,7 @@ const userDetail: ResponseAdminUserDetailType = {
   lastLoginTime: '2022-06-26 14:49:38',
 };
 
-const userDetailResponse: ResponseInfoType = {
+const userDetailResponse: ResponseDetailType = {
   code: 0,
   message: '成功',
   type: 'SUCCESS',

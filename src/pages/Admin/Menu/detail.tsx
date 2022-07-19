@@ -1,10 +1,9 @@
-import { ResponseAdminUserDetailType } from '@/services/apis/admin/user';
-import { INPUT_STYLE } from '@/services/apis/config';
-import { Drawer, Form, Input, Switch, Tag } from 'antd';
+import { ResponseAdminRoleDetailType } from '@/services/apis/admin/role';
+import { Drawer, Form, Input, Switch } from 'antd';
+import { useEffect } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
-import Avatar from 'antd/lib/avatar/avatar';
-import { useEffect } from 'react';
+import { INPUT_STYLE } from '@/services/apis/config';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -12,10 +11,9 @@ export type NoticeModalPropsType = {
 
 export type DetailModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminUserDetailType;
+  detailData: ResponseAdminRoleDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
-
 const inputStyle = INPUT_STYLE;
 
 const DetailModal: React.FC<DetailModalPropsType> = (props) => {
@@ -33,7 +31,7 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
   return (
     <Drawer
       forceRender
-      title="管理员详情"
+      title="菜单详情"
       footer={null}
       width={DefaultDrawerWidth}
       destroyOnClose={true}
@@ -42,49 +40,38 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
       onClose={onClose}
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="ID" name="adminId">
+        <Form.Item label="名称" name="name">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="名称" name="username">
+        <Form.Item label="路由" name="path">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="头像" name="avatar" initialValue={true}>
-          <Avatar size={64} src={detailData?.avatar} />
-        </Form.Item>
-        <Form.Item label="昵称" name="nickname">
+        <Form.Item label="键名" name="key">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="邮箱" name="email">
+        <Form.Item label="图标" name="icon">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="角色" name="roles">
-          <span>
-            {detailData?.roles?.map((item) => {
-              return (
-                <Tag key={item.roleId} color="blue">
-                  {item.roleName}
-                </Tag>
-              );
-            })}
-          </span>
-        </Form.Item>
-        <Form.Item label="状态" name="enabled" valuePropName="checked">
-          <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
-        </Form.Item>
-        <Form.Item label="登录次数" name="totalLogin">
+        <Form.Item label="描述" name="describe">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="最后登录IP" name="lastLoginIp">
-          <Input disabled style={inputStyle} />
-        </Form.Item>
-        <Form.Item label="最后登录时间" name="lastLoginTime">
+        <Form.Item label="重定向路由" name="redirect">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="创建时间" name="createTime">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="更新时间" name="modifyTime">
+        <Form.Item label="最后更新时间" name="modifyTime">
           <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="菜单中隐藏" name="hideInMenu" valuePropName="checked">
+          <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
+        </Form.Item>
+        <Form.Item label="菜单中隐藏子菜单" name="hideChildrenInMenu" valuePropName="checked">
+          <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
+        </Form.Item>
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
       </Form>
     </Drawer>

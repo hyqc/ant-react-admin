@@ -1,24 +1,23 @@
-import { adminUserAdd, RequestAdminUserAddParamsType } from '@/services/apis/admin/admin';
-import { APIAccount } from '@/services/apis/api';
-import { SUCCESS } from '@/services/apis/code';
+import { adminUserAdd, RequestAdminUserAddParamsType } from '@/services/apis/admin/user';
+import { APIAccount } from '@/services/apis/admin/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
-import ImgCrop from 'antd-img-crop';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { AdminUserPassword } from '@/services/common/pattern';
+import ImgCrop from 'antd-img-crop';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
-export type AdminUserAddModalPropsType = {
+export type AddModalPropsType = {
   modalStatus: boolean;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
-const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
+const AddModal: React.FC<AddModalPropsType> = (props) => {
   const [form] = Form.useForm();
   const { modalStatus, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
@@ -105,10 +104,6 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
     imgWindow?.document.write(image.outerHTML);
   }
 
-  useEffect(() => {
-    return () => {};
-  }, []);
-
   return (
     <Modal
       forceRender
@@ -159,13 +154,8 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
         <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email} hasFeedback>
           <Input allowClear />
         </Form.Item>
-        <Form.Item label="状态" name="enabled" initialValue={true}>
-          <Switch
-            checkedChildren={'启用'}
-            unCheckedChildren={'禁用'}
-            defaultChecked={true}
-            checked
-          />
+        <Form.Item label="状态" name="enabled" valuePropName="checked">
+          <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
         <Form.Item label="头像" name="avatar" initialValue={''}>
           <ImgCrop rotate>
@@ -188,4 +178,4 @@ const AdminUserAddModal: React.FC<AdminUserAddModalPropsType> = (props) => {
   );
 };
 
-export default AdminUserAddModal;
+export default AddModal;
