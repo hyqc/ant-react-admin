@@ -1,5 +1,5 @@
 import { Form, Input, message, Modal, Switch } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { adminRoleAdd, RequestAdminRoleAddParamsType } from '@/services/apis/admin/role';
@@ -65,14 +65,8 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item
-          label="名称"
-          name="roleName"
-          initialValue={''}
-          hasFeedback
-          rules={rules.roleName}
-        >
-          <Input allowClear />
+        <Form.Item label="名称" name="roleName" initialValue={''} rules={rules.roleName}>
+          <Input />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />

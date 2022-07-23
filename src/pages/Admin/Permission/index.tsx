@@ -1,5 +1,5 @@
 import React from 'react';
-import { Content, Search } from '@/components/PageListContainer';
+import { Container, Content, Search } from '@/components/PageListContainer';
 import { Form, Input, Button, Select, Row, Col } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
@@ -7,32 +7,32 @@ import type { Gutter } from 'antd/lib/grid/row';
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 6;
 
-const Admin: React.FC = () => {
+const Demo: React.FC = () => {
   const [form] = Form.useForm();
 
   return (
-    <Content>
+    <Container>
       <Search>
         <Form form={form}>
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="名称">
-                <Input allowClear />
+                <Input  />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="昵称">
-                <Input allowClear />
+                <Input  />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="角色名">
-                <Input allowClear />
+                <Input  />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="邮箱">
-                <Input allowClear />
+                <Input  />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
@@ -59,8 +59,9 @@ const Admin: React.FC = () => {
           </Row>
         </Form>
       </Search>
-    </Content>
+      <Content>这里是内容</Content>
+    </Container>
   );
 };
 
-export default Admin;
+export default Demo;
