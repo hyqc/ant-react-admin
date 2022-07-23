@@ -4,7 +4,7 @@ import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from '@/pages/Admin/User/common';
 
 export type PageinfoType = {
   total: number | undefined;
-  pageNo: number | undefined;
+  pageSize: number | undefined;
   pageSize: number | undefined;
   children?: any;
   onChange?: (pageNum: number, pageSize?: number) => void;
@@ -28,7 +28,7 @@ class Pageinfo extends React.Component<PageinfoType, StateType> {
   constructor(props: PageinfoType) {
     super(props);
 
-    this.current = props?.pageNo || DEFAULT_PAGE_NO;
+    this.current = props?.pageSize || DEFAULT_PAGE_NO;
     this.pageSize = props?.pageSize || DEFAULT_PAGE_SIZE;
     this.total = props?.total || 0;
 

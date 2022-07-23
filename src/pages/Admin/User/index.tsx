@@ -14,7 +14,6 @@ import {
   Tag,
   Popconfirm,
   Space,
-  Pagination,
 } from 'antd';
 import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
@@ -32,10 +31,10 @@ import type {
   RequestAdminUserListParamsType,
 } from '@/services/apis/admin/user';
 import type {
+  PageInfoType,
   ResponseBodyType,
   ResponseListDataType,
   ResponseListType,
-  ResponsePageInfoDataType,
 } from '@/services/apis/types';
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import AdminUserAddModal, { NoticeModalPropsType } from './add';
@@ -43,7 +42,6 @@ import AdminUserEditModal from './edit';
 import AdminUserDetailModal from './detail';
 import AdminUserBindRolesModal from './bind';
 import AdminUserEditPasswordModal from './password';
-import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from './common';
 import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
 import Authorization from '@/components/Autuorization';
 
@@ -53,7 +51,7 @@ const FormSearchRowColSpan = 5.2;
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
-  const [pageInfo, setPageInfo] = useState<ResponsePageInfoDataType>();
+  const [pageInfo, setPageInfo] = useState<PageInfoType>({ ...DEFAULT_PAGE_INFO });
   const [rowsData, setRowsData] = useState<ResponseAdminUserListItemType[]>([]);
   const [detailData, setDetailData] = useState<any>();
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
@@ -240,15 +238,11 @@ const Admin: React.FC = () => {
     setLoading(true);
     adminUserList(data)
       .then((res: ResponseListType) => {
-        const data: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
+        const data: ResponseListDataType = res.data;
         const rows = data?.rows || [];
-        const pageInfo: ResponsePageInfoDataType = {
-          total: data.total,
-          pageSize: data.pageSize,
-          pageNo: data.pageNo,
-        };
+        const page = { total: data.total, pageSize: data.pageSize, pageNum: data.pageNum };
+        setPageInfo(page);
         setRowsData(rows);
-        setPageInfo(pageInfo);
       })
       .catch((err) => {
         console.log('error', err);
@@ -271,17 +265,6 @@ const Admin: React.FC = () => {
     });
   }
 
-  // 管理员列表搜索
-  function onSearchFinish(values: RequestAdminUserListParamsType) {
-    getRows({ ...values, ...pageInfo, pageNum: 1 });
-  }
-
-  // 管理员搜索重置
-  function onSearchReset() {
-    form.resetFields();
-    getRows();
-  }
-
   function fetchAdminRoles(roleName?: string) {
     adminRoleAll({ roleName }).then((res) => {
       res.data.unshift({ roleId: 0, roleName: '全部' });
@@ -297,15 +280,6 @@ const Admin: React.FC = () => {
         getRows({ ...pageInfo, ...form.getFieldsValue() });
       },
     );
-  }
-
-  function tableChange(pagination: any, filters: any, sorter: any) {
-    getRows({
-      ...pageInfo,
-      ...form.getFieldsValue(),
-      sortField: sorter.field,
-      sortType: sorter.order,
-    });
   }
 
   // 管理员详情
@@ -383,12 +357,40 @@ const Admin: React.FC = () => {
     }
   }
 
+  // 列表搜索
+  function onSearchFinish(values: RequestAdminUserListParamsType) {
+    const page = { ...pageInfo, pageNum: 1 };
+    getRows({ ...values, ...page });
+  }
+
+  // 搜索重置
+  function onSearchReset() {
+    form.resetFields();
+    getRows({ pageNum: 1, pageSize: pageInfo.pageSize });
+  }
+
+  function onShowSizeChange(current: number, size: number) {
+    const page = { pageSize: size, pageNum: current };
+    setPageInfo({ ...pageInfo, ...page });
+  }
+
+  function tableChange(pagination: any, filters: any, sorter: any) {
+    const page = { pageSize: pagination.pageSize, pageNum: pagination.current };
+    setPageInfo({ ...pageInfo, ...page });
+    getRows({
+      ...form.getFieldsValue(),
+      ...page,
+      sortField: sorter.field,
+      sortType: sorter.order,
+    });
+  }
+
   useEffect(() => {
-    fetchAdminRoles();
+    onSearchReset();
   }, []);
 
   useEffect(() => {
-    getRows();
+    fetchAdminRoles();
   }, []);
 
   return (
@@ -398,24 +400,23 @@ const Admin: React.FC = () => {
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="名称" name="username" initialValue={''}>
-                <Input  />
+                <Input />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="昵称" name="nickname" initialValue={''}>
-                <Input  />
+                <Input />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="邮箱" name="email" initialValue={''}>
-                <Input  />
+                <Input />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="角色名" name="roleId" initialValue={0}>
                 <Select
                   style={{ offset: 0, width: '120' }}
-                  
                   showSearch
                   filterOption={(input, option) => {
                     return (option!.children as unknown as string)
@@ -476,20 +477,17 @@ const Admin: React.FC = () => {
           scroll={{ x: 'auto' }}
           loading={loading}
           columns={columns}
-          pagination={false}
           dataSource={rowsData}
           onChange={tableChange}
-        ></Table>
-        <Pagination
-          showQuickJumper
-          defaultCurrent={DEFAULT_PAGE_NO}
-          style={{ marginTop: '1rem', textAlign: 'right' }}
-          total={pageInfo?.total}
-          current={pageInfo?.pageNo || DEFAULT_PAGE_NO}
-          pageSize={pageInfo?.pageSize || DEFAULT_PAGE_SIZE}
-          showTotal={(total) => `共 ${total} 条数据`}
-          onChange={(pageNo) => getRows({ pageNo, ...form.getFieldsValue() })}
-          onShowSizeChange={(pageSize) => getRows({ pageSize, ...form.getFieldsValue() })}
+          pagination={{
+            current: pageInfo.pageNum,
+            pageSize: pageInfo.pageSize,
+            total: pageInfo.total,
+            showQuickJumper: true,
+            position: ['bottomRight'],
+            showTotal: (total) => `共 ${total} 条数据`,
+            onShowSizeChange,
+          }}
         />
       </Content>
 

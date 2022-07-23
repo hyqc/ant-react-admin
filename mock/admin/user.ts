@@ -4,6 +4,7 @@ import {
 } from '@/services/apis/admin/user';
 import { ResponseDetailType, ResponseListType } from '@/services/apis/types';
 import { success } from '../common';
+import { Request, Response } from 'express';
 
 const userListDataRows: ResponseAdminUserListItemType[] = [
   {
@@ -56,13 +57,13 @@ const userListDataRows: ResponseAdminUserListItemType[] = [
   },
 ];
 
-const userListResponse: ResponseListType = {
+const list: ResponseListType = {
   code: 0,
   type: 'success',
   message: '成功',
   data: {
-    total: 15,
-    pageNo: 1,
+    total: 105,
+    pageNum: 1,
     pageSize: 10,
     rows: userListDataRows,
   },
@@ -101,7 +102,11 @@ const userDetailResponse: ResponseDetailType = {
 };
 
 export default {
-  'POST /api/admin/user/list': userListResponse,
+  'POST /api/admin/user/list': (req: Request, res: Response) => {
+    list.data.pageNum = req.body.pageNum;
+    list.data.pageSize = req.body.pageSize;
+    res.json(list);
+  },
   'POST /api/admin/user/detail': userDetailResponse,
   'POST /api/admin/user/add': success,
   'POST /api/admin/user/edit': success,

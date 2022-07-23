@@ -1,7 +1,7 @@
 // adminRoles 管理员角色接口
 import { request } from 'umi';
 import { APIAdminRoles } from './api';
-import { ResponseBodyType } from '../types';
+import { ResponseBodyType, ResponseListType } from '../types';
 
 /************************************************************/
 /**
@@ -26,7 +26,7 @@ export type ResponseAdminRoleListItemType = {
 };
 
 export async function adminRoleList(params?: RequestAdminRoleListParamsType) {
-  return request<ResponseBodyType>(APIAdminRoles.list.url, {
+  return request<ResponseListType>(APIAdminRoles.list.url, {
     method: APIAdminRoles.list.method,
     data: params,
   });

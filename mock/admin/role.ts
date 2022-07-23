@@ -2,12 +2,9 @@ import {
   ResponseAdminRoleAllItemType,
   ResponseAdminRoleListItemType,
 } from '@/services/apis/admin/role';
-import {
-  ResponseDetailDataType,
-  ResponseDetailType,
-  ResponseListType,
-} from '@/services/apis/types';
+import { ResponseDetailType, ResponseListType } from '@/services/apis/types';
 import { success } from '../common';
+import { Request, Response } from 'express';
 
 const allRoles: ResponseAdminRoleAllItemType[] = [
   {
@@ -58,13 +55,13 @@ const rolesListRows: ResponseAdminRoleListItemType[] = [
   },
 ];
 
-const rolesList: ResponseListType = {
+const list: ResponseListType = {
   code: 0,
   message: '成功',
   type: 'SUCCESS',
   data: {
     total: 22,
-    pageNo: 1,
+    pageNum: 1,
     pageSize: 10,
     rows: rolesListRows,
   },
@@ -88,7 +85,11 @@ const roleDetail: ResponseDetailType = {
 
 export default {
   'POST /api/admin/role/all': rolesAll,
-  'POST /api/admin/role/list': rolesList,
+  'POST /api/admin/role/list': (req: Request, res: Response) => {
+    list.data.pageNum = req.body.pageNum;
+    list.data.pageSize = req.body.pageSize;
+    res.json(list);
+  },
   'POST /api/admin/role/add': success,
   'POST /api/admin/role/detail': roleDetail,
   'POST /api/admin/role/edit': success,
