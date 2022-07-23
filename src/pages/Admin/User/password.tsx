@@ -102,7 +102,7 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="名称" name="username">
-          <Input allowClear disabled />
+          <Input  disabled />
         </Form.Item>
         <Form.Item
           label="密码"
@@ -111,7 +111,7 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
           rules={rules.password}
           hasFeedback
         >
-          <Input.Password allowClear />
+          <Input.Password  />
         </Form.Item>
         <Form.Item
           label="确认密码"
@@ -121,7 +121,7 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
           hasFeedback
           rules={rules.confirmPassword}
         >
-          <Input.Password allowClear />
+          <Input.Password  />
         </Form.Item>
       </Form>
     </Modal>

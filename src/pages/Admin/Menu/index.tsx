@@ -1,41 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Content, Search } from '@/components/PageListContainer';
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  Row,
-  Col,
-  Space,
-  Table,
-  message,
-  Popconfirm,
-  Switch,
-} from 'antd';
-import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
-import type { Gutter } from 'antd/lib/grid/row';
+import { Container, Content } from '@/components/PageListContainer';
+import { Form, Button, Space, Table, message, Popconfirm, Switch } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { ResponseListDataType, ResponseListType } from '@/services/apis/types';
 import {
   adminMenuDelete,
   adminMenuDetail,
   adminMenuEnable,
+  adminMenuPermissions,
   adminMenuTree,
   RequestAdminMenuEnableParamsType,
-  RequestAdminMenuListParamsType,
   RequestAdminMenuTreeParamsType,
   ResponseAdminMenuListItemType,
+  ResponseAdminMenuPermissionsType,
 } from '@/services/apis/admin/menu';
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import { ColumnsType } from 'antd/lib/table';
 import Authorization from '@/components/Autuorization';
-import AdminMenuAddModal, { NoticeModalPropsType } from './add';
-import AdminMenuEditModal from './edit';
-import AdminMenuDetailModal from './detail';
-import { menuTreeData } from './components/MenuTreeSelect';
-
-const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
-const FormSearchRowColSpan = 5.2;
+import AdminMenuDetailModal, { NoticeModalPropsType } from './detail';
+import { history } from 'umi';
+import SavePermissionsModal from './components/PermissionsSave';
 
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
@@ -43,9 +27,9 @@ const Admin: React.FC = () => {
   const [detailData, setDetailData] = useState<any>();
   const [rowsData, setRowsData] = useState<ResponseAdminMenuListItemType[]>([]);
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
-  const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
-  const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
-  const [menuTreeSelectData, setMenuTreeSelectData] = useState<ResponseAdminMenuListItemType[]>([]);
+  const [savePermissionsModalStatus, setSaveMenuPermissionsModalStatus] = useState<boolean>(false);
+  const [menuPermissionsDetail, setMenuPermissionsDetail] =
+    useState<ResponseAdminMenuPermissionsType>({});
 
   const columns: ColumnsType<any> = [
     {
@@ -107,12 +91,6 @@ const Admin: React.FC = () => {
       },
     },
     {
-      title: '更新时间',
-      width: '12rem',
-      align: 'left',
-      dataIndex: 'modifyTime',
-    },
-    {
       title: '状态',
       width: '6rem',
       align: 'center',
@@ -161,6 +139,20 @@ const Admin: React.FC = () => {
               >
                 添加子菜单
               </Button>
+            </Authorization>
+            <Authorization>
+              {record.hideInMenu ||
+              (record.children !== undefined && record?.children.length > 0) ? (
+                ''
+              ) : (
+                <Button
+                  type="primary"
+                  style={{ marginRight: 4 }}
+                  onClick={() => openSavePermissionsModal(record)}
+                >
+                  创建权限
+                </Button>
+              )}
             </Authorization>
             <Authorization>
               <Button
@@ -233,7 +225,6 @@ const Admin: React.FC = () => {
   // 菜单详情
   function openDetailModal(record: ResponseAdminMenuListItemType) {
     adminMenuDetail({ menuId: record.menuId }).then((res) => {
-      setMenuTreeSelectData(menuTreeData(rowsData));
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
@@ -241,29 +232,27 @@ const Admin: React.FC = () => {
 
   // 菜单编辑
   function openEditModal(record: ResponseAdminMenuListItemType) {
-    adminMenuDetail({ menuId: record.menuId }).then((res) => {
-      setMenuTreeSelectData(menuTreeData(rowsData, record.menuId));
-      setDetailData(res.data);
-      setEditModalStatus(true);
-    });
+    history.push(`/admin/menu/edit?menuId=${record.menuId}`);
   }
 
   // 菜单添加
   function openAddModal(record?: ResponseAdminMenuListItemType) {
-    setMenuTreeSelectData(menuTreeData(rowsData));
-    if (record !== undefined) {
-      setDetailData({ menuId: record.menuId });
-    } else {
-      setDetailData(undefined);
+    if (record?.menuId) {
+      history.push(`/admin/menu/add?menuId=${record.menuId}`);
+      return;
     }
-    setAddModalStatus(true);
+    history.push('/admin/menu/add');
   }
 
-  function noticeAddModal(data: NoticeModalPropsType) {
-    setAddModalStatus(false);
-    if (data.reload) {
-      getRows({ ...form.getFieldsValue() });
-    }
+  /**
+   * 保存菜单权限
+   * @param record
+   */
+  function openSavePermissionsModal(record: ResponseAdminMenuListItemType) {
+    adminMenuPermissions({ menuId: record.menuId }).then((res) => {
+      setMenuPermissionsDetail(res.data || { menuId: record.menuId });
+      setSaveMenuPermissionsModalStatus(true);
+    });
   }
 
   function noticeDetailModal(data: NoticeModalPropsType) {
@@ -273,10 +262,9 @@ const Admin: React.FC = () => {
       getRows({ ...form.getFieldsValue() });
     }
   }
-
-  function noticeEditModal(data: NoticeModalPropsType) {
+  function noticeAddPermissionModal(data: NoticeModalPropsType) {
     setDetailData(undefined);
-    setEditModalStatus(false);
+    setSaveMenuPermissionsModalStatus(false);
     if (data.reload) {
       getRows({ ...form.getFieldsValue() });
     }
@@ -290,58 +278,12 @@ const Admin: React.FC = () => {
     });
   }
 
-  // 管理员列表搜索
-  function onSearchFinish(values: RequestAdminMenuListParamsType) {
-    getRows({ ...values });
-  }
-
-  // 管理员搜索重置
-  function onSearchReset() {
-    form.resetFields();
-    getRows();
-  }
-
   useEffect(() => {
     getRows();
   }, []);
 
   return (
     <Container>
-      <Search>
-        <Form form={form} onFinish={onSearchFinish}>
-          <Row gutter={FormSearchRowGutter}>
-            <Col span={FormSearchRowColSpan}>
-              <Form.Item label="名称" name="roleName" initialValue={''}>
-                <Input allowClear />
-              </Form.Item>
-            </Col>
-            <Col span={FormSearchRowColSpan}>
-              <Form.Item label="状态" name="enabled" initialValue={0}>
-                <Select style={{ offset: 0, width: '120' }}>
-                  <Select.Option value={0}>全部</Select.Option>
-                  <Select.Option value={1}>启用</Select.Option>
-                  <Select.Option value={2}>禁用</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
-              <Space>
-                <Button type="primary" htmlType="submit">
-                  <SearchOutlined />
-                  查询
-                </Button>
-                <Button type="primary" htmlType="button" onClick={onSearchReset}>
-                  <ReloadOutlined />
-                  清除
-                </Button>
-              </Space>
-            </Col>
-          </Row>
-        </Form>
-      </Search>
-
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
@@ -376,25 +318,21 @@ const Admin: React.FC = () => {
 
       {/* modal */}
 
-      <AdminMenuAddModal
-        menuTreeData={menuTreeSelectData}
-        parentId={detailData?.menuId}
-        modalStatus={addModalStatus}
-        noticeModal={noticeAddModal}
-      />
-
       <AdminMenuDetailModal
         modalStatus={detailModalStatus}
         detailData={detailData}
         noticeModal={noticeDetailModal}
       />
 
-      <AdminMenuEditModal
-        menuTreeData={menuTreeSelectData}
-        modalStatus={editModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditModal}
-      />
+      {menuPermissionsDetail && menuPermissionsDetail.menu && menuPermissionsDetail.menu?.id > 0 ? (
+        <SavePermissionsModal
+          modalStatus={savePermissionsModalStatus}
+          detailData={menuPermissionsDetail}
+          noticeModal={noticeAddPermissionModal}
+        />
+      ) : (
+        ''
+      )}
     </Container>
   );
 };

@@ -398,24 +398,24 @@ const Admin: React.FC = () => {
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="名称" name="username" initialValue={''}>
-                <Input allowClear />
+                <Input  />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="昵称" name="nickname" initialValue={''}>
-                <Input allowClear />
+                <Input  />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="邮箱" name="email" initialValue={''}>
-                <Input allowClear />
+                <Input  />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="角色名" name="roleId" initialValue={0}>
                 <Select
                   style={{ offset: 0, width: '120' }}
-                  allowClear
+                  
                   showSearch
                   filterOption={(input, option) => {
                     return (option!.children as unknown as string)

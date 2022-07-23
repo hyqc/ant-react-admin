@@ -123,6 +123,10 @@ export const APIAdminMenus = {
     url: '/admin/menu/all',
     method: POST,
   },
+  permissions: {
+    url: '/admin/menu/permissions',
+    method: POST,
+  },
 };
 
 export const APIAdminPermissions = {
@@ -136,6 +140,10 @@ export const APIAdminPermissions = {
   },
   add: {
     url: '/admin/permission/add',
+    method: POST,
+  },
+  menu: {
+    url: '/admin/permission/menu',
     method: POST,
   },
   delete: {

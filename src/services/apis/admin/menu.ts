@@ -2,6 +2,7 @@
 import { request } from 'umi';
 import { APIAdminMenus } from './api';
 import type { ResponseBodyType } from '../types';
+import { PermissionsItemType } from './permission';
 
 /************************************************************/
 /**
@@ -111,6 +112,7 @@ export type ResponseAdminMenuDetailType = {
   modifyTime: string; // 最后更新时间
   icon?: string;
   locale?: string;
+  permissions?: PermissionsItemType[];
   [key: string]: any;
 };
 
@@ -176,6 +178,42 @@ export type RequestAdminMenuEnableParamsType = {
 export async function adminMenuEnable(params: RequestAdminMenuEnableParamsType) {
   return request<ResponseBodyType>(APIAdminMenus.enable.url, {
     method: APIAdminMenus.enable.method,
+    data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 菜单的权限列表
+ */
+export type ResponseAdminMenuPermissionsItemType = {
+  menuId: number;
+  id?: number;
+  key: string;
+  type: string;
+  typeText: string;
+  name: string;
+  enabled: boolean;
+  describe?: string;
+};
+
+export type RequestAdminMenuPermissionsParamsType = {
+  menuId: number;
+};
+
+export type ResponseAdminMenuPermissionsType = {
+  menu: {
+    id: number;
+    name: string;
+    path: string;
+    key: string;
+  };
+  permissions: ResponseAdminMenuPermissionsItemType[];
+};
+
+export async function adminMenuPermissions(params: RequestAdminMenuPermissionsParamsType) {
+  return request<ResponseBodyType>(APIAdminMenus.permissions.url, {
+    method: APIAdminMenus.permissions.method,
     data: params,
   });
 }

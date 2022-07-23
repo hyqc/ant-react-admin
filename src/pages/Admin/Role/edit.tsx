@@ -67,7 +67,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="名称" name="username" rules={rules.username}>
-          <Input allowClear />
+          <Input  />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />

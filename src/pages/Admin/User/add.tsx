@@ -127,10 +127,10 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           hasFeedback
           rules={rules.username}
         >
-          <Input allowClear />
+          <Input  />
         </Form.Item>
         <Form.Item label="昵称" name="nickname" initialValue={''} hasFeedback>
-          <Input allowClear />
+          <Input  />
         </Form.Item>
         <Form.Item
           label="密码"
@@ -139,7 +139,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           rules={rules.password}
           hasFeedback
         >
-          <Input.Password allowClear />
+          <Input.Password  />
         </Form.Item>
         <Form.Item
           label="确认密码"
@@ -149,10 +149,10 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           hasFeedback
           rules={rules.confirmPassword}
         >
-          <Input.Password allowClear />
+          <Input.Password  />
         </Form.Item>
         <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email} hasFeedback>
-          <Input allowClear />
+          <Input  />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
