@@ -6,17 +6,14 @@ export interface ResponseBodyType {
   data?: any;
 }
 
-export interface ResponsePageInfoDataType {
+export interface PageInfoType {
   total: number;
+  pageNum: number;
   pageSize: number;
-  pageNo: number;
 }
 
 // 列表数据 data 部分
-export interface ResponseListDataType {
-  total: number;
-  pageSize: number;
-  pageNo: number;
+export interface ResponseListDataType extends PageInfoType {
   rows: any[];
 }
 
@@ -25,25 +22,18 @@ export interface ResponseDetailDataType {
   [key: string]: any;
 }
 
-// 接口列表返回结构
+// 列表返回结构
 export interface ResponseListType extends ResponseBodyType {
   code: number;
   message: string;
   type?: string;
-  data?: ResponseListDataType;
+  data: ResponseListDataType;
 }
 
-// 接口列表返回结构
+// 详情返回结构
 export interface ResponseDetailType extends ResponseBodyType {
   code: number;
   message: string;
   type?: string;
-  data?: ResponseDetailDataType;
-}
-
-export interface ResponseAllType extends ResponseBodyType {
-  code: number;
-  message: string;
-  type?: string;
-  data?: ResponseDetailDataType[];
+  data: ResponseDetailDataType;
 }

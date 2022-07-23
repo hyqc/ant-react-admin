@@ -28,7 +28,7 @@ export async function adminMenuTree(params?: RequestAdminMenuTreeParamsType) {
 export type RequestAdminMenuListParamsType = {
   name?: string; // 菜单名称
   enabled?: boolean; // 菜单状态，true：启用，false：禁用
-  pageNo?: number;
+  pageSize?: number;
   pageSize?: number;
   sortField?: string;
   sortType?: string;
