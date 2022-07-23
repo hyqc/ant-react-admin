@@ -1,39 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Content, Search } from '@/components/PageListContainer';
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  Row,
-  Col,
-  Space,
-  Table,
-  message,
-  Popconfirm,
-  Switch,
-} from 'antd';
-import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
-import type { Gutter } from 'antd/lib/grid/row';
+import { Container, Content } from '@/components/PageListContainer';
+import { Form, Button, Space, Table, message, Popconfirm, Switch } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { ResponseListDataType, ResponseListType } from '@/services/apis/types';
 import {
   adminMenuDelete,
   adminMenuDetail,
   adminMenuEnable,
+  adminMenuPermissions,
   adminMenuTree,
   RequestAdminMenuEnableParamsType,
-  RequestAdminMenuListParamsType,
   RequestAdminMenuTreeParamsType,
   ResponseAdminMenuListItemType,
+  ResponseAdminMenuPermissionsType,
 } from '@/services/apis/admin/menu';
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import { ColumnsType } from 'antd/lib/table';
 import Authorization from '@/components/Autuorization';
 import AdminMenuDetailModal, { NoticeModalPropsType } from './detail';
 import { history } from 'umi';
-
-const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
-const FormSearchRowColSpan = 5.2;
+import SavePermissionsModal from './components/PermissionsSave';
 
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
@@ -41,6 +27,9 @@ const Admin: React.FC = () => {
   const [detailData, setDetailData] = useState<any>();
   const [rowsData, setRowsData] = useState<ResponseAdminMenuListItemType[]>([]);
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
+  const [savePermissionsModalStatus, setSaveMenuPermissionsModalStatus] = useState<boolean>(false);
+  const [menuPermissionsDetail, setMenuPermissionsDetail] =
+    useState<ResponseAdminMenuPermissionsType>({});
 
   const columns: ColumnsType<any> = [
     {
@@ -152,6 +141,20 @@ const Admin: React.FC = () => {
               </Button>
             </Authorization>
             <Authorization>
+              {record.hideInMenu ||
+              (record.children !== undefined && record?.children.length > 0) ? (
+                ''
+              ) : (
+                <Button
+                  type="primary"
+                  style={{ marginRight: 4 }}
+                  onClick={() => openSavePermissionsModal(record)}
+                >
+                  创建权限
+                </Button>
+              )}
+            </Authorization>
+            <Authorization>
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -241,9 +244,27 @@ const Admin: React.FC = () => {
     history.push('/admin/menu/add');
   }
 
+  /**
+   * 保存菜单权限
+   * @param record
+   */
+  function openSavePermissionsModal(record: ResponseAdminMenuListItemType) {
+    adminMenuPermissions({ menuId: record.menuId }).then((res) => {
+      setMenuPermissionsDetail(res.data || { menuId: record.menuId });
+      setSaveMenuPermissionsModalStatus(true);
+    });
+  }
+
   function noticeDetailModal(data: NoticeModalPropsType) {
     setDetailData(undefined);
     setDetailModalStatus(false);
+    if (data.reload) {
+      getRows({ ...form.getFieldsValue() });
+    }
+  }
+  function noticeAddPermissionModal(data: NoticeModalPropsType) {
+    setDetailData(undefined);
+    setSaveMenuPermissionsModalStatus(false);
     if (data.reload) {
       getRows({ ...form.getFieldsValue() });
     }
@@ -255,17 +276,6 @@ const Admin: React.FC = () => {
       message.success(res.message, MessageDuritain);
       getRows({ ...form.getFieldsValue() });
     });
-  }
-
-  // 管理员列表搜索
-  function onSearchFinish(values: RequestAdminMenuListParamsType) {
-    getRows({ ...values });
-  }
-
-  // 管理员搜索重置
-  function onSearchReset() {
-    form.resetFields();
-    getRows();
   }
 
   useEffect(() => {
@@ -313,6 +323,16 @@ const Admin: React.FC = () => {
         detailData={detailData}
         noticeModal={noticeDetailModal}
       />
+
+      {menuPermissionsDetail && menuPermissionsDetail.menu && menuPermissionsDetail.menu?.id > 0 ? (
+        <SavePermissionsModal
+          modalStatus={savePermissionsModalStatus}
+          detailData={menuPermissionsDetail}
+          noticeModal={noticeAddPermissionModal}
+        />
+      ) : (
+        ''
+      )}
     </Container>
   );
 };

@@ -1,10 +1,18 @@
 import { ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
+import { AdminMenuKey } from '@/services/common/pattern';
 
 export const INPUT_NAME_LENGTH_MAX = 50;
 export const FORM_RULES: any = {
   name: [{ required: true, type: 'string', message: '请输入菜单名称!' }],
   path: [{ required: true, type: 'string', message: '请输入菜单路由!' }],
-  key: [{ required: true, type: 'string', message: '请输入菜单键名!' }],
+  key: [
+    { required: true, type: 'string', message: '请输入菜单键名!' },
+    {
+      required: true,
+      pattern: AdminMenuKey,
+      message: '请按照大驼峰法命名唯一键',
+    },
+  ],
   parentId: [{ required: true, type: 'number', message: '缺少父级菜单ID' }],
   sort: [{ required: true, type: 'number', message: '排序值为不小于0的整数' }],
 };
@@ -63,4 +71,17 @@ export function makeMenuSpreadTreeData(
 ): ResponseAdminMenuListItemType[] {
   const result: ResponseAdminMenuListItemType[] = [];
   return menuSpreadTree(result, data, 0, menuId);
+}
+
+/**
+ * 把路径剔除/后改为全大驼峰法转换
+ * @param path
+ * @returns
+ */
+export function path2UpperCamelCase(path: string) {
+  return path
+    ?.split('/')
+    .filter((name) => name.length > 0)
+    .map((name) => name[0].toUpperCase() + name.substr(1))
+    .join('');
 }

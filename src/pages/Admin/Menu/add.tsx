@@ -1,5 +1,5 @@
 import { Button, Col, Form, Input, message, Row, Switch } from 'antd';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import {
@@ -9,7 +9,7 @@ import {
   ResponseAdminMenuListItemType,
 } from '@/services/apis/admin/menu';
 import MenuTreeSelect from './components/MenuTreeSelect';
-import { FORM_RULES, makeMenuSpreadTreeData } from './components/common';
+import { FORM_RULES, makeMenuSpreadTreeData, path2UpperCamelCase } from './components/common';
 import { Container, Content } from '@/components/PageListContainer';
 import { Gutter } from 'antd/lib/grid/row';
 import { history } from 'umi';
@@ -50,6 +50,10 @@ const AddModal: React.FC = () => {
 
   function handleReset() {
     form.resetFields();
+  }
+
+  function onChangePath(e: ChangeEvent) {
+    form.setFieldsValue({ key: path2UpperCamelCase(form.getFieldValue('path')) });
   }
 
   useEffect(() => {
@@ -93,7 +97,7 @@ const AddModal: React.FC = () => {
                 <Input />
               </Form.Item>
               <Form.Item label="路由" name="path" initialValue={''} rules={rules.path}>
-                <Input />
+                <Input onChange={onChangePath} />
               </Form.Item>
               <Form.Item label="唯一键名" name="key" initialValue={''} rules={rules.key}>
                 <Input />
