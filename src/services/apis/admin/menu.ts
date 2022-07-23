@@ -2,7 +2,7 @@
 import { request } from 'umi';
 import { APIAdminMenus } from './api';
 import type { ResponseBodyType } from '../types';
-import { PermissionsItemType } from './permission';
+import { PermissionsItemType, ResponseAdminMenuPermissionsItemType } from './permission';
 
 /************************************************************/
 /**
@@ -186,16 +186,6 @@ export async function adminMenuEnable(params: RequestAdminMenuEnableParamsType) 
 /**
  * 菜单的权限列表
  */
-export type ResponseAdminMenuPermissionsItemType = {
-  menuId: number;
-  id?: number;
-  key: string;
-  type: string;
-  typeText: string;
-  name: string;
-  enabled: boolean;
-  describe?: string;
-};
 
 export type RequestAdminMenuPermissionsParamsType = {
   menuId: number;
