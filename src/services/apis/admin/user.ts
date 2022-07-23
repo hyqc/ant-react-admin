@@ -1,7 +1,7 @@
 // adminUsers 管理员管理接口
 import { request } from 'umi';
 import { APIAdminUsers } from './api';
-import { ResponseBodyType } from '../types';
+import { ResponseBodyType, ResponseListType } from '../types';
 
 /************************************************************/
 /**
@@ -49,7 +49,7 @@ export type ResponseAdminUserListItemType = {
 };
 
 export async function adminUserList(params?: RequestAdminUserListParamsType) {
-  return request<ResponseBodyType>(APIAdminUsers.list.url, {
+  return request<ResponseListType>(APIAdminUsers.list.url, {
     method: APIAdminUsers.list.method,
     data: params,
   });

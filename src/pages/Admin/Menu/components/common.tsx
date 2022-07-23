@@ -74,7 +74,7 @@ export function makeMenuSpreadTreeData(
 }
 
 /**
- * 把路径剔除/后改为全大驼峰法转换
+ * 把路径转为键名
  * @param path
  * @returns
  */
@@ -82,6 +82,6 @@ export function path2UpperCamelCase(path: string) {
   return path
     ?.split('/')
     .filter((name) => name.length > 0)
-    .map((name) => name[0].toUpperCase() + name.substr(1))
+    .map((name) => name[0].toUpperCase() + name.substring(1))
     .join('');
 }

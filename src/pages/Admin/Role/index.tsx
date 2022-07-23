@@ -9,18 +9,13 @@ import {
   Col,
   Space,
   Table,
-  Pagination,
   message,
   Popconfirm,
   Switch,
 } from 'antd';
 import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
-import {
-  ResponseListDataType,
-  ResponseListType,
-  ResponsePageInfoDataType,
-} from '@/services/apis/types';
+import { PageInfoType, ResponseListDataType, ResponseListType } from '@/services/apis/types';
 import {
   adminRoleDelete,
   adminRoleDetail,
@@ -33,7 +28,6 @@ import {
 import { DEFAULT_PAGE_INFO } from '@/services/apis/config';
 import { ColumnsType } from 'antd/lib/table';
 import Authorization from '@/components/Autuorization';
-import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from './common';
 import AdminRoleAddModal, { NoticeModalPropsType } from './add';
 import AdminRoleEditModal from './edit';
 import AdminRoleDetailModal from './detail';
@@ -44,7 +38,7 @@ const FormSearchRowColSpan = 5.2;
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
-  const [pageInfo, setPageInfo] = useState<ResponsePageInfoDataType>();
+  const [pageInfo, setPageInfo] = useState<PageInfoType>({ ...DEFAULT_PAGE_INFO });
   const [detailData, setDetailData] = useState<any>();
   const [rowsData, setRowsData] = useState<ResponseAdminRoleListItemType[]>([]);
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
@@ -148,15 +142,11 @@ const Admin: React.FC = () => {
     setLoading(true);
     adminRoleList(data)
       .then((res: ResponseListType) => {
-        const data: ResponseListDataType = res.data || DEFAULT_PAGE_INFO;
+        const data: ResponseListDataType = res.data;
         const rows = data?.rows || [];
-        const pageInfo: ResponsePageInfoDataType = {
-          total: data.total,
-          pageSize: data.pageSize,
-          pageNo: data.pageNo,
-        };
+        const page = { total: data.total, pageSize: data.pageSize, pageNum: data.pageNum };
+        setPageInfo(page);
         setRowsData(rows);
-        setPageInfo(pageInfo);
       })
       .catch((err) => {
         console.log('error', err);
@@ -164,15 +154,6 @@ const Admin: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  }
-
-  function tableChange(pagination: any, filters: any, sorter: any) {
-    getRows({
-      ...pageInfo,
-      ...form.getFieldsValue(),
-      sortField: sorter.field,
-      sortType: sorter.order,
-    });
   }
 
   // 角色状态更新
@@ -240,19 +221,36 @@ const Admin: React.FC = () => {
     });
   }
 
-  // 管理员列表搜索
-  function onSearchFinish(values: RequestAdminRoleListParamsType) {
-    getRows({ ...values, ...pageInfo, pageNum: 1 });
+  // 列表搜索
+  function onSearchFinish(values: RequestAdminUserListParamsType) {
+    const page = { ...pageInfo, pageNum: 1 };
+    getRows({ ...values, ...page });
   }
 
-  // 管理员搜索重置
+  // 搜索重置
   function onSearchReset() {
     form.resetFields();
-    getRows();
+    getRows({ pageNum: 1, pageSize: pageInfo.pageSize });
+  }
+
+  function onShowSizeChange(current: number, size: number) {
+    const page = { pageSize: size, pageNum: current };
+    setPageInfo({ ...pageInfo, ...page });
+  }
+
+  function tableChange(pagination: any, filters: any, sorter: any) {
+    const page = { pageSize: pagination.pageSize, pageNum: pagination.current };
+    setPageInfo({ ...pageInfo, ...page });
+    getRows({
+      ...form.getFieldsValue(),
+      ...page,
+      sortField: sorter.field,
+      sortType: sorter.order,
+    });
   }
 
   useEffect(() => {
-    getRows();
+    onSearchReset();
   }, []);
 
   return (
@@ -262,7 +260,7 @@ const Admin: React.FC = () => {
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="名称" name="roleName" initialValue={''}>
-                <Input  />
+                <Input />
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
@@ -308,20 +306,17 @@ const Admin: React.FC = () => {
           scroll={{ x: 'auto' }}
           loading={loading}
           columns={columns}
-          pagination={false}
           dataSource={rowsData}
           onChange={tableChange}
-        ></Table>
-        <Pagination
-          showQuickJumper
-          defaultCurrent={DEFAULT_PAGE_NO}
-          style={{ marginTop: '1rem', textAlign: 'right' }}
-          total={pageInfo?.total}
-          current={pageInfo?.pageNo || DEFAULT_PAGE_NO}
-          pageSize={pageInfo?.pageSize || DEFAULT_PAGE_SIZE}
-          showTotal={(total) => `共 ${total} 条数据`}
-          onChange={(pageNo) => getRows({ pageNo, ...form.getFieldsValue() })}
-          onShowSizeChange={(pageSize) => getRows({ pageSize, ...form.getFieldsValue() })}
+          pagination={{
+            current: pageInfo.pageNum,
+            pageSize: pageInfo.pageSize,
+            total: pageInfo.total,
+            showQuickJumper: true,
+            position: ['bottomRight'],
+            showTotal: (total) => `共 ${total} 条数据`,
+            onShowSizeChange,
+          }}
         />
       </Content>
 

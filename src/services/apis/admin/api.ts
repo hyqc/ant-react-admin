@@ -163,3 +163,34 @@ export const APIAdminPermissions = {
     method: POST,
   },
 };
+
+export const APIAdminAPIResources = {
+  list: {
+    url: '/admin/api/list',
+    method: POST,
+  },
+  detail: {
+    url: '/admin/api/detail',
+    method: POST,
+  },
+  add: {
+    url: '/admin/api/add',
+    method: POST,
+  },
+  delete: {
+    url: '/admin/api/delete',
+    method: POST,
+  },
+  edit: {
+    url: '/admin/api/edit',
+    method: POST,
+  },
+  enable: {
+    url: '/admin/api/enable',
+    method: POST,
+  },
+  all: {
+    url: '/admin/api/all',
+    method: POST,
+  },
+};
