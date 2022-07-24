@@ -3,14 +3,12 @@ import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import {
-  addMenuPermission,
+  adminAddMenuPermission,
   RequestAdminPermissionAddForMenuParamsType,
+  ResponseAdminMenuPermissionsItemType,
 } from '@/services/apis/admin/permission';
 import { PERMIDDION_RULES } from '../../Permission/components/common';
-import {
-  ResponseAdminMenuPermissionsItemType,
-  ResponseAdminMenuPermissionsType,
-} from '@/services/apis/admin/menu';
+import { ResponseAdminMenuPermissionsType } from '@/services/apis/admin/menu';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -39,7 +37,7 @@ const AddPermissionsModal: React.FC<AddModalPropsType> = (props) => {
           menuId: detailData.menu.id,
           permission: handleFormValues(values),
         };
-        addMenuPermission(data).then((res) => {
+        adminAddMenuPermission(data).then((res) => {
           message.success(res.message, MessageDuritain, () => {
             noticeModal({ reload: true });
             form.resetFields();

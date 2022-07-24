@@ -1,12 +1,5 @@
-import {
-  ResponseAdminAPIDetailType,
-  ResponseAdminAPIListItemType,
-} from '@/services/apis/admin/resource';
-import {
-  ResponseBodyType,
-  ResponseDetailDataType,
-  ResponseDetailType,
-} from '@/services/apis/types';
+import { ResponseAdminAPIListItemType } from '@/services/apis/admin/resource';
+import { ResponseBodyType, ResponseDetailType } from '@/services/apis/types';
 import { success } from '../common';
 import { Request, Response } from 'express';
 
@@ -92,5 +85,12 @@ export default {
   'POST /api/admin/api/edit': success,
   'POST /api/admin/api/enable': success,
   'POST /api/admin/api/delete': success,
-  'POST /api/admin/api/all': rows,
+  'POST /api/admin/api/all': (req: Request, res: Response) => {
+    res.json({
+      code: 0,
+      message: '成功',
+      type: 'SUCCESS',
+      data: rows,
+    });
+  },
 };
