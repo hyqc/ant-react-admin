@@ -13,6 +13,7 @@ import {
   Popconfirm,
   Switch,
   Tag,
+  Tooltip,
 } from 'antd';
 import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
@@ -27,6 +28,7 @@ import {
   adminPermissionDetail,
   adminPermissionEnable,
   adminPermissionList,
+  adminPermissionUnbindApi,
   RequestAdminPermissionEnableParamsType,
   RequestAdminPermissionListParamsType,
   ResponseAdminPermissionListItemType,
@@ -37,8 +39,10 @@ import Authorization from '@/components/Autuorization';
 import AdminPermissionAddModal, { NoticeModalPropsType } from './add';
 import AdminPermissionEditModal from './edit';
 import AdminPermissionDetailModal from './detail';
+import AdminPermissionBindApiModal from './bind';
 import { adminPageMenus, ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
 import PageMenus from './components/PageMenus';
+import { ResponseAdminAPIAllItemType } from '@/services/apis/admin/resource';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -74,12 +78,19 @@ const Admin: React.FC = () => {
       align: 'left',
       dataIndex: 'name',
       width: '8rem',
+      render(name: string, record: ResponseAdminPermissionListItemType) {
+        return (
+          <Tooltip title={record.key} key={record.id}>
+            {name}
+          </Tooltip>
+        );
+      },
     },
     {
       title: '类型',
       align: 'left',
       dataIndex: 'typeText',
-      width: '4rem',
+      width: '3rem',
       render(type: string, record: ResponseAdminPermissionListItemType) {
         return record.type === 'view' ? (
           <Tag key={record.id} color="#87d068">
@@ -97,10 +108,13 @@ const Admin: React.FC = () => {
       },
     },
     {
-      title: '唯一键',
+      title: '关联接口',
       align: 'left',
-      dataIndex: 'key',
-      width: '10rem',
+      dataIndex: 'apis',
+      width: '24rem',
+      render(apis: ResponseAdminAPIAllItemType[], record: ResponseAdminPermissionListItemType) {
+        return <Authorization>{showApisTag(apis, record)}</Authorization>;
+      },
     },
     {
       title: '状态',
@@ -109,14 +123,16 @@ const Admin: React.FC = () => {
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminPermissionListItemType) {
         return (
-          <Popconfirm
-            title={`确定要${record.enabled ? '禁用' : '启用'}该权限吗？`}
-            okText="确定"
-            cancelText="取消"
-            onConfirm={() => updateEnabled(record)}
-          >
-            <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
-          </Popconfirm>
+          <Authorization>
+            <Popconfirm
+              title={`确定要${record.enabled ? '禁用' : '启用'}该权限吗？`}
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => updateEnabled(record)}
+            >
+              <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
+            </Popconfirm>
+          </Authorization>
         );
       },
     },
@@ -229,6 +245,36 @@ const Admin: React.FC = () => {
     });
   }
 
+  // 删除绑定的接口
+  function deleteBindApi(permissionId: number, apiId: number) {
+    adminPermissionUnbindApi({ permissionId, apiId }).then((res) => {
+      message.success(res.message, MessageDuritain, () => {
+        getRows({ ...form.getFieldsValue() });
+      });
+    });
+  }
+
+  function showApisTag(
+    apis: ResponseAdminAPIAllItemType[],
+    record: ResponseAdminPermissionListItemType,
+  ) {
+    return apis.map((item) => {
+      return (
+        <Popconfirm
+          key={item.apiId}
+          title={`确定要解绑${item.path}接口吗？`}
+          okText="确定"
+          cancelText="取消"
+          onConfirm={() => deleteBindApi(record.id, item.apiId)}
+        >
+          <Tag style={{ cursor: 'pointer' }} key={item.apiId}>
+            {item.name}
+          </Tag>
+        </Popconfirm>
+      );
+    });
+  }
+
   function openBindAPIModal(record: ResponseAdminPermissionListItemType) {
     adminPermissionDetail({ permissionId: record.id }).then((res) => {
       setDetailData(res.data);
@@ -254,6 +300,14 @@ const Admin: React.FC = () => {
   function noticeEditModal(data: NoticeModalPropsType) {
     setDetailData(undefined);
     setEditModalStatus(false);
+    if (data.reload) {
+      getRows({ ...form.getFieldsValue() });
+    }
+  }
+
+  function noticeBindModal(data: NoticeModalPropsType) {
+    setDetailData(undefined);
+    setBindAPIModalStatus(false);
     if (data.reload) {
       getRows({ ...form.getFieldsValue() });
     }
@@ -420,6 +474,12 @@ const Admin: React.FC = () => {
         modalStatus={editModalStatus}
         detailData={detailData}
         noticeModal={noticeEditModal}
+      />
+
+      <AdminPermissionBindApiModal
+        modalStatus={bindAPIModalStatus}
+        detailData={detailData}
+        noticeModal={noticeBindModal}
       />
     </Container>
   );

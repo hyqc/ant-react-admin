@@ -166,6 +166,14 @@ export const APIAdminPermissions = {
     url: '/admin/permission/all',
     method: POST,
   },
+  bind: {
+    url: '/admin/permission/bind',
+    method: POST,
+  },
+  unbind: {
+    url: '/admin/permission/unbind',
+    method: POST,
+  },
 };
 
 export const APIAdminAPIResources = {

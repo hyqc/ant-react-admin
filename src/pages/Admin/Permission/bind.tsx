@@ -1,15 +1,14 @@
 import {
-  adminUserAssignRoles,
-  RequestAdminUserAssignRolesParamsType,
-  ResponseAdminUserDetailType,
-} from '@/services/apis/admin/user';
+  adminPermissionBindApi,
+  RequestAdminPermissionBindApiParamsType,
+  ResponseAdminPermissionDetailType,
+} from '@/services/apis/admin/permission';
 import { SUCCESS } from '@/services/apis/code';
 import { Form, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
-import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
-import { ResponseAdminUserListItemRolesItemType } from '@/services/apis/admin/user';
+import { adminAPIAll, ResponseAdminAPIAllItemType } from '@/services/apis/admin/resource';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -17,7 +16,7 @@ export type NoticeModalPropsType = {
 
 export type BindModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminUserDetailType;
+  detailData: ResponseAdminPermissionDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 
@@ -25,11 +24,11 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
   const [form] = Form.useForm();
   const { modalStatus, detailData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-  const [roleOptions, setRoleOptions] = useState<ResponseAdminRoleAllItemType[]>([]);
+  const [apiOptions, setAPIOptions] = useState<ResponseAdminAPIAllItemType[]>([]);
 
-  const roleIdsValue: number[] =
-    detailData?.roles.map((item: ResponseAdminUserListItemRolesItemType) => {
-      return item.roleId;
+  const apiIdsValue: number[] =
+    detailData?.apis.map((item: ResponseAdminAPIAllItemType) => {
+      return item.apiId;
     }) || [];
 
   function handleOk() {
@@ -37,11 +36,11 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
     form
       .validateFields()
       .then((values) => {
-        const data: RequestAdminUserAssignRolesParamsType = {
-          adminId: detailData.adminId,
-          roleIds: values.roleIds || [],
+        const data: RequestAdminPermissionBindApiParamsType = {
+          permissionId: detailData.id,
+          apiIds: values.apiIds || [],
         };
-        adminUserAssignRoles(data)
+        adminPermissionBindApi(data)
           .then((res) => {
             message.destroy();
             message.success(res.message, MessageDuritain, () => {
@@ -64,25 +63,24 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
     noticeModal({ reload: false });
   }
 
-  function fetchAdminRoles(roleName?: string) {
-    adminRoleAll({ roleName }).then((res) => {
-      setRoleOptions(res.data || []);
+  function fetchAdminAPIs() {
+    adminAPIAll().then((res) => {
+      setAPIOptions(res.data || []);
     });
   }
 
   useEffect(() => {
     form.resetFields();
-    if (detailData && detailData.username) {
-      fetchAdminRoles();
-      form.setFieldsValue({ username: detailData?.username, roleIds: roleIdsValue });
+    if (detailData && detailData.name) {
+      fetchAdminAPIs();
+      form.setFieldsValue({ name: detailData?.name, apiIds: apiIdsValue });
     }
-    return () => {};
   }, [detailData]);
 
   return (
     <Modal
       forceRender
-      title="分配角色"
+      title="绑定接口"
       width={DefaultModalWidth}
       destroyOnClose={true}
       maskClosable={false}
@@ -95,10 +93,10 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="username">
+        <Form.Item label="名称" name="name">
           <Input disabled />
         </Form.Item>
-        <Form.Item label="角色" name="roleIds">
+        <Form.Item label="接口" name="apiIds">
           <Select
             showSearch
             mode={'multiple'}
@@ -108,10 +106,10 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
                 .includes(input.toLowerCase());
             }}
           >
-            {roleOptions?.map((item) => {
+            {apiOptions?.map((item) => {
               return (
-                <Select.Option key={item.roleId} value={item.roleId}>
-                  {item.roleName}
+                <Select.Option key={item.apiId} value={item.apiId}>
+                  {item.name}
                 </Select.Option>
               );
             })}
