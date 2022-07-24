@@ -10,7 +10,7 @@ export const DEFAULT_PERMISSION_TYPES: PermissionTypesItemType[] = [
   { key: 'delete', name: '删除' },
 ];
 
-const ruleItem: any = {
+export const DEFAULT_RULES: any = {
   key: [{ required: true, pattern: AdminPerssionKey, message: '请按照驼峰法命名' }],
   name: [
     { required: true, type: 'string', message: '请添加权限名称' },
@@ -24,7 +24,20 @@ const ruleItem: any = {
 };
 
 export const PERMIDDION_RULES = {
-  view: ruleItem,
-  edit: ruleItem,
-  delete: ruleItem,
+  view: DEFAULT_RULES,
+  edit: DEFAULT_RULES,
+  delete: DEFAULT_RULES,
 };
+
+/**
+ * 把路径转为键名
+ * @param path
+ * @returns
+ */
+export function path2UpperCamelCase(path: string) {
+  return path
+    ?.split('/')
+    .filter((name) => name.length > 0)
+    .map((name) => name[0].toUpperCase() + name.substring(1))
+    .join('');
+}

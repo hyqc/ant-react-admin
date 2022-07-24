@@ -2,7 +2,7 @@ import {
   ResponseAdminMenuListItemType,
   ResponseAdminMenuPermissionsType,
 } from '@/services/apis/admin/menu';
-import { ResponseDetailType, ResponseListType } from '@/services/apis/types';
+import { ResponseBodyType, ResponseDetailType, ResponseListType } from '@/services/apis/types';
 import { success } from '../common';
 
 const menuTreeData: ResponseAdminMenuListItemType[] = [
@@ -213,6 +213,56 @@ const menuPermissions: ResponseDetailType = {
   type: 'SUCCESS',
   data: menuPermissionsDetail,
 };
+
+const pageMenus: ResponseBodyType = {
+  code: 0,
+  message: 'success',
+  type: 'SUCCESS',
+  data: [
+    {
+      menuId: 2,
+      name: '账号管理',
+      path: '/admin/user',
+      key: 'AdminUser',
+      parentId: 1,
+      redirect: '/',
+      hideInMenu: false,
+      hideChildrenInMenu: false,
+      enabled: true,
+      enabledText: '启用',
+      createTime: '',
+      modifyTime: '',
+    },
+    {
+      menuId: 3,
+      name: '角色管理',
+      path: '/admin/role',
+      key: 'AdminRole',
+      parentId: 1,
+      redirect: '/',
+      hideInMenu: false,
+      hideChildrenInMenu: false,
+      enabled: true,
+      enabledText: '启用',
+      createTime: '',
+      modifyTime: '',
+    },
+    {
+      menuId: 4,
+      name: '菜单管理',
+      path: '/admin/menu',
+      key: 'AdminMenu',
+      parentId: 1,
+      redirect: '/',
+      hideInMenu: false,
+      hideChildrenInMenu: false,
+      enabled: true,
+      enabledText: '启用',
+      createTime: '',
+      modifyTime: '',
+    },
+  ],
+};
 export default {
   'POST /api/admin/menu/tree': menuTree,
   'POST /api/admin/menu/add': success,
@@ -221,4 +271,5 @@ export default {
   'POST /api/admin/menu/delete': success,
   'POST /api/admin/menu/detail': menuDetail,
   'POST /api/admin/menu/permissions': menuPermissions,
+  'POST /api/admin/menu/page': pageMenus,
 };
