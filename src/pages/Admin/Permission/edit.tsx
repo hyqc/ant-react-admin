@@ -7,12 +7,15 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { DEFAULT_RULES, path2UpperCamelCase } from './components/common';
+import PageMenus from './components/PageMenus';
+import { ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
 };
 
 export type EditModalPropsType = {
+  pageMenusData: ResponseAdminMenuListItemType[];
   modalStatus: boolean;
   detailData: ResponseAdminPermissionDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
@@ -20,9 +23,12 @@ export type EditModalPropsType = {
 
 const EditModal: React.FC<EditModalPropsType> = (props) => {
   const [form] = Form.useForm();
-  const { modalStatus, detailData, noticeModal } = props;
+  const { pageMenusData, modalStatus, detailData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-
+  const [menuCheckedItem, setMenuCheckedItem] = useState<
+    ResponseAdminMenuListItemType | undefined
+  >();
+  const [pageMenusDataMap, setPageMenusDataMap] = useState<any>();
   const rules: any = DEFAULT_RULES;
 
   function handleOk() {
@@ -52,8 +58,25 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
     form.setFieldsValue({ key: path2UpperCamelCase(form.getFieldValue('path')) });
   }
 
+  function menuIdChange(index: number) {
+    if (pageMenusDataMap[index] !== undefined) {
+      setMenuCheckedItem(pageMenusDataMap[index]);
+    }
+  }
+
+  useEffect(() => {
+    const data: any = {};
+    pageMenusData?.forEach((item) => {
+      data[item.menuId] = item;
+    });
+    setPageMenusDataMap(data);
+  }, [pageMenusData]);
+
   useEffect(() => {
     form.setFieldsValue(detailData);
+    if (detailData?.menuId) {
+      menuIdChange(detailData.menuId);
+    }
   }, [detailData]);
 
   return (
@@ -72,26 +95,26 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="菜单名称" name="menuName">
-          <Input disabled />
+        <Form.Item label="菜单名称" name="menuId">
+          <PageMenus data={pageMenusData} onChange={menuIdChange} />
         </Form.Item>
-        <Form.Item label="菜单路由" name="menuPath">
-          <Input disabled />
+        <Form.Item label="菜单路由">
+          <Input disabled value={menuCheckedItem?.path} />
         </Form.Item>
-        <Form.Item label="名称" name="name" initialValue={''} rules={rules.name}>
+        <Form.Item label="名称" name="name" rules={rules.name}>
           <Input />
         </Form.Item>
-        <Form.Item label="类型" name="type" initialValue={'view'}>
+        <Form.Item label="类型" name="type">
           <Select style={{ offset: 0, width: '160' }}>
             <Select.Option value="view">查看</Select.Option>
             <Select.Option value="edit">编辑</Select.Option>
             <Select.Option value="delete">删除</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="键名" name="key" initialValue={''} rules={rules.key}>
+        <Form.Item label="键名" name="key" rules={rules.key}>
           <Input onChange={onChangePath} />
         </Form.Item>
-        <Form.Item label="描述" name="describe" initialValue={''}>
+        <Form.Item label="描述" name="describe">
           <Input.TextArea />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">

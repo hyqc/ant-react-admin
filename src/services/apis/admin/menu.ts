@@ -2,7 +2,7 @@
 import { request } from 'umi';
 import { APIAdminMenus } from './api';
 import type { ResponseBodyType } from '../types';
-import { PermissionsItemType, ResponseAdminMenuPermissionsItemType } from './permission';
+import { ResponseAdminMenuPermissionsItemType } from './permission';
 
 /************************************************************/
 /**
@@ -28,7 +28,7 @@ export async function adminMenuTree(params?: RequestAdminMenuTreeParamsType) {
 export type RequestAdminMenuListParamsType = {
   name?: string; // 菜单名称
   enabled?: boolean; // 菜单状态，true：启用，false：禁用
-  pageSize?: number;
+  pageNum?: number;
   pageSize?: number;
   sortField?: string;
   sortType?: string;
@@ -205,5 +205,16 @@ export async function adminMenuPermissions(params: RequestAdminMenuPermissionsPa
   return request<ResponseBodyType>(APIAdminMenus.permissions.url, {
     method: APIAdminMenus.permissions.method,
     data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 权限的菜单列表
+ */
+export async function adminPageMenus() {
+  return request<ResponseBodyType>(APIAdminMenus.page.url, {
+    method: APIAdminMenus.page.method,
+    data: {},
   });
 }

@@ -16,7 +16,12 @@ import {
 } from 'antd';
 import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Gutter } from 'antd/lib/grid/row';
-import { PageInfoType, ResponseListDataType, ResponseListType } from '@/services/apis/types';
+import {
+  PageInfoType,
+  ResponseBodyType,
+  ResponseListDataType,
+  ResponseListType,
+} from '@/services/apis/types';
 import {
   adminPermissionDelete,
   adminPermissionDetail,
@@ -32,6 +37,8 @@ import Authorization from '@/components/Autuorization';
 import AdminPermissionAddModal, { NoticeModalPropsType } from './add';
 import AdminPermissionEditModal from './edit';
 import AdminPermissionDetailModal from './detail';
+import { adminPageMenus, ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
+import PageMenus from './components/PageMenus';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -46,6 +53,7 @@ const Admin: React.FC = () => {
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
   const [bindAPIModalStatus, setBindAPIModalStatus] = useState<boolean>(false);
+  const [pageMenusData, setPageMenusData] = useState<ResponseAdminMenuListItemType[]>([]);
 
   const columns: ColumnsType<any> = [
     {
@@ -287,6 +295,19 @@ const Admin: React.FC = () => {
     });
   }
 
+  function getPageMenus() {
+    adminPageMenus().then((res: ResponseBodyType) => {
+      const rows = res.data?.filter((item: ResponseAdminMenuListItemType) => {
+        return !item.hideInMenu;
+      });
+      setPageMenusData(rows);
+    });
+  }
+
+  useEffect(() => {
+    getPageMenus();
+  }, []);
+
   useEffect(() => {
     onSearchReset();
   }, []);
@@ -297,8 +318,10 @@ const Admin: React.FC = () => {
         <Form form={form} onFinish={onSearchFinish}>
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="菜单名称" name="menuName" initialValue={''}>
-                <Input />
+              <Form.Item label="菜单名称" name="menuId" initialValue={0}>
+                <PageMenus data={pageMenusData}>
+                  <Select.Option value={0}>全部</Select.Option>
+                </PageMenus>
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
@@ -313,7 +336,7 @@ const Admin: React.FC = () => {
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="权限类型" name="type" initialValue={''}>
-                <Select style={{ offset: 0, width: '160' }}>
+                <Select>
                   <Select.Option value="">全部</Select.Option>
                   <Select.Option value="view">查看</Select.Option>
                   <Select.Option value="edit">编辑</Select.Option>
@@ -323,7 +346,7 @@ const Admin: React.FC = () => {
             </Col>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="权限状态" name="enabled" initialValue={0}>
-                <Select style={{ offset: 0, width: '120' }}>
+                <Select>
                   <Select.Option value={0}>全部</Select.Option>
                   <Select.Option value={1}>启用</Select.Option>
                   <Select.Option value={2}>禁用</Select.Option>
@@ -380,7 +403,11 @@ const Admin: React.FC = () => {
 
       {/* modal */}
 
-      <AdminPermissionAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
+      <AdminPermissionAddModal
+        pageMenusData={pageMenusData}
+        modalStatus={addModalStatus}
+        noticeModal={noticeAddModal}
+      />
 
       <AdminPermissionDetailModal
         detailData={detailData}
@@ -389,6 +416,7 @@ const Admin: React.FC = () => {
       />
 
       <AdminPermissionEditModal
+        pageMenusData={pageMenusData}
         modalStatus={editModalStatus}
         detailData={detailData}
         noticeModal={noticeEditModal}
