@@ -1,54 +1,67 @@
-import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
-import { MenuDataItem } from '@umijs/route-utils';
+import type {
+  MenusRemoteItem,
+  ReponseCurrentAdminUserDetailType,
+} from '@/services/apis/admin/account';
 
 const AvatarImage =
   'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
 
-const menusData: MenuDataItem = [
-  {
-    path: '/login',
-    component: './Login',
-    title: 'login',
-    layout: false,
+const menusData: MenusRemoteItem = {
+  AdminUser: {
+    key: 'AdminUser',
+    path: '/admin/user',
+    name: 'user',
+    icon: 'UserOutlined',
+    component: './Admin/User',
+    hideInMenu: false,
   },
-  {
-    name: 'admin',
-    icon: 'setting',
-    routes: [
-      {
-        path: '/admin/user',
-        name: 'user',
-        icon: 'UserOutlined',
-        component: './Admin/User',
-      },
-      {
-        path: '/admin/role',
-        name: 'role',
-        icon: 'UserSwitchOutlined',
-        component: './Admin/Role',
-      },
-      {
-        path: '/admin/permission',
-        name: 'permission',
-        icon: 'UnlockOutlined',
-        component: './Admin/Permission',
-      },
-      {
-        path: '/admin/api',
-        name: 'api',
-        icon: 'ApiOutlined',
-        component: './Admin/Api',
-      },
-    ],
+  AdminRole: {
+    key: 'AdminRole',
+    path: '/admin/role',
+    name: 'role',
+    icon: 'UserSwitchOutlined',
+    component: './Admin/Role',
+    hideInMenu: false,
   },
-  {
-    path: '/',
-    redirect: '/admin/user',
+  AdminMenu: {
+    key: 'AdminMenu',
+    path: '/admin/menu',
+    name: 'menu',
+    icon: 'UnlockOutlined',
+    component: './Admin/Menu',
+    hideInMenu: false,
   },
-  {
-    component: './404',
+  AdminMenuAdd: {
+    key: 'AdminMenuAdd',
+    path: '/admin/menu/add',
+    name: 'menu.add',
+    component: './Admin/Menu/add',
+    hideInMenu: true,
   },
-];
+  AdminMenuEdit: {
+    key: 'AdminMenuEdit',
+    path: '/admin/menu/edit',
+    name: 'menu.edit',
+    component: './Admin/Menu/edit',
+    hideInMenu: true,
+  },
+  AdminPermission: {
+    key: 'AdminPermission',
+    path: '/admin/permission',
+    name: 'permission',
+    icon: 'UnlockOutlined',
+    component: './Admin/Permission',
+    hideInMenu: false,
+  },
+  AdminApi: {
+    key: 'AdminApi',
+    path: '/admin/api',
+    name: 'api',
+    icon: 'ApiOutlined',
+    component: './Admin/Api',
+    hideInMenu: false,
+  },
+};
 
 const currentAdminUserDetail: ReponseCurrentAdminUserDetailType = {
   adminId: 1,

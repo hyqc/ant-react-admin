@@ -4,12 +4,16 @@ import { RunTimeLayoutConfig, RequestConfig, Link } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentAdminInfo } from './services/apis/admin/account';
+import { currentAdminInfo, MenusRemoteItem } from './services/apis/admin/account';
 import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
 import { message } from 'antd';
 import type { ResponseBodyType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
 import defaultSettings from '../config/defaultSettings';
+import { MenuDataItem } from '@umijs/route-utils';
+import routersConfig from '../config/routes';
+import React from 'react';
+import * as IconMap from '@ant-design/icons';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -24,12 +28,13 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: ReponseCurrentAdminUserDetailType;
+  menuData?: MenuDataItem[];
   fetchUserInfo?: () => Promise<ReponseCurrentAdminUserDetailType | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await currentAdminInfo();
-      return msg.data;
+      const res = await currentAdminInfo();
+      return res.data;
     } catch (error) {
       history.push(LoginPath);
     }
@@ -38,9 +43,11 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   if (history.location.pathname !== LoginPath) {
     const currentUser: ReponseCurrentAdminUserDetailType = await fetchUserInfo();
+    const menuData = handleRemoteMenuIntoLocal(routersConfig, currentUser.menus);
     return {
       fetchUserInfo,
       currentUser,
+      menuData,
       settings: { ...defaultSettings, ...currentUser?.settings },
     };
   }
@@ -89,11 +96,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     //   if (initialState.loading) return <PageLoading />;
     //   return children;
     // },
-    // menu: {
-    //   request: async (params, defaultMenuData) => {
-    //     return initialState?.menuData || {};
-    //   },
-    // },
+    menu: {
+      request: (params, defaultMenuData) => {
+        return initialState?.menuData;
+      },
+    },
     childrenRender: (children, props) => {
       // if (initialState?.loading) return <PageLoading />;
       return (
@@ -154,3 +161,18 @@ export const request: RequestConfig = {
   requestInterceptors: [interceptorsRequest],
   responseInterceptors: [interceptorsResponse],
 };
+
+function handleRemoteMenuIntoLocal(defaultMenuData: MenuDataItem[], remoteMenus: MenusRemoteItem) {
+  defaultMenuData.forEach((item) => {
+    if (item.key && remoteMenus[item.key] && remoteMenus[item.key].hideInMenu === false) {
+      item.hideInMenu = false;
+    }
+    if (item.icon !== undefined && item.icon.length > 0 && IconMap[item.icon]) {
+      item.icon = React.createElement(IconMap[item.icon]);
+    }
+    if (item.routes !== undefined && item.routes.length > 0) {
+      handleRemoteMenuIntoLocal(item.routes, remoteMenus);
+    }
+  });
+  return defaultMenuData;
+}

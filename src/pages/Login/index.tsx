@@ -6,6 +6,7 @@ import { login } from '@/services/apis/admin/account';
 import type { RequestLoginParamsType } from '@/services/apis/admin/account';
 import { AdminUserPassword } from '@/services/common/pattern';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { MenuDataItem } from '@umijs/route-utils';
 
 const Login: React.FC = () => {
   const { setInitialState } = useModel('@@initialState');
@@ -95,5 +96,18 @@ const Login: React.FC = () => {
     </div>
   );
 };
+
+/**
+ * 菜单数据平铺
+ */
+export function menusListData2Map(menus: MenuDataItem[]) {
+  let result = {};
+  menus.forEach((item: MenuDataItem) => {
+    if (item.key) {
+      result[item.key] = item;
+    }
+  });
+  return result;
+}
 
 export default Login;
