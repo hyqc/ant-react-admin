@@ -113,7 +113,7 @@ const Admin: React.FC = () => {
       dataIndex: 'apis',
       width: '24rem',
       render(apis: ResponseAdminAPIAllItemType[], record: ResponseAdminPermissionListItemType) {
-        return <Authorization>{showApisTag(apis, record)}</Authorization>;
+        return showApisTag(apis, record);
       },
     },
     {
@@ -123,7 +123,19 @@ const Admin: React.FC = () => {
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminPermissionListItemType) {
         return (
-          <Authorization>
+          <Authorization
+            name="AdminPermissionEdit"
+            forbidden={
+              <>
+                <Switch
+                  disabled
+                  checkedChildren={'启用'}
+                  unCheckedChildren={'禁用'}
+                  checked={enabled}
+                />
+              </>
+            }
+          >
             <Popconfirm
               title={`确定要${record.enabled ? '禁用' : '启用'}该权限吗？`}
               okText="确定"
@@ -142,7 +154,7 @@ const Admin: React.FC = () => {
       render(text, record: ResponseAdminPermissionListItemType) {
         return (
           <Space>
-            <Authorization>
+            <Authorization name="AdminPermissionView">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -151,7 +163,7 @@ const Admin: React.FC = () => {
                 详情
               </Button>
             </Authorization>
-            <Authorization>
+            <Authorization name="AdminPermissionEdit">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -160,7 +172,7 @@ const Admin: React.FC = () => {
                 编辑
               </Button>
             </Authorization>
-            <Authorization>
+            <Authorization name="AdminPermissionEdit">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -170,7 +182,7 @@ const Admin: React.FC = () => {
               </Button>
             </Authorization>
             {/* 禁用的才能删除 */}
-            <Authorization>
+            <Authorization name="AdminPermissionDelete">
               {!record.enabled ? (
                 <Popconfirm
                   title="确定要删除该权限吗？"
@@ -260,17 +272,29 @@ const Admin: React.FC = () => {
   ) {
     return apis.map((item) => {
       return (
-        <Popconfirm
+        <Authorization
           key={item.apiId}
-          title={`确定要解绑${item.path}接口吗？`}
-          okText="确定"
-          cancelText="取消"
-          onConfirm={() => deleteBindApi(record.id, item.apiId)}
+          name="AdminPermissionEdit"
+          forbidden={
+            <>
+              <Tag style={{ cursor: 'no-drop' }} key={item.apiId}>
+                {item.name}
+              </Tag>
+            </>
+          }
         >
-          <Tag style={{ cursor: 'pointer' }} key={item.apiId}>
-            {item.name}
-          </Tag>
-        </Popconfirm>
+          <Popconfirm
+            key={item.apiId}
+            title={`确定要解绑${item.path}接口吗？`}
+            okText="确定"
+            cancelText="取消"
+            onConfirm={() => deleteBindApi(record.id, item.apiId)}
+          >
+            <Tag style={{ cursor: 'pointer' }} key={item.apiId}>
+              {item.name}
+            </Tag>
+          </Popconfirm>
+        </Authorization>
       );
     });
   }
@@ -428,10 +452,12 @@ const Admin: React.FC = () => {
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
-          <Button type="primary" onClick={openAddModal}>
-            <PlusOutlined />
-            新建接口
-          </Button>
+          <Authorization name="AdminPermissionEdit">
+            <Button type="primary" onClick={openAddModal}>
+              <PlusOutlined />
+              新建接口
+            </Button>
+          </Authorization>
         </Space>
 
         {/* table */}
