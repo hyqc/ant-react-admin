@@ -4,7 +4,11 @@ import { RunTimeLayoutConfig, RequestConfig, Link } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentAdminInfo, MenusRemoteItem } from './services/apis/admin/account';
+import {
+  currentAdminInfo,
+  CurrentUserPermissionsType,
+  MenusRemoteItem,
+} from './services/apis/admin/account';
 import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
 import { message } from 'antd';
 import type { ResponseBodyType } from '@/services/apis/types';
@@ -22,12 +26,10 @@ export const initialStateConfig = {
   loading: <PageLoading />,
 };
 
-/**
- * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
- * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: ReponseCurrentAdminUserDetailType;
+  permissions?: CurrentUserPermissionsType;
   menuData?: MenuDataItem[];
   fetchUserInfo?: () => Promise<ReponseCurrentAdminUserDetailType | undefined>;
 }> {
@@ -43,11 +45,20 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   if (history.location.pathname !== LoginPath) {
     const currentUser: ReponseCurrentAdminUserDetailType = await fetchUserInfo();
-    const menuData = handleRemoteMenuIntoLocal(routersConfig, currentUser.menus);
+    const menuData = handleRemoteMenuIntoLocal(routersConfig, { ...currentUser?.menus });
+    const permissions = { ...currentUser.permissions };
+    if (currentUser?.menus) {
+      currentUser.menus = null;
+    }
+    if (currentUser.permissions) {
+      currentUser.permissions = null;
+    }
+    console.log(permissions);
     return {
       fetchUserInfo,
       currentUser,
       menuData,
+      permissions,
       settings: { ...defaultSettings, ...currentUser?.settings },
     };
   }
@@ -57,7 +68,6 @@ export async function getInitialState(): Promise<{
   };
 }
 
-// ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     rightContentRender: () => <RightContent />,

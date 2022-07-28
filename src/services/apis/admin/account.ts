@@ -17,8 +17,8 @@ export type ReponseCurrentAdminUserDetailType = {
   email: string;
   token: string;
   expire: number;
-  permissions: CurrentUserPermissionsType;
-  menus: MenusRemoteItem;
+  permissions: CurrentUserPermissionsType | null | undefined;
+  menus: MenusRemoteItem | null | undefined;
   signature?: string;
   settings?: PureSettings;
   createTime?: string;

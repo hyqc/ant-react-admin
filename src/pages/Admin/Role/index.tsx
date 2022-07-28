@@ -78,14 +78,28 @@ const Admin: React.FC = () => {
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminRoleListItemType) {
         return (
-          <Popconfirm
-            title={`确定要${record.enabled ? '禁用' : '启用'}该角色吗？`}
-            okText="确定"
-            cancelText="取消"
-            onConfirm={() => updateEnabled(record)}
+          <Authorization
+            name="AdminRoleEdit"
+            forbidden={
+              <>
+                <Switch
+                  disabled
+                  checkedChildren={'启用'}
+                  unCheckedChildren={'禁用'}
+                  checked={enabled}
+                />
+              </>
+            }
           >
-            <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
-          </Popconfirm>
+            <Popconfirm
+              title={`确定要${record.enabled ? '禁用' : '启用'}该角色吗？`}
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => updateEnabled(record)}
+            >
+              <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
+            </Popconfirm>
+          </Authorization>
         );
       },
     },
@@ -95,7 +109,7 @@ const Admin: React.FC = () => {
       render(text, record: ResponseAdminRoleListItemType) {
         return (
           <Space>
-            <Authorization>
+            <Authorization name="AdminRoleView">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -104,7 +118,7 @@ const Admin: React.FC = () => {
                 详情
               </Button>
             </Authorization>
-            <Authorization>
+            <Authorization name="AdminRoleEdit">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -115,7 +129,7 @@ const Admin: React.FC = () => {
             </Authorization>
 
             {/* 禁用的才能删除 */}
-            <Authorization>
+            <Authorization name="AdminRoleDelete">
               {!record.enabled ? (
                 <Popconfirm
                   title="确定要删除该角色吗？"
@@ -293,10 +307,12 @@ const Admin: React.FC = () => {
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
-          <Button type="primary" onClick={openAddModal}>
-            <PlusOutlined />
-            新建角色
-          </Button>
+          <Authorization name="AdminRoleEdit">
+            <Button type="primary" onClick={openAddModal}>
+              <PlusOutlined />
+              新建角色
+            </Button>
+          </Authorization>
         </Space>
 
         {/* table */}

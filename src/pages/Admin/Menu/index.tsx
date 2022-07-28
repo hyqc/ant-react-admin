@@ -54,7 +54,19 @@ const Admin: React.FC = () => {
           return <></>;
         }
         return (
-          <Authorization>
+          <Authorization
+            name="AdminMenuEdit"
+            forbidden={
+              <>
+                <Switch
+                  disabled
+                  checkedChildren={'隐藏'}
+                  unCheckedChildren={'显示'}
+                  checked={enabled}
+                />
+              </>
+            }
+          >
             <Popconfirm
               title={`确定在菜单中${record.hideInMenu ? '显示' : '隐藏'}该项吗？`}
               okText="确定"
@@ -77,7 +89,19 @@ const Admin: React.FC = () => {
           return <></>;
         }
         return (
-          <Authorization>
+          <Authorization
+            name="AdminMenuEdit"
+            forbidden={
+              <>
+                <Switch
+                  disabled
+                  checkedChildren={'隐藏'}
+                  unCheckedChildren={'显示'}
+                  checked={enabled}
+                />
+              </>
+            }
+          >
             <Popconfirm
               title={`确定在菜单中${record.hideInMenu ? '显示' : '隐藏'}其子菜单项吗？`}
               okText="确定"
@@ -100,7 +124,19 @@ const Admin: React.FC = () => {
           return <></>;
         }
         return (
-          <Authorization>
+          <Authorization
+            name="AdminMenuEdit"
+            forbidden={
+              <>
+                <Switch
+                  disabled
+                  checkedChildren={'启用'}
+                  unCheckedChildren={'禁用'}
+                  checked={enabled}
+                />
+              </>
+            }
+          >
             <Popconfirm
               title={`确定要${record.enabled ? '禁用' : '启用'}该菜单吗？`}
               okText="确定"
@@ -122,7 +158,7 @@ const Admin: React.FC = () => {
         }
         return (
           <Space>
-            <Authorization>
+            <Authorization name="AdminMenuView">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -131,7 +167,7 @@ const Admin: React.FC = () => {
                 详情
               </Button>
             </Authorization>
-            <Authorization>
+            <Authorization name="AdminMenuEdit">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -140,7 +176,7 @@ const Admin: React.FC = () => {
                 添加子菜单
               </Button>
             </Authorization>
-            <Authorization>
+            <Authorization name="AdminMenuEdit">
               {record.hideInMenu ||
               (record.children !== undefined && record?.children.length > 0) ? (
                 ''
@@ -154,7 +190,7 @@ const Admin: React.FC = () => {
                 </Button>
               )}
             </Authorization>
-            <Authorization>
+            <Authorization name="AdminMenuEdit">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -165,7 +201,7 @@ const Admin: React.FC = () => {
             </Authorization>
 
             {/* 禁用的才能删除 */}
-            <Authorization>
+            <Authorization name="AdminMenuDelete">
               {!record.enabled ? (
                 <Popconfirm
                   title="确定要删除该菜单吗？"
@@ -287,10 +323,12 @@ const Admin: React.FC = () => {
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
-          <Button type="primary" onClick={() => openAddModal()}>
-            <PlusOutlined />
-            新建菜单
-          </Button>
+          <Authorization name="AdminMenuEdit">
+            <Button type="primary" onClick={() => openAddModal()}>
+              <PlusOutlined />
+              新建菜单
+            </Button>
+          </Authorization>
         </Space>
 
         {/* table */}
