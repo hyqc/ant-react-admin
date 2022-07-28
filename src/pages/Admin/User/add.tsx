@@ -1,7 +1,7 @@
 import { adminUserAdd, RequestAdminUserAddParamsType } from '@/services/apis/admin/user';
 import { APIAccount } from '@/services/apis/admin/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
@@ -127,10 +127,10 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           hasFeedback
           rules={rules.username}
         >
-          <Input  />
+          <Input />
         </Form.Item>
         <Form.Item label="昵称" name="nickname" initialValue={''} hasFeedback>
-          <Input  />
+          <Input />
         </Form.Item>
         <Form.Item
           label="密码"
@@ -139,7 +139,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           rules={rules.password}
           hasFeedback
         >
-          <Input.Password  />
+          <Input.Password />
         </Form.Item>
         <Form.Item
           label="确认密码"
@@ -149,10 +149,10 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           hasFeedback
           rules={rules.confirmPassword}
         >
-          <Input.Password  />
+          <Input.Password />
         </Form.Item>
         <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email} hasFeedback>
-          <Input  />
+          <Input />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />

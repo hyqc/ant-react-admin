@@ -150,7 +150,19 @@ const Admin: React.FC = () => {
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminUserListItemType) {
         return (
-          <Authorization>
+          <Authorization
+            name="AdminUserEdit"
+            forbidden={
+              <>
+                <Switch
+                  disabled
+                  checkedChildren={'启用'}
+                  unCheckedChildren={'禁用'}
+                  checked={enabled}
+                />
+              </>
+            }
+          >
             <Popconfirm
               title={`确定要${record.enabled ? '禁用' : '启用'}该管理员吗？`}
               okText="确定"
@@ -169,7 +181,7 @@ const Admin: React.FC = () => {
       render(text, record: ResponseAdminUserListItemType) {
         return (
           <Space>
-            <Authorization>
+            <Authorization name="AdminUserView">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -179,7 +191,7 @@ const Admin: React.FC = () => {
               </Button>
             </Authorization>
 
-            <Authorization>
+            <Authorization name="AdminUserEdit">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -189,7 +201,7 @@ const Admin: React.FC = () => {
               </Button>
             </Authorization>
 
-            <Authorization>
+            <Authorization name="AdminUserEdit">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -199,7 +211,7 @@ const Admin: React.FC = () => {
               </Button>
             </Authorization>
 
-            <Authorization>
+            <Authorization name="AdminUserEdit">
               {/* 非超管修改密码 */}
               <Button
                 type="primary"
@@ -211,7 +223,7 @@ const Admin: React.FC = () => {
             </Authorization>
 
             {/* 禁用的才能删除 */}
-            <Authorization>
+            <Authorization name="AdminUserDelete">
               {!record.enabled ? (
                 <Popconfirm
                   title="确定要删除该管理员吗？"
@@ -464,10 +476,12 @@ const Admin: React.FC = () => {
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
-          <Button type="primary" onClick={openAddModal}>
-            <PlusOutlined />
-            新建管理员
-          </Button>
+          <Authorization name="AdminUserEdit">
+            <Button type="primary" onClick={openAddModal}>
+              <PlusOutlined />
+              新建管理员
+            </Button>
+          </Authorization>
         </Space>
 
         {/* table */}

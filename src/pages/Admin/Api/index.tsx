@@ -85,14 +85,28 @@ const Admin: React.FC = () => {
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminAPIListItemType) {
         return (
-          <Popconfirm
-            title={`确定要${record.enabled ? '禁用' : '启用'}该接口资源吗？`}
-            okText="确定"
-            cancelText="取消"
-            onConfirm={() => updateEnabled(record)}
+          <Authorization
+            name="AdminApiEdit"
+            forbidden={
+              <>
+                <Switch
+                  disabled
+                  checkedChildren={'启用'}
+                  unCheckedChildren={'禁用'}
+                  checked={enabled}
+                />
+              </>
+            }
           >
-            <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
-          </Popconfirm>
+            <Popconfirm
+              title={`确定要${record.enabled ? '禁用' : '启用'}该接口资源吗？`}
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => updateEnabled(record)}
+            >
+              <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
+            </Popconfirm>
+          </Authorization>
         );
       },
     },
@@ -102,7 +116,7 @@ const Admin: React.FC = () => {
       render(text, record: ResponseAdminAPIListItemType) {
         return (
           <Space>
-            <Authorization>
+            <Authorization name="AdminApiView">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -111,7 +125,7 @@ const Admin: React.FC = () => {
                 详情
               </Button>
             </Authorization>
-            <Authorization>
+            <Authorization name="AdminApiEdit">
               <Button
                 type="primary"
                 style={{ marginRight: 4 }}
@@ -122,7 +136,7 @@ const Admin: React.FC = () => {
             </Authorization>
 
             {/* 禁用的才能删除 */}
-            <Authorization>
+            <Authorization name="AdminApiDelete">
               {!record.enabled ? (
                 <Popconfirm
                   title="确定要删除该接口资源吗？"
@@ -310,10 +324,12 @@ const Admin: React.FC = () => {
       <Content>
         {/* button */}
         <Space style={{ marginBottom: '1rem' }}>
-          <Button type="primary" onClick={openAddModal}>
-            <PlusOutlined />
-            新建接口
-          </Button>
+          <Authorization name="AdminApiEdit">
+            <Button type="primary" onClick={openAddModal}>
+              <PlusOutlined />
+              新建接口
+            </Button>
+          </Authorization>
         </Space>
 
         {/* table */}
