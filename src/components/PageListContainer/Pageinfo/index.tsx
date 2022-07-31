@@ -4,7 +4,7 @@ import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from '@/pages/Admin/User/common';
 
 export type PageinfoType = {
   total: number | undefined;
-  pageSize: number | undefined;
+  pageNum: number | undefined;
   pageSize: number | undefined;
   children?: any;
   onChange?: (pageNum: number, pageSize?: number) => void;
