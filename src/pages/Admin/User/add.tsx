@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
-import { AdminUserPassword } from '@/services/common/pattern';
 import ImgCrop from 'antd-img-crop';
+import { AdminUserFormRules } from './common';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -23,35 +23,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   const [fileList, setFielList] = useState<any[]>([]);
   const [avatar, setAvatar] = useState<string>('');
-  const rules: any = {
-    username: [{ required: true, type: 'string', message: '请输入管理员名称!' }],
-    email: [{ type: 'email', message: '邮箱格式错误!' }],
-    password: [
-      { required: true, type: 'string', message: '密码不能为空' },
-      {
-        required: true,
-        pattern: AdminUserPassword,
-        message: '',
-      },
-    ],
-    confirmPassword: [
-      { required: true, type: 'string', message: '密码不能为空' },
-      {
-        required: true,
-        pattern: AdminUserPassword,
-        message: '',
-      },
-      {
-        required: true,
-        validator: (rule: any, value: string) => {
-          if (form.getFieldValue('password') !== value) {
-            return Promise.reject(new Error('两次输入的密码不一致'));
-          }
-          return Promise.resolve();
-        },
-      },
-    ],
-  };
+  const rules: any = AdminUserFormRules(form);
 
   function handleOk() {
     setConfirmLoading(true);
@@ -120,25 +92,13 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item
-          label="名称"
-          name="username"
-          initialValue={''}
-          hasFeedback
-          rules={rules.username}
-        >
+        <Form.Item label="账号" name="username" initialValue={''} rules={rules.username}>
           <Input />
         </Form.Item>
-        <Form.Item label="昵称" name="nickname" initialValue={''} hasFeedback>
+        <Form.Item label="昵称" name="nickname" initialValue={''}>
           <Input />
         </Form.Item>
-        <Form.Item
-          label="密码"
-          name="password"
-          initialValue={''}
-          rules={rules.password}
-          hasFeedback
-        >
+        <Form.Item label="密码" name="password" initialValue={''} rules={rules.password}>
           <Input.Password />
         </Form.Item>
         <Form.Item
@@ -146,12 +106,11 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           name="confirmPassword"
           initialValue={''}
           dependencies={['password']}
-          hasFeedback
           rules={rules.confirmPassword}
         >
           <Input.Password />
         </Form.Item>
-        <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email} hasFeedback>
+        <Form.Item label="邮箱" name="email" initialValue={''} rules={rules.email}>
           <Input />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">

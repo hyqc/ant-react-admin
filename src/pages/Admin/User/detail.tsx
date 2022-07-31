@@ -45,7 +45,7 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
         <Form.Item label="ID" name="adminId">
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="名称" name="username">
+        <Form.Item label="账号" name="username">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="头像" name="avatar" initialValue={true}>

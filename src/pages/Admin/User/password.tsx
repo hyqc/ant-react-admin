@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { AdminUserPassword } from '@/services/common/pattern';
+import { AdminUserFormRules } from './common';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -24,33 +25,7 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
   const { modalStatus, detailData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
 
-  const rules: any = {
-    password: [
-      { required: true, type: 'string', message: '密码不能为空' },
-      {
-        required: true,
-        pattern: AdminUserPassword,
-        message: '',
-      },
-    ],
-    confirmPassword: [
-      { required: true, type: 'string', message: '密码不能为空' },
-      {
-        required: true,
-        pattern: AdminUserPassword,
-        message: '',
-      },
-      {
-        required: true,
-        validator: (rule: any, value: string) => {
-          if (form.getFieldValue('password') !== value) {
-            return Promise.reject(new Error('两次输入的密码不一致'));
-          }
-          return Promise.resolve();
-        },
-      },
-    ],
-  };
+  const rules: any = AdminUserFormRules(form);
 
   function handleOk() {
     setConfirmLoading(true);
@@ -101,27 +76,20 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="username">
-          <Input  disabled />
+        <Form.Item label="账号" name="username">
+          <Input disabled />
         </Form.Item>
-        <Form.Item
-          label="密码"
-          name="password"
-          initialValue={''}
-          rules={rules.password}
-          hasFeedback
-        >
-          <Input.Password  />
+        <Form.Item label="密码" name="password" initialValue={''} rules={rules.password}>
+          <Input.Password />
         </Form.Item>
         <Form.Item
           label="确认密码"
           name="confirmPassword"
           initialValue={''}
           dependencies={['password']}
-          hasFeedback
           rules={rules.confirmPassword}
         >
-          <Input.Password  />
+          <Input.Password />
         </Form.Item>
       </Form>
     </Modal>
