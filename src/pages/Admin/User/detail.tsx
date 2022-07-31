@@ -41,7 +41,7 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
       visible={modalStatus}
       onClose={onClose}
     >
-      <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+      <Form form={form} labelAlign="left" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="ID" name="adminId">
           <Input disabled style={inputStyle} />
         </Form.Item>

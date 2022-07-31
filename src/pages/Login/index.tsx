@@ -6,7 +6,7 @@ import { login } from '@/services/apis/admin/account';
 import type { RequestLoginParamsType } from '@/services/apis/admin/account';
 import { AdminUserPassword } from '@/services/common/pattern';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { MenuDataItem } from '@umijs/route-utils';
+import { SetLoginToken } from '@/utils/common';
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
@@ -29,7 +29,7 @@ const Login: React.FC = () => {
     try {
       const res = await login(values);
       // 设置token
-      localStorage.setItem('token', res.data.token);
+      SetLoginToken(res.data.token, res.data.expire, values.remember || false);
       // 设置菜单
       await setInitialState((s: any) => ({
         ...s,
@@ -39,7 +39,7 @@ const Login: React.FC = () => {
       if (!history) return;
       const { query } = history.location;
       const { redirect } = query as { redirect: string };
-      window.location.href = redirect || '/';
+      history.push(redirect || '/');
       return;
     } catch (error) {
       console.log(error);
@@ -99,18 +99,5 @@ const Login: React.FC = () => {
     </div>
   );
 };
-
-/**
- * 菜单数据平铺
- */
-export function menusListData2Map(menus: MenuDataItem[]) {
-  let result = {};
-  menus.forEach((item: MenuDataItem) => {
-    if (item.key) {
-      result[item.key] = item;
-    }
-  });
-  return result;
-}
 
 export default Login;

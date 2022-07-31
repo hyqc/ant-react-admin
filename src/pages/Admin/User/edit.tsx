@@ -120,7 +120,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
         },
       ]);
     }
-  });
+  }, []);
 
   return (
     <Modal
@@ -139,13 +139,13 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="名称" name="username" rules={rules.username}>
-          <Input  />
+          <Input />
         </Form.Item>
         <Form.Item label="昵称" name="nickname" rules={rules.nickname}>
-          <Input  />
+          <Input />
         </Form.Item>
         <Form.Item label="邮箱" name="email" rules={rules.email}>
-          <Input  />
+          <Input />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
