@@ -4,7 +4,7 @@ import { FormInstance } from 'antd';
 export const DEFAULT_PAGE_NO = 1;
 export const DEFAULT_PAGE_SIZE = 10;
 
-export const AdminUserFormRules = (form: FormInstance<any>): any => {
+export const AdminUserFormRules = (form: FormInstance<any>): { [key: string]: any[] } => {
   return {
     username: [{ required: true, type: 'string', message: '请输入账号名称!' }],
     email: [{ type: 'email', message: '邮箱格式错误!' }],

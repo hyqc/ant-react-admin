@@ -7,7 +7,6 @@ import { Form, Input, message, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
-import { AdminUserPassword } from '@/services/common/pattern';
 import { AdminUserFormRules } from './common';
 
 export type NoticeModalPropsType = {
@@ -25,7 +24,7 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
   const { modalStatus, detailData, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
 
-  const rules: any = AdminUserFormRules(form);
+  const rules = AdminUserFormRules(form);
 
   function handleOk() {
     setConfirmLoading(true);
@@ -56,9 +55,8 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
   }
 
   useEffect(() => {
-    form.resetFields();
     form.setFieldsValue(detailData);
-  });
+  }, []);
 
   return (
     <Modal
@@ -85,8 +83,8 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
         <Form.Item
           label="确认密码"
           name="confirmPassword"
-          initialValue={''}
           dependencies={['password']}
+          initialValue={''}
           rules={rules.confirmPassword}
         >
           <Input.Password />

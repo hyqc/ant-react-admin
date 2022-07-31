@@ -23,7 +23,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   const [fileList, setFielList] = useState<any[]>([]);
   const [avatar, setAvatar] = useState<string>('');
-  const rules: any = AdminUserFormRules(form);
+  const rules = AdminUserFormRules(form);
 
   function handleOk() {
     setConfirmLoading(true);
