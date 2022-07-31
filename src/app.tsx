@@ -4,20 +4,14 @@ import { RunTimeLayoutConfig, RequestConfig, Link } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import {
-  currentAdminInfo,
-  CurrentUserPermissionsType,
-  MenusRemoteItem,
-} from './services/apis/admin/account';
+import { currentAdminInfo, CurrentUserPermissionsType } from './services/apis/admin/account';
 import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
 import { message } from 'antd';
 import type { ResponseBodyType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
 import defaultSettings from '../config/defaultSettings';
 import { MenuDataItem } from '@umijs/route-utils';
-import routersConfig from '../config/routes';
-import React from 'react';
-import * as IconMap from '@ant-design/icons';
+import { HandleMenusToMap, HandleRemoteMenuIntoLocal, IsLogin, Logout } from '@/utils/common';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -45,19 +39,11 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   if (history.location.pathname !== LoginPath) {
     const currentUser: ReponseCurrentAdminUserDetailType = await fetchUserInfo();
-    const menuData = handleRemoteMenuIntoLocal(routersConfig, { ...currentUser?.menus });
     const permissions = { ...currentUser.permissions };
-    if (currentUser?.menus) {
-      currentUser.menus = null;
-    }
-    if (currentUser.permissions) {
-      currentUser.permissions = null;
-    }
-    console.log(permissions);
+    currentUser.permissions = null;
     return {
       fetchUserInfo,
       currentUser,
-      menuData,
       permissions,
       settings: { ...defaultSettings, ...currentUser?.settings },
     };
@@ -71,16 +57,15 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     rightContentRender: () => <RightContent />,
-    disableContentMargin: false,
+    disableContentMargin: true,
     waterMarkProps: {
       content: '',
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
-      const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== LoginPath) {
-        history.push(LoginPath);
+      if (location.pathname !== LoginPath && !IsLogin(initialState)) {
+        return Logout();
       }
     },
     links: [],
@@ -100,15 +85,35 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     menuHeaderRender: undefined,
     // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
+    // unAccessible: (
+    //   <Result
+    //     status="403"
+    //     title="403"
+    //     subTitle="Sorry, you are not authorized to access this page."
+    //     extra={<Button type="primary">sdfasdfsdf</Button>}
+    //   />
+    // ),
     // 增加一个 loading 的状态
     // childrenRender: (children) => {
     //   if (initialState.loading) return <PageLoading />;
     //   return children;
     // },
     menu: {
+      locale: true,
+      defaultOpenAll: true,
+      //params: { time: new Date().getTime() },
       request: (params, defaultMenuData) => {
-        return initialState?.menuData;
+        const menuData = initialState?.currentUser?.menus;
+        const menuList: MenuDataItem[] = HandleRemoteMenuIntoLocal(
+          [],
+          HandleRemoteMenuIntoLocal([], defaultMenuData, menuData, 'children'),
+          menuData,
+          'children',
+        );
+        setInitialState({ ...initialState, menuData: HandleMenusToMap({}, menuList, 'children') });
+        return new Promise((resolve, reject) => {
+          resolve(menuList);
+        });
       },
     },
     childrenRender: (children, props) => {
@@ -118,7 +123,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           {children}
           {!props.location?.pathname?.includes('/login') && (
             <SettingDrawer
-              disableUrlParams
               enableDarkTheme
               settings={initialState?.settings}
               onSettingChange={(settings) => {
@@ -171,18 +175,3 @@ export const request: RequestConfig = {
   requestInterceptors: [interceptorsRequest],
   responseInterceptors: [interceptorsResponse],
 };
-
-function handleRemoteMenuIntoLocal(defaultMenuData: MenuDataItem[], remoteMenus: MenusRemoteItem) {
-  defaultMenuData.forEach((item) => {
-    if (item.key && remoteMenus[item.key] && remoteMenus[item.key].hideInMenu === false) {
-      item.hideInMenu = false;
-    }
-    if (item.icon !== undefined && item.icon.length > 0 && IconMap[item.icon]) {
-      item.icon = React.createElement(IconMap[item.icon]);
-    }
-    if (item.routes !== undefined && item.routes.length > 0) {
-      handleRemoteMenuIntoLocal(item.routes, remoteMenus);
-    }
-  });
-  return defaultMenuData;
-}

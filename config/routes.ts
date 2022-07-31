@@ -5,12 +5,22 @@
     component: './Login',
     title: 'login',
     layout: false,
+    allow: 'allow',
+  },
+  {
+    path: '/home',
+    name: 'home',
+    icon: 'HomeOutlined',
+    component: './Home',
+    key: 'Home',
+    access: 'allow',
   },
   {
     key: 'Admin',
     name: 'admin',
     path: '/admin',
     icon: 'SettingOutlined',
+    access: 'allow',
     routes: [
       {
         key: 'AdminUser',
@@ -19,6 +29,7 @@
         icon: 'UserOutlined',
         component: './Admin/User',
         hideInMenu: true,
+        access: 'forbidden',
       },
       {
         key: 'AdminRole',
@@ -27,6 +38,7 @@
         icon: 'UserSwitchOutlined',
         component: './Admin/Role',
         hideInMenu: true,
+        access: 'forbidden',
       },
       {
         key: 'AdminMenu',
@@ -35,6 +47,7 @@
         icon: 'UnlockOutlined',
         component: './Admin/Menu',
         hideInMenu: true,
+        access: 'forbidden',
       },
       {
         key: 'AdminMenuAdd',
@@ -42,6 +55,7 @@
         name: 'menu.add',
         component: './Admin/Menu/add',
         hideInMenu: true,
+        access: 'forbidden',
       },
       {
         key: 'AdminMenuEdit',
@@ -49,6 +63,7 @@
         name: 'menu.edit',
         component: './Admin/Menu/edit',
         hideInMenu: true,
+        access: 'forbidden',
       },
       {
         key: 'AdminPermission',
@@ -57,6 +72,7 @@
         icon: 'UnlockOutlined',
         component: './Admin/Permission',
         hideInMenu: true,
+        access: 'forbidden',
       },
       {
         key: 'AdminApi',
@@ -65,6 +81,12 @@
         icon: 'ApiOutlined',
         component: './Admin/Api',
         hideInMenu: true,
+        access: 'forbidden',
+      },
+      {
+        component: './404',
+        access: 'allow',
+        key: '404',
       },
     ],
   },
@@ -74,15 +96,18 @@
     icon: 'BookOutlined',
     component: './Demo',
     key: 'Demo',
+    access: 'allow',
   },
+
   {
     path: '/',
     redirect: '/home',
     key: 'Home',
+    access: 'allow',
   },
   {
-    path: '*',
     component: './404',
     key: '404',
+    access: 'allow',
   },
 ];

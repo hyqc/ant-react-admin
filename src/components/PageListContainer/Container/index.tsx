@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { useModel } from 'umi';
+import ForbiddenPage from '@/pages/403';
 
 export type ContentType = {
   wrapperStyle?: React.CSSProperties;
@@ -8,7 +9,10 @@ export type ContentType = {
 };
 
 const Content: React.FC<ContentType> = (props: any) => {
-  const { wrapperStyle, cardStyle } = props;
+  const { wrapperStyle } = props;
+  const { initialState } = useModel('@@initialState');
+  const menuMap = initialState?.menuData || {};
+  const canAccessLocalMenu = menuMap[location.pathname].access === AccessAllow;
 
   const initCardStyle: any = () => {
     let wrapperStyless = {
@@ -22,12 +26,10 @@ const Content: React.FC<ContentType> = (props: any) => {
 
   const wrapperStyless = initCardStyle();
 
-  return (
-    <PageHeaderWrapper style={wrapperStyless}>
-      <Card style={cardStyle} bordered={false}>
-        {props?.children}
-      </Card>
-    </PageHeaderWrapper>
+  return canAccessLocalMenu ? (
+    <PageHeaderWrapper style={wrapperStyless}>{props?.children}</PageHeaderWrapper>
+  ) : (
+    <ForbiddenPage />
   );
 };
 

@@ -7,15 +7,15 @@
   "background_color": "#001529",
   "icons": [
     {
-      "src": "9d8e8a2487205a32c402584efe583012.ico",
+      "src": "favicon.ico",
       "sizes": "192x192"
     },
     {
-      "src": "9d8e8a2487205a32c402584efe583012.ico",
+      "src": "favicon.ico",
       "sizes": "128x128"
     },
     {
-      "src": "9d8e8a2487205a32c402584efe583012.ico",
+      "src": "favicon.ico",
       "sizes": "512x512"
     }
   ]
