@@ -9,7 +9,7 @@ export default {
   'menu.exception.not-find': '404',
   'menu.account': '個人中心',
   'menu.account.logout': '退出登錄',
-  'menu.menu.admin': '系统管理',
+  'menu.admin': '系统管理',
   'menu.admin.user': '賬號管理',
   'menu.admin.role': '角色管理',
   'menu.admin.menu': '菜單管理',
