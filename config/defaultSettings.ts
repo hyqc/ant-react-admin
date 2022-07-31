@@ -14,7 +14,7 @@ const Settings: LayoutSettings & {
   colorWeak: false,
   title: '管理后台',
   pwa: false,
-  logo: '/9d8e8a2487205a32c402584efe583012.ico',
+  logo: '/favicon.ico',
   iconfontUrl: '',
 };
 

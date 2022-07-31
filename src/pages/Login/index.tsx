@@ -9,6 +9,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { MenuDataItem } from '@umijs/route-utils';
 
 const Login: React.FC = () => {
+  const [form] = Form.useForm();
   const { setInitialState } = useModel('@@initialState');
   const intl = useIntl();
 
@@ -29,6 +30,7 @@ const Login: React.FC = () => {
       const res = await login(values);
       // 设置token
       localStorage.setItem('token', res.data.token);
+      // 设置菜单
       await setInitialState((s: any) => ({
         ...s,
         currentUser: res.data,
@@ -37,7 +39,7 @@ const Login: React.FC = () => {
       if (!history) return;
       const { query } = history.location;
       const { redirect } = query as { redirect: string };
-      history.push(redirect || '/');
+      window.location.href = redirect || '/';
       return;
     } catch (error) {
       console.log(error);
@@ -57,6 +59,7 @@ const Login: React.FC = () => {
       <div className={styles.login}>
         <Card>
           <Form
+            form={form}
             name="login"
             className={styles.loginForm}
             initialValues={{ remember: true }}
@@ -64,7 +67,7 @@ const Login: React.FC = () => {
           >
             <Form.Item>
               <p className={styles.title}>
-                <img className={styles.logo} src="/9d8e8a2487205a32c402584efe583012.ico" />
+                <img className={styles.logo} src="/favicon.ico" />
                 <span>管理后台</span>
               </p>
             </Form.Item>
