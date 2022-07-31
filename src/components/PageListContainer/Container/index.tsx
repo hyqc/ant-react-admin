@@ -12,7 +12,7 @@ const Content: React.FC<ContentType> = (props: any) => {
   const { wrapperStyle } = props;
   const { initialState } = useModel('@@initialState');
   const menuMap = initialState?.menuData || {};
-  const canAccessLocalMenu = menuMap[location.pathname].access === AccessAllow;
+  const canAccessLocalMenu = menuMap[location.pathname]?.access === AccessAllow;
 
   const initCardStyle: any = () => {
     let wrapperStyless = {

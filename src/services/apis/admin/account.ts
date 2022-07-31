@@ -33,6 +33,7 @@ export type ReponseCurrentAdminUserDetailType = {
 export type RequestLoginParamsType = {
   username: string;
   password: string;
+  remember?: boolean;
 };
 
 // 登录响应数据
@@ -67,9 +68,16 @@ export async function logout(params?: RequestLogoutParamsType) {
   });
 }
 
-export async function currentAdminInfo() {
+export type RequestCurrentAdminInfoParamsType = {
+  refreshToken?: boolean;
+};
+
+export async function currentAdminInfo(refreshToken?: boolean) {
   return request<ResponseBodyType>(APIAccount.detail.url, {
     method: APIAccount.detail.method,
+    params: {
+      refreshToken: refreshToken || false,
+    },
   });
 }
 

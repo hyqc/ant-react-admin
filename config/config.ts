@@ -56,6 +56,9 @@ export default defineConfig({
   webpack5: {},
   exportStatic: {},
   mock: {},
+  devServer: {
+    port: 8888,
+  },
   define: {
     LocalStorageTokenKey: 'token', // 记录token的键名
     LoginPath: '/login', // 登录页路径

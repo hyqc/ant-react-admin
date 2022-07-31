@@ -16,6 +16,14 @@
     access: 'allow',
   },
   {
+    path: '/account',
+    name: 'account',
+    icon: 'HomeOutlined',
+    component: './Account',
+    key: 'Account',
+    access: 'allow',
+  },
+  {
     key: 'Admin',
     name: 'admin',
     path: '/admin',

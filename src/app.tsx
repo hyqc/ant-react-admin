@@ -11,7 +11,15 @@ import type { ResponseBodyType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
 import defaultSettings from '../config/defaultSettings';
 import { MenuDataItem } from '@umijs/route-utils';
-import { HandleMenusToMap, HandleRemoteMenuIntoLocal, IsLogin, Logout } from '@/utils/common';
+import {
+  GetLoginToken,
+  HandleMenusToMap,
+  HandleRemoteMenuIntoLocal,
+  IsLogin,
+  IsLongPage,
+  Logout,
+  MenusMapType,
+} from '@/utils/common';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -24,12 +32,13 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: ReponseCurrentAdminUserDetailType;
   permissions?: CurrentUserPermissionsType;
-  menuData?: MenuDataItem[];
+  menuData?: MenusMapType;
   fetchUserInfo?: () => Promise<ReponseCurrentAdminUserDetailType | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
-      const res = await currentAdminInfo();
+      const tokenInfo = GetLoginToken();
+      const res = await currentAdminInfo(tokenInfo?.remember);
       return res.data;
     } catch (error) {
       history.push(LoginPath);
@@ -37,7 +46,7 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
   // 如果不是登录页面，执行
-  if (history.location.pathname !== LoginPath) {
+  if (!IsLongPage()) {
     const currentUser: ReponseCurrentAdminUserDetailType = await fetchUserInfo();
     const permissions = { ...currentUser.permissions };
     currentUser.permissions = null;
@@ -143,6 +152,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 // 请求拦截器：
 const interceptorsRequest = (url: string, options: any) => {
   isDev && console.log('请求拦截器：', BaseAPI, url, options, `${BaseAPI}${url}`);
+  if (!IsLongPage()) {
+    const tokenInfo = GetLoginToken();
+    const token = tokenInfo !== undefined ? tokenInfo.token : '';
+    options.headers.Authorization = 'Bearer ' + token;
+  }
   return {
     url: `${BaseAPI}${url}`,
     options: { ...options, interceptors: true },
