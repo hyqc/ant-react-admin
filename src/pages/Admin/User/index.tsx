@@ -70,7 +70,7 @@ const Admin: React.FC = () => {
       sorter: true,
     },
     {
-      title: '名称',
+      title: '账号',
       align: 'center',
       dataIndex: 'username',
       width: '8rem',
@@ -411,7 +411,7 @@ const Admin: React.FC = () => {
         <Form form={form} onFinish={onSearchFinish}>
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
-              <Form.Item label="名称" name="username" initialValue={''}>
+              <Form.Item label="账号" name="username" initialValue={''}>
                 <Input />
               </Form.Item>
             </Col>

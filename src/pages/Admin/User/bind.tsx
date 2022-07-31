@@ -3,7 +3,6 @@ import {
   RequestAdminUserAssignRolesParamsType,
   ResponseAdminUserDetailType,
 } from '@/services/apis/admin/user';
-import { SUCCESS } from '@/services/apis/code';
 import { Form, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
@@ -95,7 +94,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="username">
+        <Form.Item label="账号" name="username">
           <Input disabled />
         </Form.Item>
         <Form.Item label="角色" name="roleIds">

@@ -11,6 +11,7 @@ import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { AdminUserPassword } from '@/services/common/pattern';
+import { AdminUserFormRules } from './common';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -29,35 +30,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
   const [fileList, setFielList] = useState<any[]>();
   const [avatar, setAvatar] = useState<string>('');
 
-  const rules: any = {
-    username: [{ required: true, type: 'string', message: '请输入管理员名称!' }],
-    email: [{ type: 'email', message: '邮箱格式错误!' }],
-    password: [
-      { required: true, type: 'string', message: '密码不能为空' },
-      {
-        required: true,
-        pattern: AdminUserPassword,
-        message: '',
-      },
-    ],
-    confirmPassword: [
-      { required: true, type: 'string', message: '密码不能为空' },
-      {
-        required: true,
-        pattern: AdminUserPassword,
-        message: '',
-      },
-      {
-        required: true,
-        validator: (rule: any, value: string) => {
-          if (form.getFieldValue('password') !== value) {
-            return Promise.reject(new Error('两次输入的密码不一致'));
-          }
-          return Promise.resolve();
-        },
-      },
-    ],
-  };
+  const rules: any = AdminUserFormRules(form);
 
   function handleOk() {
     setConfirmLoading(true);
@@ -120,7 +93,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
         },
       ]);
     }
-  });
+  }, []);
 
   return (
     <Modal
@@ -138,14 +111,14 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="username" rules={rules.username}>
-          <Input  />
+        <Form.Item label="账号" name="username" rules={rules.username}>
+          <Input />
         </Form.Item>
         <Form.Item label="昵称" name="nickname" rules={rules.nickname}>
-          <Input  />
+          <Input />
         </Form.Item>
         <Form.Item label="邮箱" name="email" rules={rules.email}>
-          <Input  />
+          <Input />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
