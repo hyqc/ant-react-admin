@@ -99,6 +99,15 @@
     ],
   },
   {
+    name: '接口文档',
+    path: '/doc',
+    icon: 'BookOutlined',
+    component: './Document',
+    key: 'Doc',
+    access: 'allow',
+    layout: false,
+  },
+  {
     name: 'demo',
     path: '/demo',
     icon: 'BookOutlined',
