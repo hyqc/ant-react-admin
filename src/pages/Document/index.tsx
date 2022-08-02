@@ -1,7 +1,6 @@
-import { Col, Divider, Layout, Menu, Row } from 'antd';
+import { Col, Layout, Menu, Row } from 'antd';
 import React, { useState } from 'react';
-import * as IconMap from '@ant-design/icons';
-import { DocMenus } from './menu';
+import MenuDoc from './menu';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import 'github-markdown-css';
@@ -18,8 +17,9 @@ const Document: React.FC = () => {
   }
 
   function openMd(path?: string) {
-    path && parseMdFileContent(path);
+    path && path.length > 0 && parseMdFileContent(path);
   }
+
   return (
     <Layout className="layout">
       <Header className="header">
@@ -45,43 +45,10 @@ const Document: React.FC = () => {
           theme="light"
           breakpoint="lg"
           collapsedWidth="0"
-          onBreakpoint={(broken) => {
-            console.log(broken);
-          }}
-          onCollapse={(collapsed, type) => {
-            console.log(collapsed, type);
-          }}
+          onBreakpoint={(broken) => {}}
+          onCollapse={(collapsed, type) => {}}
         >
-          <Menu className="menu-item" theme="light" mode="inline" defaultSelectedKeys={['0']}>
-            {DocMenus.map((item, index) => {
-              return (
-                <>
-                  {item.path ? (
-                    <Menu.Item key={index} onClick={() => openMd(item?.uri)}>
-                      {item.icon && React.createElement(IconMap[item.icon])}
-                      {item.name}
-                    </Menu.Item>
-                  ) : (
-                    <Menu.Item
-                      key={index}
-                      disabled
-                      style={{ backgroundColor: '#fff', cursor: 'pointer' }}
-                    >
-                      {item.name}
-                    </Menu.Item>
-                  )}
-                  {item.line ? (
-                    <Divider
-                      key={index + 1000}
-                      style={{ marginLeft: '2.6rem', marginTop: '2px', marginBottom: '2px' }}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </>
-              );
-            })}
-          </Menu>
+          <MenuDoc changeDoc={openMd} />
         </Sider>
         <Content className="content">
           <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
