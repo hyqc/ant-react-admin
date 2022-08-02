@@ -38,8 +38,11 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const tokenInfo = GetLoginToken();
-      const res = await currentAdminInfo(tokenInfo?.remember);
-      return res.data;
+      if (tokenInfo?.token) {
+        const res = await currentAdminInfo(tokenInfo?.remember);
+        return res.data;
+      }
+      return undefined;
     } catch (error) {
       history.push(LoginPath);
     }
