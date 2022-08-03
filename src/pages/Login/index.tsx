@@ -11,7 +11,6 @@ import { AdminUserFormRules } from '../Admin/User/common';
 const Login: React.FC = () => {
   const [form] = Form.useForm();
   const { setInitialState } = useModel('@@initialState');
-  const intl = useIntl();
 
   const rules: any = AdminUserFormRules(form);
 
@@ -33,11 +32,6 @@ const Login: React.FC = () => {
       return;
     } catch (error) {
       console.log(error);
-      const defaultLoginFailureMessage = intl.formatMessage({
-        id: 'pages.login.failure',
-        defaultMessage: '登录失败，请重试！',
-      });
-      message.error(defaultLoginFailureMessage);
     }
   };
 

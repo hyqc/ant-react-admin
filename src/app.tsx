@@ -6,8 +6,6 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentAdminInfo, CurrentUserPermissionsType } from './services/apis/admin/account';
 import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
-import { message } from 'antd';
-import type { ResponseBodyType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
 import defaultSettings from '../config/defaultSettings';
 import { MenuDataItem } from '@umijs/route-utils';
@@ -20,6 +18,7 @@ import {
   Logout,
   MenusMapType,
 } from '@/utils/common';
+import { Context } from 'react';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -154,36 +153,33 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
 // 请求拦截器：
 const interceptorsRequest = (url: string, options: any) => {
-  isDev && console.log('请求拦截器：', BaseAPI, url, options, `${BaseAPI}${url}`);
+  const realyUrl = `${BaseAPI}${url}`;
+  isDev && console.log('请求拦截器：', BaseAPI, url, options, realyUrl);
   if (!IsLongPage()) {
     const tokenInfo = GetLoginToken();
     const token = tokenInfo !== undefined ? tokenInfo.token : '';
     options.headers.Authorization = 'Bearer ' + token;
   }
   return {
-    url: `${BaseAPI}${url}`,
-    options: { ...options, interceptors: true },
+    url: realyUrl,
+    options: { ...options, interceptors: true, url: realyUrl },
   };
 };
 
 // 响应拦截器：
 const interceptorsResponse = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
-  const data: ResponseBodyType = await response.clone().json();
-  if (data.code !== SUCCESS) {
-    message.destroy();
-  }
   return response;
 };
 
 export const request: RequestConfig = {
   timeout: 6000,
   errorConfig: {
-    adaptor: (resData: { code: number; message: any; type: any }) => {
+    adaptor: (resData: any, ctx) => {
       return {
         ...resData,
         success: resData.code === SUCCESS,
-        errorMessage: resData.message,
+        errorMessage: resData.message || resData,
         showType: resData.type,
       };
     },
