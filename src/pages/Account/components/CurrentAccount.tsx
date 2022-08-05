@@ -1,7 +1,10 @@
 import { AdminUserFormRules } from '@/pages/Admin/User/common';
-import { upload } from '@/services/apis/admin/account';
+import {
+  currentAdminEdit,
+  RequestCurrentAdminEditParamsType,
+  upload,
+} from '@/services/apis/admin/account';
 import { APIAccount } from '@/services/apis/admin/api';
-import { adminUserEdit, RequestAdminUserEditParamsType } from '@/services/apis/admin/user';
 import { GetLoginToken } from '@/utils/common';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message, Upload, UploadFile } from 'antd';
@@ -31,16 +34,14 @@ const CurrentAccountInfo: React.FC = () => {
     form
       .validateFields()
       .then((values) => {
-        const adminId = detailData.adminId || 0;
-        let data: RequestAdminUserEditParamsType;
+        let data: RequestCurrentAdminEditParamsType;
         data = {
-          adminId: adminId,
           nickname: values.nickname,
           email: values.email,
           avatar,
         };
-        adminUserEdit(data).then((res) => {
-          console.log('------', res);
+        console.log(data);
+        currentAdminEdit(data).then((res) => {
           message.success(res.message, MessageDuritain, () => {});
         });
       })

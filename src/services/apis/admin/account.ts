@@ -93,3 +93,28 @@ export async function upload(data: RequestUploadFileParamsType) {
     data: data,
   });
 }
+
+export type RequestCurrentAdminEditParamsType = {
+  nickname?: string;
+  avatar?: string;
+  email?: string;
+};
+
+export async function currentAdminEdit(params?: RequestCurrentAdminEditParamsType) {
+  return request<ResponseBodyType>(APIAccount.edit.url, {
+    method: APIAccount.edit.method,
+    data: params,
+  });
+}
+
+export type RequestCurrentAdminEditPasswordParamsType = {
+  password?: string;
+  confirmPassword?: string;
+};
+
+export async function currentAdminEditPassword(params?: RequestCurrentAdminEditPasswordParamsType) {
+  return request<ResponseBodyType>(APIAccount.password.url, {
+    method: APIAccount.password.method,
+    data: params,
+  });
+}

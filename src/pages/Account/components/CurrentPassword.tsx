@@ -1,5 +1,5 @@
 import { AdminUserFormRules } from '@/pages/Admin/User/common';
-import { adminUserEdit, RequestAdminUserEditParamsType } from '@/services/apis/admin/user';
+import { currentAdminEditPassword } from '@/services/apis/admin/account';
 import { Button, Form, Input, message } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -18,14 +18,7 @@ const CurrentAccountPassword: React.FC = () => {
     form
       .validateFields()
       .then((values) => {
-        const adminId = detailData.adminId || 0;
-        let data: RequestAdminUserEditParamsType;
-        data = {
-          adminId: adminId,
-          passwrod: values.password,
-          confirmPassword: values.confirmPassword,
-        };
-        adminUserEdit(data).then((res) => {
+        currentAdminEditPassword({ ...values }).then((res) => {
           message.success(res.message, MessageDuritain, () => {});
         });
       })

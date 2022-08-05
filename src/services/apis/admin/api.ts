@@ -22,6 +22,14 @@ export const APIAccount = {
     url: '/admin/account/detail',
     method: GET,
   },
+  edit: {
+    url: '/admin/account/edit',
+    method: POST,
+  },
+  password: {
+    url: '/admin/account/password',
+    method: POST,
+  },
   upload: {
     url: '/admin/account/upload',
     method: POST,
