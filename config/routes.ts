@@ -99,7 +99,7 @@
     ],
   },
   {
-    name: '接口文档',
+    name: 'doc',
     path: '/doc',
     icon: 'BookOutlined',
     component: './Document',

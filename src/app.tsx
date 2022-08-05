@@ -18,6 +18,7 @@ import {
   Logout,
   MenusMapType,
 } from '@/utils/common';
+import { message } from 'antd';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -159,6 +160,7 @@ const interceptorsRequest = (url: string, options: any) => {
     const token = tokenInfo !== undefined ? tokenInfo.token : '';
     options.headers.Authorization = 'Bearer ' + token;
   }
+  message.destroy();
   return {
     url: realyUrl,
     options: { ...options, interceptors: true, url: realyUrl },

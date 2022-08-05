@@ -1,6 +1,7 @@
 export default {
   'menu.login': '登录',
   'menu.home': '首页',
+  'menu.doc': '接口文档',
   'menu.welcome': '欢迎',
   'menu.exception.403': '403',
   'menu.exception.404': '404',
