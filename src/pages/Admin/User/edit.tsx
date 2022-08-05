@@ -10,7 +10,6 @@ import ImgCrop from 'antd-img-crop';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
-import { AdminUserPassword } from '@/services/common/pattern';
 import { AdminUserFormRules } from './common';
 
 export type NoticeModalPropsType = {

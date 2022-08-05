@@ -95,20 +95,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       );
     },
     menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: (
-    //   <Result
-    //     status="403"
-    //     title="403"
-    //     subTitle="Sorry, you are not authorized to access this page."
-    //     extra={<Button type="primary">sdfasdfsdf</Button>}
-    //   />
-    // ),
-    // 增加一个 loading 的状态
-    // childrenRender: (children) => {
-    //   if (initialState.loading) return <PageLoading />;
-    //   return children;
-    // },
     menu: {
       locale: true,
       defaultOpenAll: true,
@@ -168,24 +154,38 @@ const interceptorsRequest = (url: string, options: any) => {
 };
 
 // 响应拦截器：
-const interceptorsResponse = async (response: any, options: any) => {
+const interceptorsResponse: any = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
-  return response;
+  message.destroy();
+  return new Promise(async (resolve, reject) => {
+    const resData = await response.clone().json();
+    if (response.status !== 200) {
+      const msg: string =
+        resData && resData.path && resData.error
+          ? `${resData.status}：${resData.path} ${resData.error}`
+          : '请求失败';
+      message.error(msg, MessageDuritain);
+      return reject(msg);
+    }
+    if (resData.code !== SUCCESS) {
+      message.error(resData.message, MessageDuritain);
+      return reject(resData.message);
+    }
+    return resolve(resData);
+  });
+};
+
+const errorHandler = (err: any) => {
+  throw err;
 };
 
 export const request: RequestConfig = {
   timeout: 6000,
   errorConfig: {
-    adaptor: (resData: any, ctx) => {
-      return {
-        ...resData,
-        success: resData.code === SUCCESS,
-        errorMessage: resData.message || resData,
-        showType: resData.type,
-      };
-    },
+    // adaptor,
   },
   middlewares: [],
   requestInterceptors: [interceptorsRequest],
   responseInterceptors: [interceptorsResponse],
+  errorHandler,
 };

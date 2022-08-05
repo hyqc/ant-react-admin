@@ -81,7 +81,13 @@ export async function currentAdminInfo(refreshToken?: boolean) {
   });
 }
 
-export async function upload(data?: any) {
+// 1:image
+export type RequestUploadFileParamsType = {
+  fileType: number;
+  file: File;
+};
+
+export async function upload(data: RequestUploadFileParamsType) {
   return request<ResponseBodyType>(APIAccount.upload.url, {
     method: APIAccount.upload.method,
     data: data,
