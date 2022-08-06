@@ -158,3 +158,7 @@ export const Logout = (): void => {
 export const IsLongPage = (): boolean => {
   return location.pathname === LoginPath;
 };
+
+export const first2Upcase = (s: string): string => {
+  return s[0].toUpperCase() + s.substring(1).toLowerCase();
+};

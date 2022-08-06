@@ -74,7 +74,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       fetchAdminAPIs();
       form.setFieldsValue({ name: detailData?.name, apiIds: apiIdsValue });
     }
-  }, []);
+  }, [detailData]);
 
   return (
     <Modal
@@ -92,7 +92,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="name">
+        <Form.Item label="权限名称" name="name">
           <Input disabled />
         </Form.Item>
         <Form.Item label="接口" name="apiIds">

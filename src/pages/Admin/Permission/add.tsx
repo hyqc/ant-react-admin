@@ -9,6 +9,7 @@ import {
 import { DEFAULT_RULES, path2UpperCamelCase } from './components/common';
 import { ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
 import PageMenus from './components/PageMenus';
+import { first2Upcase } from '@/utils/common';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -24,9 +25,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
   const [form] = Form.useForm();
   const { pageMenusData, modalStatus, noticeModal } = props;
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-  const [menuCheckedItem, setMenuCheckedItem] = useState<
-    ResponseAdminMenuListItemType | undefined
-  >();
+  const [menuCheckedItem, setMenuCheckedItem] = useState<ResponseAdminMenuListItemType>();
   const [pageMenusDataMap, setPageMenusDataMap] = useState<any>();
 
   const rules: any = DEFAULT_RULES;
@@ -60,19 +59,32 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
   }
 
   function onChangePath(e: ChangeEvent) {
-    form.setFieldsValue({ key: path2UpperCamelCase(form.getFieldValue('path')) });
+    makePermissionKey(form.getFieldValue('path'));
+  }
+
+  function onChangeType(e: ChangeEvent) {
+    makePermissionKey();
   }
 
   function menuIdChange(index: number) {
     if (pageMenusDataMap[index] !== undefined) {
-      setMenuCheckedItem(pageMenusDataMap[index]);
+      const menu = pageMenusDataMap[index];
+      setMenuCheckedItem(menu);
+      makePermissionKey(menu.path);
     }
+  }
+
+  function makePermissionKey(path?: string) {
+    const type = form.getFieldValue('type');
+    path = path ? path : menuCheckedItem ? menuCheckedItem.path : '';
+    const key = path2UpperCamelCase(path) + first2Upcase(type);
+    form.setFieldsValue({ key });
   }
 
   useEffect(() => {
     const data: any = {};
     pageMenusData?.forEach((item) => {
-      data[item.menuId] = item;
+      data[item.id] = item;
     });
     setPageMenusDataMap(data);
   }, [pageMenusData]);
@@ -103,14 +115,14 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           <Input />
         </Form.Item>
         <Form.Item label="类型" name="type" initialValue={'view'}>
-          <Select style={{ offset: 0, width: '160' }}>
+          <Select style={{ offset: 0, width: '160' }} onChange={onChangeType}>
             <Select.Option value="view">查看</Select.Option>
             <Select.Option value="edit">编辑</Select.Option>
             <Select.Option value="delete">删除</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item label="键名" name="key" initialValue={''} rules={rules.key}>
-          <Input onChange={onChangePath} />
+          <Input disabled onChange={onChangePath} />
         </Form.Item>
         <Form.Item label="描述" name="describe" initialValue={''}>
           <Input.TextArea />
