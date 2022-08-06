@@ -64,8 +64,8 @@ const AddModal: React.FC = () => {
 
   useEffect(() => {
     adminMenuTree().then((res) => {
-      const { rows } = res.data;
-      setMenuData(makeMenuSpreadTreeData(rows));
+      const { list } = res.data;
+      setMenuData(makeMenuSpreadTreeData(list));
     });
   }, []);
 

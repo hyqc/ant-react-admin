@@ -140,7 +140,7 @@ export const APIAdminMenus = {
   },
   page: {
     url: '/admin/menu/page',
-    method: POST,
+    method: GET,
   },
 };
 

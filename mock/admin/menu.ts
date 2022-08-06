@@ -7,7 +7,7 @@ import { success } from '../common';
 
 const menuTreeData: ResponseAdminMenuListItemType[] = [
   {
-    menuId: 0,
+    id: 0,
     name: '顶级菜单',
     path: '/',
     parentId: 0,
@@ -20,7 +20,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
     modifyTime: '',
     children: [
       {
-        menuId: 1,
+        id: 1,
         name: '系统管理',
         path: '/setting',
         key: 'Setting',
@@ -34,7 +34,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
         modifyTime: '',
         children: [
           {
-            menuId: 2,
+            id: 2,
             name: '账号管理',
             path: '/admin/user',
             key: 'AdminUser',
@@ -48,7 +48,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             modifyTime: '',
           },
           {
-            menuId: 3,
+            id: 3,
             name: '角色管理',
             path: '/admin/role',
             key: 'AdminRole',
@@ -62,7 +62,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             modifyTime: '',
           },
           {
-            menuId: 4,
+            id: 4,
             name: '菜单管理',
             path: '/admin/menu',
             key: 'AdminMenu',
@@ -81,7 +81,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             component: './Admin/Menu/add',
             hideInMenu: true,
             key: 'AdminMenuAdd',
-            menuId: 5,
+            id: 5,
             parentId: 1,
             redirect: '/',
             hideChildrenInMenu: false,
@@ -96,7 +96,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             hideInMenu: true,
             key: 'AdminMenuEdit',
             name: '编辑菜单',
-            menuId: 6,
+            id: 6,
             parentId: 1,
             redirect: '/',
             hideChildrenInMenu: false,
@@ -106,7 +106,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             modifyTime: '',
           },
           {
-            menuId: 7,
+            id: 7,
             name: '权限管理',
             path: '/admin/permission',
             key: 'AdminPermission',
@@ -120,7 +120,7 @@ const menuTreeData: ResponseAdminMenuListItemType[] = [
             modifyTime: '',
           },
           {
-            menuId: 8,
+            id: 8,
             name: '接口管理',
             path: '/admin/api',
             key: 'AdminApi',
@@ -180,6 +180,7 @@ const menuPermissionsDetail: ResponseAdminMenuPermissionsType = {
   permissions: [
     {
       menuId: 4,
+      apis: [],
       key: 'AdminMenuView',
       type: 'view',
       typeText: '查看',
@@ -190,6 +191,7 @@ const menuPermissionsDetail: ResponseAdminMenuPermissionsType = {
     {
       menuId: 4,
       key: 'AdminMenuEdit',
+      apis: [],
       type: 'edit',
       typeText: '编辑',
       name: '菜单编辑',
@@ -198,6 +200,7 @@ const menuPermissionsDetail: ResponseAdminMenuPermissionsType = {
     },
     {
       menuId: 4,
+      apis: [],
       key: 'AdminMenuDelete',
       type: 'delete',
       typeText: '删除',

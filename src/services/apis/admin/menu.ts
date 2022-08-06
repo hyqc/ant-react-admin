@@ -35,7 +35,7 @@ export type RequestAdminMenuListParamsType = {
 };
 
 export type ResponseAdminMenuListItemType = {
-  menuId: number; // 菜单ID，唯一键
+  id: number; // 菜单ID，唯一键
   parentId: number; // 父菜单ID
   name: string; // 菜单名称，唯一键
   path: string; // 菜单路由
@@ -212,9 +212,12 @@ export async function adminMenuPermissions(params: RequestAdminMenuPermissionsPa
 /**
  * 权限的菜单列表
  */
-export async function adminPageMenus() {
+export type RequestAdminPageMenusParamsType = {
+  all?: boolean;
+};
+export async function adminPageMenus(params?: RequestAdminPageMenusParamsType) {
   return request<ResponseBodyType>(APIAdminMenus.page.url, {
     method: APIAdminMenus.page.method,
-    data: {},
+    params,
   });
 }

@@ -47,7 +47,7 @@ export function menuSpreadTree(
   level: number,
   menuId?: number,
 ): ResponseAdminMenuListItemType[] {
-  data.map((item: ResponseAdminMenuListItemType) => {
+  data?.map((item: ResponseAdminMenuListItemType) => {
     if (menuId !== undefined && item.menuId === menuId) {
       return;
     }

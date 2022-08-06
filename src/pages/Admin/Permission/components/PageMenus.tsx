@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 export type AddModalPropsType = {
   data: ResponseAdminMenuListItemType[];
+  needAll: boolean;
   value?: number;
   disabled?: boolean;
   onChange?: (parentid: number) => void;
@@ -21,6 +22,8 @@ const MenuTreeSelect: React.FC<AddModalPropsType> = (props) => {
     triggerChange(id);
   }
 
+  useEffect(() => {}, [data]);
+
   return (
     <Select
       showSearch
@@ -32,8 +35,12 @@ const MenuTreeSelect: React.FC<AddModalPropsType> = (props) => {
       disabled={disabled}
       value={value || menuId}
     >
-      {props?.children}
-      {data?.map((item) => {
+      {
+        <Select.Option key={0} value={0}>
+          全部
+        </Select.Option>
+      }
+      {data?.map((item: ResponseAdminMenuListItemType) => {
         return (
           <Select.Option key={item.menuId} value={item.menuId}>
             {item.name}

@@ -1,10 +1,9 @@
-import React, { ReactChild } from 'react';
+import React from 'react';
 import { Card } from 'antd';
 
 // 列表页容器
 export type ContentType = {
   style?: any;
-  children?: ReactChild;
 };
 const Content: React.FC<ContentType> = (props: any) => {
   return (

@@ -72,7 +72,7 @@ export async function adminPermissionList(params?: RequestAdminPermissionListPar
  */
 export type RequestAdminPermissionAddForMenuParamsType = {
   menuId: number;
-  permission: ResponseAdminMenuPermissionsItemType[];
+  permissions: ResponseAdminMenuPermissionsItemType[];
 };
 
 export async function adminAddMenuPermission(params: RequestAdminPermissionAddForMenuParamsType) {
@@ -106,7 +106,7 @@ export async function adminPermissionAdd(params: RequestAdminPermissionAddParams
  * 详情
  */
 export type RequestAdminPermissionDetailParamsType = {
-  permissionId: number;
+  id: number;
 };
 
 export type ResponseAdminPermissionDetailType = {
@@ -137,7 +137,7 @@ export async function adminPermissionDetail(params: RequestAdminPermissionDetail
  * 编辑
  */
 export type RequestAdminPermissionEditParamsType = {
-  permissionId: number;
+  id: number;
   name?: string;
   key?: string;
   describe?: string;
@@ -157,7 +157,7 @@ export async function adminPermissionEdit(params: RequestAdminPermissionEditPara
  * 启用禁用
  */
 export type RequestAdminPermissionEnableParamsType = {
-  permissionId: number;
+  id: number;
   enabled: boolean;
 };
 
@@ -173,7 +173,7 @@ export async function adminPermissionEnable(params: RequestAdminPermissionEnable
  * 删除
  */
 export type RequestAdminPermissionDeleteParamsType = {
-  permissionId: number;
+  id: number;
   enabled: boolean;
 };
 
@@ -189,7 +189,7 @@ export async function adminPermissionDelete(params: RequestAdminPermissionDelete
  * 解绑接口
  */
 export type RequestAdminPermissionUnbindApiParamsType = {
-  permissionId: number;
+  id: number;
   apiId: number;
 };
 

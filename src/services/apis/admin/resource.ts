@@ -113,7 +113,7 @@ export type RequestAdminAPIAllParamsType = {
 };
 
 export type ResponseAdminAPIAllItemType = {
-  apiId: number;
+  id: number;
   name: string;
   path?: string;
   key?: string;

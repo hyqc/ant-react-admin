@@ -79,11 +79,7 @@ const Admin: React.FC = () => {
       dataIndex: 'name',
       width: '8rem',
       render(name: string, record: ResponseAdminPermissionListItemType) {
-        return (
-          <Tooltip title={record.key} key={record.id}>
-            {name}
-          </Tooltip>
-        );
+        return <Tooltip title={record.key}>{name}</Tooltip>;
       },
     },
     {
@@ -93,17 +89,11 @@ const Admin: React.FC = () => {
       width: '3rem',
       render(type: string, record: ResponseAdminPermissionListItemType) {
         return record.type === 'view' ? (
-          <Tag key={record.id} color="#87d068">
-            {record.typeText}
-          </Tag>
+          <Tag color="#87d068">{record.typeText}</Tag>
         ) : record.type === 'edit' ? (
-          <Tag key={record.id} color="#108ee9">
-            {record.typeText}
-          </Tag>
+          <Tag color="#108ee9">{record.typeText}</Tag>
         ) : (
-          <Tag key={record.id} color="#f50">
-            {record.typeText}
-          </Tag>
+          <Tag color="#f50">{record.typeText}</Tag>
         );
       },
     },
@@ -226,7 +216,7 @@ const Admin: React.FC = () => {
   // 权限状态更新
   function updateEnabled(record: ResponseAdminPermissionListItemType) {
     const updateData: RequestAdminPermissionEnableParamsType = {
-      permissionId: record.id,
+      id: record.id,
       enabled: !record.enabled,
     };
     adminPermissionEnable(updateData).then((res) => {
@@ -243,7 +233,7 @@ const Admin: React.FC = () => {
 
   // 权限详情
   function openDetailModal(record: ResponseAdminPermissionListItemType) {
-    adminPermissionDetail({ permissionId: record.id }).then((res) => {
+    adminPermissionDetail({ id: record.id }).then((res) => {
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
@@ -251,15 +241,15 @@ const Admin: React.FC = () => {
 
   // 权限编辑
   function openEditModal(record: ResponseAdminPermissionListItemType) {
-    adminPermissionDetail({ permissionId: record.id }).then((res) => {
+    adminPermissionDetail({ id: record.id }).then((res) => {
       setDetailData(res.data);
       setEditModalStatus(true);
     });
   }
 
   // 删除绑定的接口
-  function deleteBindApi(permissionId: number, apiId: number) {
-    adminPermissionUnbindApi({ permissionId, apiId }).then((res) => {
+  function deleteBindApi(id: number, apiId: number) {
+    adminPermissionUnbindApi({ id, apiId }).then((res) => {
       message.success(res.message, MessageDuritain, () => {
         getRows({ ...form.getFieldsValue() });
       });
@@ -270,29 +260,24 @@ const Admin: React.FC = () => {
     apis: ResponseAdminAPIAllItemType[],
     record: ResponseAdminPermissionListItemType,
   ) {
-    return apis.map((item) => {
+    return apis?.map((item) => {
       return (
         <Authorization
-          key={item.apiId}
+          key={item.id}
           name="AdminPermissionEdit"
           forbidden={
             <>
-              <Tag style={{ cursor: 'no-drop' }} key={item.apiId}>
-                {item.name}
-              </Tag>
+              <Tag style={{ cursor: 'no-drop' }}>{item.name}</Tag>
             </>
           }
         >
           <Popconfirm
-            key={item.apiId}
             title={`确定要解绑${item.path}接口吗？`}
             okText="确定"
             cancelText="取消"
-            onConfirm={() => deleteBindApi(record.id, item.apiId)}
+            onConfirm={() => deleteBindApi(record.id, item.id)}
           >
-            <Tag style={{ cursor: 'pointer' }} key={item.apiId}>
-              {item.name}
-            </Tag>
+            <Tag style={{ cursor: 'pointer' }}>{item.name}</Tag>
           </Popconfirm>
         </Authorization>
       );
@@ -300,7 +285,7 @@ const Admin: React.FC = () => {
   }
 
   function openBindAPIModal(record: ResponseAdminPermissionListItemType) {
-    adminPermissionDetail({ permissionId: record.id }).then((res) => {
+    adminPermissionDetail({ id: record.id }).then((res) => {
       setDetailData(res.data);
       setBindAPIModalStatus(true);
     });
@@ -339,7 +324,7 @@ const Admin: React.FC = () => {
 
   // 删除权限
   function onDelete(record: ResponseAdminPermissionListItemType) {
-    adminPermissionDelete({ permissionId: record.id, enabled: record.enabled }).then((res) => {
+    adminPermissionDelete({ id: record.id, enabled: record.enabled }).then((res) => {
       message.success(res.message, MessageDuritain);
       getRows({ ...form.getFieldsValue() });
     });
@@ -375,10 +360,7 @@ const Admin: React.FC = () => {
 
   function getPageMenus() {
     adminPageMenus().then((res: ResponseBodyType) => {
-      const rows = res.data?.filter((item: ResponseAdminMenuListItemType) => {
-        return !item.hideInMenu;
-      });
-      setPageMenusData(rows);
+      setPageMenusData(res.data);
     });
   }
 
@@ -397,9 +379,7 @@ const Admin: React.FC = () => {
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="菜单名称" name="menuId" initialValue={0}>
-                <PageMenus data={pageMenusData}>
-                  <Select.Option value={0}>全部</Select.Option>
-                </PageMenus>
+                <PageMenus data={pageMenusData}></PageMenus>
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
