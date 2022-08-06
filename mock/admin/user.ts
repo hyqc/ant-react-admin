@@ -65,7 +65,7 @@ const list: ResponseListType = {
     total: 105,
     pageNum: 1,
     pageSize: 10,
-    rows: userListDataRows,
+    list: userListDataRows,
   },
 };
 

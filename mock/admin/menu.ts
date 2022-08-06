@@ -147,7 +147,7 @@ const menuTree: ResponseListType = {
     total: 1,
     pageNum: 1,
     pageSize: 10,
-    rows: menuTreeData,
+    list: menuTreeData,
   },
 };
 

@@ -63,23 +63,16 @@ const Admin: React.FC = () => {
 
   const columns: ColumnsType<any> = [
     {
-      title: 'ID',
-      dataIndex: 'adminId',
-      width: '4rem',
-      align: 'center',
-      sorter: true,
-    },
-    {
       title: '账号',
-      align: 'center',
+      align: 'left',
       dataIndex: 'username',
-      width: '8rem',
+      width: '6rem',
     },
     {
       title: '昵称',
-      align: 'center',
+      align: 'left',
       dataIndex: 'nickname',
-      width: '8rem',
+      width: '6rem',
     },
     {
       title: '头像',
@@ -92,8 +85,8 @@ const Admin: React.FC = () => {
     },
     {
       title: '邮箱',
-      align: 'center',
-      width: '14rem',
+      align: 'left',
+      width: '10rem',
       dataIndex: 'email',
     },
     {
@@ -113,34 +106,20 @@ const Admin: React.FC = () => {
     {
       title: '登录次数',
       align: 'center',
-      width: '6rem',
-      dataIndex: 'totalLogin',
-      sorter: true,
-    },
-    {
-      title: '创建时间',
-      align: 'center',
-      width: '12rem',
-      dataIndex: 'createTime',
-      sorter: true,
-    },
-    {
-      title: '更新时间',
-      align: 'center',
-      width: '12rem',
-      dataIndex: 'modifyTime',
+      width: '7rem',
+      dataIndex: 'loginTotal',
       sorter: true,
     },
     {
       title: '最后登录IP',
       align: 'center',
-      width: '12rem',
+      width: '7rem',
       dataIndex: 'lastLoginIp',
     },
     {
       title: '最后登录时间',
       align: 'center',
-      width: '12rem',
+      width: '11rem',
       dataIndex: 'lastLoginTime',
     },
     {
@@ -251,7 +230,7 @@ const Admin: React.FC = () => {
     adminUserList(data)
       .then((res: ResponseListType) => {
         const data: ResponseListDataType = res.data;
-        const rows = data?.rows || [];
+        const rows = data?.list || [];
         const page = { total: data.total, pageSize: data.pageSize, pageNum: data.pageNum };
         setPageInfo(page);
         setRowsData(rows);

@@ -2,7 +2,7 @@ import { PureSettings } from '@ant-design/pro-layout/lib/defaultSettings';
 import { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { request } from 'umi';
 import { ResponseBodyType } from '../types';
-import { APIAccount } from './api';
+import { APIAccount, APICommon } from './api';
 
 export type MenusRemoteItem = {
   [key: string]: MenuDataItem;
@@ -88,8 +88,8 @@ export type RequestUploadFileParamsType = {
 };
 
 export async function upload(data: RequestUploadFileParamsType) {
-  return request<ResponseBodyType>(APIAccount.upload.url, {
-    method: APIAccount.upload.method,
+  return request<ResponseBodyType>(APICommon.upload.url, {
+    method: APICommon.upload.method,
     data: data,
   });
 }

@@ -9,6 +9,13 @@ export type APIType = {
   [key: string]: APIItemType;
 };
 
+export const APICommon = {
+  upload: {
+    url: '/admin/common/upload',
+    method: POST,
+  },
+};
+
 export const APIAccount = {
   login: {
     url: '/admin/account/login',
@@ -28,10 +35,6 @@ export const APIAccount = {
   },
   password: {
     url: '/admin/account/password',
-    method: POST,
-  },
-  upload: {
-    url: '/admin/account/upload',
     method: POST,
   },
 };

@@ -8,6 +8,12 @@
     allow: 'allow',
   },
   {
+    path: '/',
+    redirect: '/home',
+    key: 'Home',
+    access: 'allow',
+  },
+  {
     path: '/home',
     name: 'home',
     icon: 'HomeOutlined',
@@ -24,9 +30,9 @@
     access: 'allow',
   },
   {
+    path: '/admin',
     key: 'Admin',
     name: 'admin',
-    path: '/admin',
     icon: 'SettingOutlined',
     access: 'allow',
     routes: [
@@ -113,13 +119,6 @@
     icon: 'BookOutlined',
     component: './Demo',
     key: 'Demo',
-    access: 'allow',
-  },
-
-  {
-    path: '/',
-    redirect: '/home',
-    key: 'Home',
     access: 'allow',
   },
   {

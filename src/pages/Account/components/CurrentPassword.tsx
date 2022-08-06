@@ -1,5 +1,6 @@
 import { AdminUserFormRules } from '@/pages/Admin/User/common';
 import { currentAdminEditPassword } from '@/services/apis/admin/account';
+import { Logout } from '@/utils/common';
 import { Button, Form, Input, message } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -19,7 +20,9 @@ const CurrentAccountPassword: React.FC = () => {
       .validateFields()
       .then((values) => {
         currentAdminEditPassword({ ...values }).then((res) => {
-          message.success(res.message, MessageDuritain, () => {});
+          message.success(res.message + '，请重新登录！', MessageDuritain, () => {
+            Logout();
+          });
         });
       })
       .catch((err) => {
@@ -37,13 +40,15 @@ const CurrentAccountPassword: React.FC = () => {
       <Form.Item label="名称" name="username">
         <Input disabled />
       </Form.Item>
-      <Form.Item label="密码" name="password" initialValue={''} rules={rules.password}>
+      <Form.Item label="旧密码" name="oldPassword" rules={rules.oldPassword}>
+        <Input.Password />
+      </Form.Item>
+      <Form.Item label="密码" name="password" dependencies={['oldPassword']} rules={rules.password}>
         <Input.Password />
       </Form.Item>
       <Form.Item
         label="确认密码"
         name="confirmPassword"
-        initialValue={''}
         dependencies={['password']}
         rules={rules.confirmPassword}
       >

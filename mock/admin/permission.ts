@@ -3,7 +3,7 @@ import { ResponseBodyType, ResponseDetailType } from '@/services/apis/types';
 import { success } from '../common';
 import { Request, Response } from 'express';
 
-const rows: ResponseAdminPermissionListItemType[] = [
+const list: ResponseAdminPermissionListItemType[] = [
   {
     menuId: 4,
     menuName: '菜单列表',
@@ -161,7 +161,7 @@ const rows: ResponseAdminPermissionListItemType[] = [
     ],
   },
 ];
-const list: ResponseBodyType = {
+const listData: ResponseBodyType = {
   code: 0,
   type: 'SUCCESS',
   message: '成功',
@@ -169,7 +169,7 @@ const list: ResponseBodyType = {
     total: 55,
     pageNum: 3,
     pageSize: 10,
-    rows: rows,
+    list,
   },
 };
 
@@ -215,8 +215,8 @@ const detail: ResponseDetailType = {
 export default {
   'POST /api/admin/permission/menu': success,
   'POST /api/admin/permission/list': (req: Request, res: Response) => {
-    list.data.pageNum = req.body.pageNum;
-    list.data.pageSize = req.body.pageSize;
+    listData.data.pageNum = req.body.pageNum;
+    listData.data.pageSize = req.body.pageSize;
     res.json(list);
   },
   'POST /api/admin/permission/add': success,

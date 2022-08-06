@@ -53,7 +53,7 @@ const list: ResponseBodyType = {
     total: 55,
     pageNum: 3,
     pageSize: 10,
-    rows: rows,
+    list: rows,
   },
 };
 

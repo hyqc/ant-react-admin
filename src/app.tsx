@@ -98,16 +98,24 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     menu: {
       locale: true,
       defaultOpenAll: true,
-      //params: { time: new Date().getTime() },
       request: (params, defaultMenuData) => {
         const menuData = initialState?.currentUser?.menus;
-        const menuList: MenuDataItem[] = HandleRemoteMenuIntoLocal(
+        const tmpMenuList: MenuDataItem[] = HandleRemoteMenuIntoLocal(
           [],
-          HandleRemoteMenuIntoLocal([], defaultMenuData, menuData, 'children'),
+          defaultMenuData,
           menuData,
           'children',
         );
-        setInitialState({ ...initialState, menuData: HandleMenusToMap({}, menuList, 'children') });
+        const menuList: MenuDataItem[] = HandleRemoteMenuIntoLocal(
+          [],
+          tmpMenuList,
+          menuData,
+          'routes',
+        );
+        setInitialState({
+          ...initialState,
+          menuData: HandleMenusToMap({}, menuList, 'children'),
+        });
         return new Promise((resolve, reject) => {
           resolve(menuList);
         });

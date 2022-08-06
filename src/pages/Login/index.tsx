@@ -28,7 +28,7 @@ const Login: React.FC = () => {
       if (!history) return;
       const { query } = history.location;
       const { redirect } = query as { redirect: string };
-      window.location.href = redirect || '/';
+      window.location.href = redirect || '/home';
       return;
     } catch (error) {
       console.log(error);

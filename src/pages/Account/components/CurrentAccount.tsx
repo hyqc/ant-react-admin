@@ -4,7 +4,7 @@ import {
   RequestCurrentAdminEditParamsType,
   upload,
 } from '@/services/apis/admin/account';
-import { APIAccount } from '@/services/apis/admin/api';
+import { APICommon } from '@/services/apis/admin/api';
 import { GetLoginToken } from '@/utils/common';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message, Upload, UploadFile } from 'antd';
@@ -115,10 +115,13 @@ const CurrentAccountInfo: React.FC = () => {
         <Form.Item label="头像" name="avatar">
           <Upload
             maxCount={1}
-            customRequest={uploadFile}
+            // customRequest={uploadFile}
             headers={headers}
+            data={{
+              fileType: 1,
+            }}
             accept={UploadImageAccept}
-            action={`${BaseAPI}${APIAccount.upload.url}`}
+            action={`${BaseAPI}${APICommon.upload.url}`}
             fileList={fileList}
             listType="picture-card"
             onPreview={onPreview}

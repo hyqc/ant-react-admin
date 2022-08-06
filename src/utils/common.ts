@@ -19,7 +19,7 @@ export const HandleRemoteMenuIntoLocal = (
   childrenKey: string,
 ): MenuDataItem[] => {
   defaultMenuData?.forEach((item) => {
-    const tmpItem: MenuDataItem = { ...item };
+    let tmpItem: MenuDataItem = { ...item };
     if (tmpItem.key && remoteMenus[tmpItem.key]) {
       // 更新合并后的菜单的访问权限：access | forbidden，用于访问权限判断
       tmpItem.access = AccessAllow;

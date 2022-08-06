@@ -157,7 +157,7 @@ const Admin: React.FC = () => {
     adminRoleList(data)
       .then((res: ResponseListType) => {
         const data: ResponseListDataType = res.data;
-        const rows = data?.rows || [];
+        const rows = data?.list || [];
         const page = { total: data.total, pageSize: data.pageSize, pageNum: data.pageNum };
         setPageInfo(page);
         setRowsData(rows);

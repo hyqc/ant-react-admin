@@ -3,7 +3,7 @@ import {
   RequestAdminUserEditParamsType,
   ResponseAdminUserDetailType,
 } from '@/services/apis/admin/user';
-import { APIAccount } from '@/services/apis/admin/api';
+import { APICommon } from '@/services/apis/admin/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
@@ -127,7 +127,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
             <Upload
               maxCount={1}
               accept={UploadImageAccept}
-              action={`${BaseAPI}${APIAccount.upload.url}`}
+              action={`${BaseAPI}${APICommon.upload.url}`}
               fileList={fileList}
               listType="picture-card"
               onPreview={onPreview}
