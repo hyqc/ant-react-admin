@@ -1,6 +1,6 @@
 import { ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
 import { Select } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export type AddModalPropsType = {
   data: ResponseAdminMenuListItemType[];
@@ -28,6 +28,8 @@ const MenuTreeSelect: React.FC<AddModalPropsType> = (props) => {
     }
     return styleCss;
   }
+
+  useEffect(() => {}, [data]);
 
   return (
     <Select

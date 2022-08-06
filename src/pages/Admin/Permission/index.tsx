@@ -379,7 +379,9 @@ const Admin: React.FC = () => {
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
               <Form.Item label="菜单名称" name="menuId" initialValue={0}>
-                <PageMenus data={pageMenusData}></PageMenus>
+                <PageMenus data={pageMenusData}>
+                  <Select.Option value={0}>全部</Select.Option>
+                </PageMenus>
               </Form.Item>
             </Col>
             <Col span={FormSearchRowColSpan}>
