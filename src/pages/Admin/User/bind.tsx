@@ -94,6 +94,9 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+        <Form.Item label="ID" name="adminId" hidden>
+          <Input disabled value={detailData.adminId} />
+        </Form.Item>
         <Form.Item label="账号" name="username">
           <Input disabled />
         </Form.Item>

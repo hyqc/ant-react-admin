@@ -80,7 +80,7 @@ const AddModal: React.FC = () => {
           form={form}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 12 }}
-          labelAlign="left"
+          labelAlign="right"
           labelWrap
         >
           <Row gutter={FormSearchRowGutter}>
@@ -129,15 +129,15 @@ const AddModal: React.FC = () => {
           </Row>
           <Row gutter={[12, 24]}>
             <Col span={24}>
-              <Form.Item style={{ marginTop: '2rem' }}>
-                <Button type="primary" onClick={handleCancel} style={ButtonStyles}>
-                  返回
+              <Form.Item style={{ marginTop: '2rem', marginLeft: '8rem' }}>
+                <Button htmlType="submit" type="primary" onClick={handleOk} style={ButtonStyles}>
+                  保存
                 </Button>
                 <Button htmlType="button" type="primary" onClick={handleReset} style={ButtonStyles}>
                   重置
                 </Button>
-                <Button htmlType="submit" type="primary" onClick={handleOk} style={ButtonStyles}>
-                  保存
+                <Button type="primary" onClick={handleCancel} style={ButtonStyles}>
+                  返回
                 </Button>
               </Form.Item>
             </Col>

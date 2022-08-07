@@ -133,7 +133,7 @@ const Admin: React.FC = () => {
     },
     {
       title: '状态',
-      width: '6rem',
+      width: '7rem',
       align: 'center',
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminUserListItemType) {
@@ -162,7 +162,7 @@ const Admin: React.FC = () => {
             }
           >
             <Popconfirm
-              title={`确定要${record.enabled ? '禁用' : '启用'}该管理员吗？`}
+              title={`确定要${record.enabled ? '禁用' : '启用'}该账号吗？`}
               okText="确定"
               cancelText="取消"
               onConfirm={() => updateEnabled(record)}
@@ -227,7 +227,7 @@ const Admin: React.FC = () => {
                 <Authorization name="AdminUserDelete">
                   {!record.enabled ? (
                     <Popconfirm
-                      title="确定要删除该管理员吗？"
+                      title="确定要删除该账号吗？"
                       okText="确定"
                       cancelText="取消"
                       onConfirm={() => onDelete(record)}
@@ -248,7 +248,7 @@ const Admin: React.FC = () => {
     },
   ];
 
-  // 获取管理员列表
+  // 获取账号列表
   function getRows(data?: RequestAdminUserListParamsType) {
     setLoading(true);
     adminUserList(data)
@@ -267,7 +267,7 @@ const Admin: React.FC = () => {
       });
   }
 
-  // 管理员状态更新
+  // 账号状态更新
   function updateEnabled(record: ResponseAdminUserListItemType) {
     const updateData: RequestAdminUserEnableParamsType = {
       adminId: record.adminId,
@@ -287,17 +287,18 @@ const Admin: React.FC = () => {
     });
   }
 
-  // 删除管理员
+  // 删除账号
   function onDelete(record: ResponseAdminUserListItemType) {
     adminUserDelete({ adminId: record.adminId, enabled: record.enabled }).then(
       (res: ResponseBodyType) => {
-        message.success(res.message, MessageDuritain);
-        getRows({ ...pageInfo, ...form.getFieldsValue() });
+        message.success(res.message, MessageDuritain, () => {
+          getRows({ ...pageInfo, ...form.getFieldsValue() });
+        });
       },
     );
   }
 
-  // 管理员详情
+  // 账号详情
   function openDetailModal(record: ResponseAdminUserListItemType) {
     adminUserDetail({ adminId: record.adminId }).then((res) => {
       setDetailData(res.data);
@@ -313,7 +314,7 @@ const Admin: React.FC = () => {
     });
   }
 
-  // 管理员编辑
+  // 账号编辑
   function openEditModal(record: ResponseAdminUserListItemType) {
     adminUserDetail({ adminId: record.adminId }).then((res) => {
       setDetailData(res.data);
@@ -321,7 +322,7 @@ const Admin: React.FC = () => {
     });
   }
 
-  // 管理员添加
+  // 账号添加
   function openAddModal() {
     setAddModalStatus(true);
   }
@@ -482,7 +483,7 @@ const Admin: React.FC = () => {
           <Authorization name="AdminUserEdit">
             <Button type="primary" onClick={openAddModal}>
               <PlusOutlined />
-              新建管理员
+              新建账号
             </Button>
           </Authorization>
         </Space>

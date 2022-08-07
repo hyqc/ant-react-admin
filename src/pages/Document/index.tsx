@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import 'github-markdown-css';
 import './index.less';
+import { Link } from 'umi';
 
 const { Header, Content, Sider } = Layout;
 
@@ -26,8 +27,10 @@ const Document: React.FC = () => {
         <Row className="row">
           <Col span={6}>
             <h1>
-              <img className="logo" src="/favicon.ico" />
-              WEI
+              <Link to={'/'}>
+                <img className="logo" src="/favicon.ico" />
+                WEI
+              </Link>
             </h1>
           </Col>
           <Col span={14}>

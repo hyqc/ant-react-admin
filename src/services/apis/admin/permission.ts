@@ -76,8 +76,8 @@ export type RequestAdminPermissionAddForMenuParamsType = {
 };
 
 export async function adminAddMenuPermission(params: RequestAdminPermissionAddForMenuParamsType) {
-  return request<ResponseBodyType>(APIAdminPermissions.menu.url, {
-    method: APIAdminPermissions.menu.method,
+  return request<ResponseBodyType>(APIAdminPermissions.addMenuPermissions.url, {
+    method: APIAdminPermissions.addMenuPermissions.method,
     data: params,
   });
 }
@@ -210,8 +210,8 @@ export type RequestAdminPermissionBindApiParamsType = {
 };
 
 export async function adminPermissionBindApi(params: RequestAdminPermissionBindApiParamsType) {
-  return request<ResponseBodyType>(APIAdminPermissions.bind.url, {
-    method: APIAdminPermissions.bind.method,
+  return request<ResponseBodyType>(APIAdminPermissions.bindApis.url, {
+    method: APIAdminPermissions.bindApis.method,
     data: params,
   });
 }

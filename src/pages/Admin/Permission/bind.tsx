@@ -70,7 +70,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
 
   useEffect(() => {
     form.resetFields();
-    if (detailData && detailData.name) {
+    if (detailData) {
       fetchAdminAPIs();
       form.setFieldsValue({ name: detailData?.name, apiIds: apiIdsValue });
     }

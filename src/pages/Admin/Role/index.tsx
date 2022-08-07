@@ -232,8 +232,9 @@ const Admin: React.FC = () => {
   // 删除角色
   function onDelete(record: ResponseAdminRoleListItemType) {
     adminRoleDelete({ id: record.roleId, enabled: record.enabled }).then((res) => {
-      message.success(res.message, MessageDuritain);
-      getRows({ ...pageInfo, ...form.getFieldsValue() });
+      message.success(res.message, MessageDuritain, () => {
+        getRows({ ...pageInfo, ...form.getFieldsValue() });
+      });
     });
   }
 

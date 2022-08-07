@@ -157,8 +157,8 @@ export const APIAdminPermissions = {
     url: '/admin/permission/add',
     method: POST,
   },
-  menu: {
-    url: '/admin/permission/menu',
+  addMenuPermissions: {
+    url: '/admin/permission/addMenuPermissions',
     method: POST,
   },
   delete: {
@@ -177,8 +177,8 @@ export const APIAdminPermissions = {
     url: '/admin/permission/all',
     method: POST,
   },
-  bind: {
-    url: '/admin/permission/bind',
+  bindApis: {
+    url: '/admin/permission/bindApis',
     method: POST,
   },
   unbind: {
