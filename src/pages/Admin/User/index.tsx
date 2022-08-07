@@ -67,6 +67,7 @@ const Admin: React.FC = () => {
       align: 'left',
       dataIndex: 'username',
       width: '6rem',
+      sorter: true,
     },
     {
       title: '昵称',
@@ -94,6 +95,13 @@ const Admin: React.FC = () => {
       width: '8rem',
       dataIndex: 'roles',
       render: (roles, record: ResponseAdminUserListItemType) => {
+        if (record.adminId === AdminId) {
+          return (
+            <Tag color="geekblue" style={{ cursor: 'default' }}>
+              超管
+            </Tag>
+          );
+        }
         return roles?.map((item: ResponseAdminUserListItemRolesItemType) => {
           return (
             <Tag color="geekblue" style={{ cursor: 'default' }} key={item.roleId}>
@@ -121,6 +129,7 @@ const Admin: React.FC = () => {
       align: 'center',
       width: '11rem',
       dataIndex: 'lastLoginTime',
+      sorter: true,
     },
     {
       title: '状态',
@@ -128,6 +137,16 @@ const Admin: React.FC = () => {
       align: 'center',
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminUserListItemType) {
+        if (record.adminId === AdminId) {
+          return (
+            <Switch
+              checkedChildren={'启用'}
+              disabled
+              unCheckedChildren={'禁用'}
+              checked={enabled}
+            />
+          );
+        }
         return (
           <Authorization
             name="AdminUserEdit"
@@ -169,55 +188,60 @@ const Admin: React.FC = () => {
                 详情
               </Button>
             </Authorization>
-
-            <Authorization name="AdminUserEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openBindRolesModal(record)}
-              >
-                分配角色
-              </Button>
-            </Authorization>
-
-            <Authorization name="AdminUserEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditModal(record)}
-              >
-                编辑
-              </Button>
-            </Authorization>
-
-            <Authorization name="AdminUserEdit">
-              {/* 非超管修改密码 */}
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditPasswordModal(record)}
-              >
-                修改密码
-              </Button>
-            </Authorization>
-
-            {/* 禁用的才能删除 */}
-            <Authorization name="AdminUserDelete">
-              {!record.enabled ? (
-                <Popconfirm
-                  title="确定要删除该管理员吗？"
-                  okText="确定"
-                  cancelText="取消"
-                  onConfirm={() => onDelete(record)}
-                >
-                  <Button type="primary" danger style={{ marginRight: 4 }}>
-                    删除
+            {record.adminId === AdminId ? (
+              <></>
+            ) : (
+              <>
+                <Authorization name="AdminUserEdit">
+                  <Button
+                    type="primary"
+                    style={{ marginRight: 4 }}
+                    onClick={() => openBindRolesModal(record)}
+                  >
+                    分配角色
                   </Button>
-                </Popconfirm>
-              ) : (
-                ''
-              )}
-            </Authorization>
+                </Authorization>
+
+                <Authorization name="AdminUserEdit">
+                  <Button
+                    type="primary"
+                    style={{ marginRight: 4 }}
+                    onClick={() => openEditModal(record)}
+                  >
+                    编辑
+                  </Button>
+                </Authorization>
+
+                <Authorization name="AdminUserEdit">
+                  {/* 非超管修改密码 */}
+                  <Button
+                    type="primary"
+                    style={{ marginRight: 4 }}
+                    onClick={() => openEditPasswordModal(record)}
+                  >
+                    修改密码
+                  </Button>
+                </Authorization>
+
+                {/* 禁用的才能删除 */}
+                <Authorization name="AdminUserDelete">
+                  {!record.enabled ? (
+                    <Popconfirm
+                      title="确定要删除该管理员吗？"
+                      okText="确定"
+                      cancelText="取消"
+                      onConfirm={() => onDelete(record)}
+                    >
+                      <Button type="primary" danger style={{ marginRight: 4 }}>
+                        删除
+                      </Button>
+                    </Popconfirm>
+                  ) : (
+                    ''
+                  )}
+                </Authorization>
+              </>
+            )}
           </Space>
         );
       },
@@ -256,8 +280,8 @@ const Admin: React.FC = () => {
     });
   }
 
-  function fetchAdminRoles(roleName?: string) {
-    adminRoleAll({ roleName }).then((res) => {
+  function fetchAdminRoles(name?: string) {
+    adminRoleAll({ name }).then((res) => {
       res.data.unshift({ roleId: 0, roleName: '全部' });
       setRoleOptions(res.data || []);
     });
@@ -488,29 +512,35 @@ const Admin: React.FC = () => {
 
       <AdminUserAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
 
-      <AdminUserDetailModal
-        modalStatus={detailModalStatus}
-        detailData={detailData}
-        noticeModal={noticeDetailModal}
-      />
+      {detailData ? (
+        <>
+          <AdminUserDetailModal
+            modalStatus={detailModalStatus}
+            detailData={detailData}
+            noticeModal={noticeDetailModal}
+          />
 
-      <AdminUserEditModal
-        modalStatus={editModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditModal}
-      />
+          <AdminUserEditModal
+            modalStatus={editModalStatus}
+            detailData={detailData}
+            noticeModal={noticeEditModal}
+          />
 
-      <AdminUserBindRolesModal
-        modalStatus={bindModalStatus}
-        detailData={detailData}
-        noticeModal={noticeBindRolesModal}
-      />
+          <AdminUserBindRolesModal
+            modalStatus={bindModalStatus}
+            detailData={detailData}
+            noticeModal={noticeBindRolesModal}
+          />
 
-      <AdminUserEditPasswordModal
-        modalStatus={editPasswordModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditPasswordModal}
-      />
+          <AdminUserEditPasswordModal
+            modalStatus={editPasswordModalStatus}
+            detailData={detailData}
+            noticeModal={noticeEditPasswordModal}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };

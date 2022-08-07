@@ -56,7 +56,7 @@ export async function getInitialState(): Promise<{
       fetchUserInfo,
       currentUser,
       permissions,
-      settings: { ...defaultSettings, ...currentUser?.settings },
+      settings: { ...defaultSettings },
     };
   }
   return {

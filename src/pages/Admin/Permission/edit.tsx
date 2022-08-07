@@ -109,6 +109,9 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+        <Form.Item label="权限ID" hidden name="id">
+          <Input disabled />
+        </Form.Item>
         <Form.Item label="菜单名称" name="menuId">
           <PageMenus data={pageMenusData} onChange={menuIdChange} />
         </Form.Item>

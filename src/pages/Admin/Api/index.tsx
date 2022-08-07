@@ -49,7 +49,7 @@ const Admin: React.FC = () => {
   const columns: ColumnsType<any> = [
     {
       title: 'ID',
-      dataIndex: 'apiId',
+      dataIndex: 'id',
       width: '4rem',
       align: 'center',
       sorter: true,
@@ -71,6 +71,7 @@ const Admin: React.FC = () => {
       align: 'left',
       dataIndex: 'key',
       width: '12rem',
+      sorter: true,
     },
     {
       title: '更新时间',
@@ -180,7 +181,7 @@ const Admin: React.FC = () => {
   // 接口资源状态更新
   function updateEnabled(record: ResponseAdminAPIListItemType) {
     const updateData: RequestAdminAPIEnableParamsType = {
-      apiId: record.apiId,
+      id: record.id,
       enabled: !record.enabled,
     };
     adminAPIEnable(updateData).then((res) => {
@@ -197,7 +198,7 @@ const Admin: React.FC = () => {
 
   // 接口资源详情
   function openDetailModal(record: ResponseAdminAPIListItemType) {
-    adminAPIDetail({ apiId: record.apiId }).then((res) => {
+    adminAPIDetail({ id: record.id }).then((res) => {
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
@@ -205,7 +206,7 @@ const Admin: React.FC = () => {
 
   // 接口资源编辑
   function openEditModal(record: ResponseAdminAPIListItemType) {
-    adminAPIDetail({ apiId: record.apiId }).then((res) => {
+    adminAPIDetail({ id: record.id }).then((res) => {
       setDetailData(res.data);
       setEditModalStatus(true);
     });
@@ -236,7 +237,7 @@ const Admin: React.FC = () => {
 
   // 删除接口资源
   function onDelete(record: ResponseAdminAPIListItemType) {
-    adminAPIDelete({ apiId: record.apiId, enabled: record.enabled }).then((res) => {
+    adminAPIDelete({ id: record.id, enabled: record.enabled }).then((res) => {
       message.success(res.message, MessageDuritain);
       getRows({ ...form.getFieldsValue() });
     });
@@ -335,7 +336,7 @@ const Admin: React.FC = () => {
         {/* table */}
         <Table
           sticky
-          rowKey="apiId"
+          rowKey="id"
           scroll={{ x: 'auto' }}
           loading={loading}
           columns={columns}
@@ -357,17 +358,22 @@ const Admin: React.FC = () => {
 
       <AdminAPIAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
 
-      <AdminAPIDetailModal
-        modalStatus={detailModalStatus}
-        detailData={detailData}
-        noticeModal={noticeDetailModal}
-      />
-
-      <AdminAPIEditModal
-        modalStatus={editModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditModal}
-      />
+      {detailData ? (
+        <>
+          <AdminAPIDetailModal
+            modalStatus={detailModalStatus}
+            detailData={detailData}
+            noticeModal={noticeDetailModal}
+          />
+          <AdminAPIEditModal
+            modalStatus={editModalStatus}
+            detailData={detailData}
+            noticeModal={noticeEditModal}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };

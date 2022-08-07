@@ -437,7 +437,7 @@ const Admin: React.FC = () => {
           <Authorization name="AdminPermissionEdit">
             <Button type="primary" onClick={openAddModal}>
               <PlusOutlined />
-              新建接口
+              新建权限
             </Button>
           </Authorization>
         </Space>

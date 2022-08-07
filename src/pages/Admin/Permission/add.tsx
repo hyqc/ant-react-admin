@@ -105,8 +105,10 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="菜单名称" name="menuId">
-          <PageMenus data={pageMenusData} onChange={menuIdChange} />
+        <Form.Item label="页面名称" name="menuId">
+          <PageMenus data={pageMenusData} onChange={menuIdChange}>
+            <Select.Option value={0}>请选择页面</Select.Option>
+          </PageMenus>
         </Form.Item>
         <Form.Item label="菜单路由">
           <Input disabled value={menuCheckedItem?.path} />

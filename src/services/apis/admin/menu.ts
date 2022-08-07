@@ -216,8 +216,8 @@ export type RequestAdminPageMenusParamsType = {
   all?: boolean;
 };
 export async function adminPageMenus(params?: RequestAdminPageMenusParamsType) {
-  return request<ResponseBodyType>(APIAdminMenus.page.url, {
-    method: APIAdminMenus.page.method,
-    params,
+  return request<ResponseBodyType>(APIAdminMenus.pages.url, {
+    method: APIAdminMenus.pages.method,
+    data: params,
   });
 }

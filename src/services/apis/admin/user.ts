@@ -158,9 +158,9 @@ export type RequestAdminUserAssignRolesParamsType = {
   roleIds: number[];
 };
 
-export async function adminUserAssignRoles(params: RequestAdminUserAssignRolesParamsType) {
-  return request<ResponseBodyType>(APIAdminUsers.bind.url, {
-    method: APIAdminUsers.bind.method,
+export async function adminUserBindRoles(params: RequestAdminUserAssignRolesParamsType) {
+  return request<ResponseBodyType>(APIAdminUsers.bindRoles.url, {
+    method: APIAdminUsers.bindRoles.method,
     data: params,
   });
 }

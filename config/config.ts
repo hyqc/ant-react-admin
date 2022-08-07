@@ -65,9 +65,10 @@ export default defineConfig({
     BaseAPI: '/api', // 请求接口的前缀
     MessageDuritain: 1.5, // message 等消息提示框关闭的默认时间秒
     UploadImageAccept: '.png, .jpg, .jpeg,.ico', // 上传图片允许的类型
-    DefaultModalWidth: 800, // modal default width 800px
+    DefaultModalWidth: 600, // modal default width 800px
     DefaultDrawerWidth: 600, // drawer default width 600px
     AccessAllow: 'allow', // 403权限允许访问
     AccessForbidden: 'forbidden', // 403权限禁止访问
+    AdminId: 1, // 超管ID
   },
 });

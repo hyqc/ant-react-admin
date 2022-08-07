@@ -63,12 +63,14 @@ const Admin: React.FC = () => {
       title: '创建时间',
       align: 'center',
       dataIndex: 'createTime',
+      width: '12rem',
       sorter: true,
     },
     {
       title: '更新时间',
       align: 'center',
       dataIndex: 'modifyTime',
+      width: '12rem',
       sorter: true,
     },
     {
@@ -173,7 +175,7 @@ const Admin: React.FC = () => {
   // 角色状态更新
   function updateEnabled(record: ResponseAdminRoleListItemType) {
     const updateData: RequestAdminRoleEnableParamsType = {
-      roleId: record.roleId,
+      id: record.roleId,
       enabled: !record.enabled,
     };
     adminRoleEnable(updateData).then((res) => {
@@ -185,7 +187,7 @@ const Admin: React.FC = () => {
 
   // 角色详情
   function openDetailModal(record: ResponseAdminRoleListItemType) {
-    adminRoleDetail({ roleId: record.roleId }).then((res) => {
+    adminRoleDetail({ id: record.roleId }).then((res) => {
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
@@ -193,7 +195,7 @@ const Admin: React.FC = () => {
 
   // 角色编辑
   function openEditModal(record: ResponseAdminRoleListItemType) {
-    adminRoleDetail({ roleId: record.roleId }).then((res) => {
+    adminRoleDetail({ id: record.roleId }).then((res) => {
       setDetailData(res.data);
       setEditModalStatus(true);
     });
@@ -229,14 +231,14 @@ const Admin: React.FC = () => {
 
   // 删除角色
   function onDelete(record: ResponseAdminRoleListItemType) {
-    adminRoleDelete({ roleId: record.roleId, enabled: record.enabled }).then((res) => {
+    adminRoleDelete({ id: record.roleId, enabled: record.enabled }).then((res) => {
       message.success(res.message, MessageDuritain);
       getRows({ ...pageInfo, ...form.getFieldsValue() });
     });
   }
 
   // 列表搜索
-  function onSearchFinish(values: RequestAdminUserListParamsType) {
+  function onSearchFinish(values: RequestAdminRoleListParamsType) {
     const page = { ...pageInfo, pageNum: 1 };
     getRows({ ...values, ...page });
   }

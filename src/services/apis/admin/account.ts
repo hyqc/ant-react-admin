@@ -75,7 +75,7 @@ export type RequestCurrentAdminInfoParamsType = {
 export async function currentAdminInfo(refreshToken?: boolean) {
   return request<ResponseBodyType>(APIAccount.detail.url, {
     method: APIAccount.detail.method,
-    params: {
+    data: {
       refreshToken: refreshToken || false,
     },
   });

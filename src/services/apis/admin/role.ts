@@ -54,7 +54,7 @@ export async function adminRoleAdd(params: RequestAdminRoleAddParamsType) {
  * 详情
  */
 export type RequestAdminRoleIDetailParamsType = {
-  roleId: number;
+  id: number;
 };
 
 export type ResponseAdminRoleDetailType = {
@@ -79,8 +79,8 @@ export async function adminRoleDetail(params: RequestAdminRoleIDetailParamsType)
  * 编辑
  */
 export type RequestAdminRoleEditParamsType = {
-  roleId: number;
-  roleName?: string;
+  id: number;
+  name?: string;
   enabled?: boolean;
   permissionIds?: string;
 };
@@ -97,7 +97,7 @@ export async function adminRoleEdit(params: RequestAdminRoleEditParamsType) {
  * 全部
  */
 export type RequestAdminRoleAllParamsType = {
-  roleName?: string; // 角色名称
+  name?: string; // 角色名称
 };
 
 export type ResponseAdminRoleAllItemType = {
@@ -118,7 +118,7 @@ export async function adminRoleAll(params?: RequestAdminRoleAllParamsType) {
  */
 
 export type RequestAdminRoleDeleteParamsType = {
-  roleId: number;
+  id: number;
   enabled: boolean;
 };
 
@@ -134,7 +134,7 @@ export async function adminRoleDelete(params: RequestAdminRoleDeleteParamsType) 
  * 启用禁用
  */
 export type RequestAdminRoleEnableParamsType = {
-  roleId: number;
+  id: number;
   enabled: boolean;
 };
 

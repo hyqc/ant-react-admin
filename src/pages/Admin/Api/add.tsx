@@ -1,5 +1,5 @@
 import { Form, Input, message, Modal, Switch } from 'antd';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { adminAPIAdd, RequestAdminAPIAddParamsType } from '@/services/apis/admin/resource';
@@ -80,7 +80,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
         <Form.Item label="描述" name="describe" initialValue={''}>
           <Input.TextArea />
         </Form.Item>
-        <Form.Item label="状态" name="enabled" valuePropName="checked">
+        <Form.Item label="状态" name="enabled" valuePropName="checked" initialValue={true}>
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} defaultChecked />
         </Form.Item>
       </Form>

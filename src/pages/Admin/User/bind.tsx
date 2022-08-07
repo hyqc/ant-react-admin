@@ -1,5 +1,5 @@
 import {
-  adminUserAssignRoles,
+  adminUserBindRoles,
   RequestAdminUserAssignRolesParamsType,
   ResponseAdminUserDetailType,
 } from '@/services/apis/admin/user';
@@ -27,7 +27,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
   const [roleOptions, setRoleOptions] = useState<ResponseAdminRoleAllItemType[]>([]);
 
   const roleIdsValue: number[] =
-    detailData?.roles.map((item: ResponseAdminUserListItemRolesItemType) => {
+    detailData?.roles?.map((item: ResponseAdminUserListItemRolesItemType) => {
       return item.roleId;
     }) || [];
 
@@ -40,7 +40,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
           adminId: detailData.adminId,
           roleIds: values.roleIds || [],
         };
-        adminUserAssignRoles(data)
+        adminUserBindRoles(data)
           .then((res) => {
             message.destroy();
             message.success(res.message, MessageDuritain, () => {
@@ -63,8 +63,8 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
     noticeModal({ reload: false });
   }
 
-  function fetchAdminRoles(roleName?: string) {
-    adminRoleAll({ roleName }).then((res) => {
+  function fetchAdminRoles(name?: string) {
+    adminRoleAll({ name }).then((res) => {
       setRoleOptions(res.data || []);
     });
   }

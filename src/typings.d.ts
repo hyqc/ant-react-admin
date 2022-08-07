@@ -31,3 +31,4 @@ declare const DefaultModalWidth: number;
 declare const DefaultDrawerWidth: number;
 declare const AccessAllow: string;
 declare const AccessForbidden: string;
+declare const AdminId: number;

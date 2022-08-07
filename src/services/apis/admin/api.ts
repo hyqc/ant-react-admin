@@ -1,4 +1,4 @@
-import { POST, GET } from '../config';
+import { POST } from '../config';
 
 export type APIItemType = {
   url: string;
@@ -27,7 +27,7 @@ export const APIAccount = {
   },
   detail: {
     url: '/admin/account/detail',
-    method: GET,
+    method: POST,
   },
   edit: {
     url: '/admin/account/edit',
@@ -64,8 +64,8 @@ export const APIAdminUsers = {
     url: '/admin/user/enable',
     method: POST,
   },
-  bind: {
-    url: '/admin/user/bind',
+  bindRoles: {
+    url: '/admin/user/bindRoles',
     method: POST,
   },
 };
@@ -138,9 +138,9 @@ export const APIAdminMenus = {
     url: '/admin/menu/permissions',
     method: POST,
   },
-  page: {
-    url: '/admin/menu/page',
-    method: GET,
+  pages: {
+    url: '/admin/menu/pages',
+    method: POST,
   },
 };
 
