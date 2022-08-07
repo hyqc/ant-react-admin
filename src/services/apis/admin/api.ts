@@ -142,6 +142,10 @@ export const APIAdminMenus = {
     url: '/admin/menu/pages',
     method: POST,
   },
+  mode: {
+    url: '/admin/menu/mode',
+    method: POST,
+  },
 };
 
 export const APIAdminPermissions = {

@@ -40,7 +40,7 @@ import AdminPermissionAddModal, { NoticeModalPropsType } from './add';
 import AdminPermissionEditModal from './edit';
 import AdminPermissionDetailModal from './detail';
 import AdminPermissionBindApiModal from './bind';
-import { adminPageMenus, ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
+import { adminMenuPages, ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
 import PageMenus from './components/PageMenus';
 import { ResponseAdminAPIAllItemType } from '@/services/apis/admin/resource';
 
@@ -359,7 +359,7 @@ const Admin: React.FC = () => {
   }
 
   function getPageMenus() {
-    adminPageMenus().then((res: ResponseBodyType) => {
+    adminMenuPages().then((res: ResponseBodyType) => {
       setPageMenusData(res.data);
     });
   }

@@ -113,7 +113,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           menuData,
           'routes',
         );
-        console.log('menuList', menuList);
         setInitialState({
           ...initialState,
           menuData: HandleMenusToMap({}, menuList, 'children'),
@@ -169,7 +168,6 @@ const interceptorsResponse: any = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
   return new Promise(async (resolve, reject) => {
     const resData = await response.clone().json();
-    console.log('resData', resData);
     if (response.status !== 200) {
       const msg: string =
         resData && resData.path && resData.error
