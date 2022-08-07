@@ -67,6 +67,7 @@ export async function getInitialState(): Promise<{
 
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    // collapsed: true,
     rightContentRender: () => <RightContent />,
     disableContentMargin: true,
     waterMarkProps: {
@@ -81,7 +82,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     links: [],
     menuItemRender: (menuItemProps, defaultDom) => {
-      if (menuItemProps.isUrl || !menuItemProps.path) {
+      if (menuItemProps.isUrl) {
         return defaultDom;
       }
       // 支持二级菜单显示icon
@@ -168,6 +169,7 @@ const interceptorsResponse: any = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
   return new Promise(async (resolve, reject) => {
     const resData = await response.clone().json();
+    console.log('resData', resData);
     if (response.status !== 200) {
       const msg: string =
         resData && resData.path && resData.error
@@ -186,6 +188,10 @@ const interceptorsResponse: any = async (response: any, options: any) => {
 };
 
 const errorHandler = (err: any) => {
+  const reg = /.*timeout.*/gi;
+  if (reg.test(err)) {
+    message.error('请求超时', MessageDuritain);
+  }
   throw err;
 };
 

@@ -1,6 +1,6 @@
-import { Button, Card, Checkbox, Form, Input, message } from 'antd';
-import React, { useEffect } from 'react';
-import { useIntl, history, SelectLang, useModel } from 'umi';
+import { Button, Card, Checkbox, Form, Input } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { history, SelectLang, useModel } from 'umi';
 import styles from './index.less';
 import { login } from '@/services/apis/admin/account';
 import type { RequestLoginParamsType } from '@/services/apis/admin/account';
@@ -11,11 +11,12 @@ import { AdminUserFormRules } from '../Admin/User/common';
 const Login: React.FC = () => {
   const [form] = Form.useForm();
   const { setInitialState } = useModel('@@initialState');
-
+  const [loginBtnLoading, setLoginBtnLoading] = useState<boolean>(false);
   const rules: any = AdminUserFormRules(form);
 
   const handleSubmit = async (values: RequestLoginParamsType) => {
     try {
+      setLoginBtnLoading(true);
       const res = await login(values);
       // 设置token
       SetLoginToken(res.data.token, res.data.expire, values.remember || false);
@@ -32,6 +33,8 @@ const Login: React.FC = () => {
       return;
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoginBtnLoading(false);
     }
   };
 
@@ -53,7 +56,7 @@ const Login: React.FC = () => {
                 <span>管理后台</span>
               </p>
             </Form.Item>
-            <Form.Item name="username" rules={rules.username}>
+            <Form.Item name="username" rules={rules.username} validateFirst>
               <Input
                 type="text"
                 className={styles.loginInput}
@@ -61,7 +64,7 @@ const Login: React.FC = () => {
                 placeholder="账号"
               />
             </Form.Item>
-            <Form.Item name="password" rules={rules.password}>
+            <Form.Item name="password" rules={rules.password} validateFirst>
               <Input.Password
                 className={styles.loginInput}
                 prefix={<LockOutlined />}
@@ -75,7 +78,12 @@ const Login: React.FC = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" className={styles.loginButton}>
+              <Button
+                type="primary"
+                loading={loginBtnLoading}
+                htmlType="submit"
+                className={styles.loginButton}
+              >
                 登录
               </Button>
             </Form.Item>

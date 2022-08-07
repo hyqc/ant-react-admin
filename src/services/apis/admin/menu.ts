@@ -127,17 +127,16 @@ export async function adminMenuDetail(params: RequestAdminMenuDetailParamsType) 
  * 编辑
  */
 export type RequestAdminMenuEditParamsType = {
-  menuId: number;
-  parentId: number; // 父菜单ID
-  name: string; // 菜单名称，唯一键
-  path: string; // 菜单路由
-  redirect: string; // 重定向路由
-  hideInMenu: boolean; // 是否在菜单中隐藏
-  authority: string; // 数据库中不设置
+  id: number;
+  parentId?: number; // 父菜单ID
+  name?: string; // 菜单名称，唯一键
+  path?: string; // 菜单路由
+  redirect?: string; // 重定向路由
+  hideInMenu?: boolean; // 是否在菜单中隐藏
   hideChildrenInMenu?: boolean;
   icon?: string;
   locale?: string;
-  enabled: boolean;
+  enabled?: boolean;
   [key: string]: any;
 };
 
@@ -170,9 +169,7 @@ export async function adminMenuDelete(params: RequestAdminMenuDeleteParamsType) 
  */
 export type RequestAdminMenuEnableParamsType = {
   menuId: number;
-  enabled?: boolean;
-  hideInMenu?: boolean;
-  hideChildrenInMenu?: boolean;
+  enabled: boolean;
 };
 
 export async function adminMenuEnable(params: RequestAdminMenuEnableParamsType) {

@@ -6,10 +6,11 @@ import { ResponseBodyType } from '@/services/apis/types';
 import {
   adminMenuDelete,
   adminMenuDetail,
+  adminMenuEdit,
   adminMenuEnable,
   adminMenuPermissions,
   adminMenuTree,
-  RequestAdminMenuEnableParamsType,
+  RequestAdminMenuEditParamsType,
   RequestAdminMenuTreeParamsType,
   ResponseAdminMenuListItemType,
   ResponseAdminMenuPermissionsType,
@@ -141,7 +142,7 @@ const Admin: React.FC = () => {
               title={`确定要${record.enabled ? '禁用' : '启用'}该菜单吗？`}
               okText="确定"
               cancelText="取消"
-              onConfirm={() => updateMenuStatus(record, 'enabled')}
+              onConfirm={() => updateMenuEnabled(record)}
             >
               <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} checked={enabled} />
             </Popconfirm>
@@ -178,7 +179,9 @@ const Admin: React.FC = () => {
             </Authorization>
             <Authorization name="AdminMenuEdit">
               {record.hideInMenu ||
-              (record.children !== undefined && record?.children.length > 0) ? (
+              (record.children !== undefined &&
+                record?.children.length > 0 &&
+                !record.hideChildrenInMenu) ? (
                 ''
               ) : (
                 <Button
@@ -247,11 +250,22 @@ const Admin: React.FC = () => {
 
   // 菜单状态更新
   function updateMenuStatus(record: ResponseAdminMenuListItemType, field: string) {
-    const updateData: RequestAdminMenuEnableParamsType = {
-      menuId: record.id,
+    const updateData: RequestAdminMenuEditParamsType = {
+      id: record.id,
     };
     updateData[field] = !record[field];
-    adminMenuEnable(updateData).then((res) => {
+    adminMenuEdit(updateData).then((res) => {
+      message.success(res.message, MessageDuritain, () => {
+        getRows({ ...form.getFieldsValue() });
+      });
+    });
+  }
+
+  function updateMenuEnabled(record: ResponseAdminMenuListItemType) {
+    adminMenuEnable({
+      menuId: record.id,
+      enabled: !record.enabled,
+    }).then((res) => {
       message.success(res.message, MessageDuritain, () => {
         getRows({ ...form.getFieldsValue() });
       });
