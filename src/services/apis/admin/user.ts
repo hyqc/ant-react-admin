@@ -122,7 +122,7 @@ export type RequestAdminUserEditParamsType = {
   avatar?: string;
   email?: string;
   enabled?: boolean;
-  passwrod?: string;
+  password?: string;
   confirmPassword?: string;
 };
 

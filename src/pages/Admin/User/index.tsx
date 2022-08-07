@@ -132,8 +132,22 @@ const Admin: React.FC = () => {
       sorter: true,
     },
     {
+      title: '创建时间',
+      align: 'center',
+      width: '11rem',
+      dataIndex: 'createTime',
+      sorter: true,
+    },
+    {
+      title: '更新时间',
+      align: 'center',
+      width: '11rem',
+      dataIndex: 'modifyTime',
+      sorter: true,
+    },
+    {
       title: '状态',
-      width: '7rem',
+      width: '8rem',
       align: 'center',
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminUserListItemType) {

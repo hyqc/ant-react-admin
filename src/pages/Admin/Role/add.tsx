@@ -68,6 +68,9 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
         <Form.Item label="名称" name="name" initialValue={''} rules={rules.roleName}>
           <Input />
         </Form.Item>
+        <Form.Item label="描述" name="describe" initialValue={''}>
+          <Input.TextArea />
+        </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>

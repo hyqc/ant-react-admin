@@ -37,9 +37,9 @@ export async function adminRoleList(params?: RequestAdminRoleListParamsType) {
  * 新增
  */
 export type RequestAdminRoleAddParamsType = {
-  roleName: string;
-  enabled?: boolean;
-  permissionIds?: string;
+  name: string;
+  enabled: boolean;
+  describe?: string;
 };
 
 export async function adminRoleAdd(params: RequestAdminRoleAddParamsType) {
@@ -64,7 +64,6 @@ export type ResponseAdminRoleDetailType = {
   enabledText?: string;
   createTime?: string;
   modifyTime?: string;
-  permissionIds: number[];
 };
 
 export async function adminRoleDetail(params: RequestAdminRoleIDetailParamsType) {
@@ -81,6 +80,7 @@ export async function adminRoleDetail(params: RequestAdminRoleIDetailParamsType)
 export type RequestAdminRoleEditParamsType = {
   id: number;
   name?: string;
+  describe?: string;
   enabled?: boolean;
   permissionIds?: string;
 };

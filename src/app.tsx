@@ -112,6 +112,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           menuData,
           'routes',
         );
+        console.log('menuList', menuList);
         setInitialState({
           ...initialState,
           menuData: HandleMenusToMap({}, menuList, 'children'),
@@ -147,6 +148,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
 // 请求拦截器：
 const interceptorsRequest = (url: string, options: any) => {
+  message.destroy();
   const realyUrl = `${BaseAPI}${url}`;
   isDev && console.log('请求拦截器：', BaseAPI, url, options, realyUrl);
   if (!IsLongPage()) {
@@ -154,7 +156,7 @@ const interceptorsRequest = (url: string, options: any) => {
     const token = tokenInfo !== undefined ? tokenInfo.token : '';
     options.headers.Authorization = 'Bearer ' + token;
   }
-  message.destroy();
+
   return {
     url: realyUrl,
     options: { ...options, interceptors: true, url: realyUrl },
@@ -164,7 +166,6 @@ const interceptorsRequest = (url: string, options: any) => {
 // 响应拦截器：
 const interceptorsResponse: any = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
-  message.destroy();
   return new Promise(async (resolve, reject) => {
     const resData = await response.clone().json();
     if (response.status !== 200) {
@@ -176,6 +177,7 @@ const interceptorsResponse: any = async (response: any, options: any) => {
       return reject(msg);
     }
     if (resData.code !== SUCCESS) {
+      message.destroy();
       message.error(resData.message, MessageDuritain);
       return reject(resData.message);
     }

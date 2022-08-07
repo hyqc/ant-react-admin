@@ -43,6 +43,9 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
         <Form.Item label="名称" name="name">
           <Input disabled style={inputStyle} />
         </Form.Item>
+        <Form.Item label="描述" name="describe">
+          <Input.TextArea disabled style={inputStyle} />
+        </Form.Item>
         <Form.Item label="创建时间" name="createTime">
           <Input disabled style={inputStyle} />
         </Form.Item>

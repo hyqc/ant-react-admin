@@ -64,8 +64,8 @@ const AddModal: React.FC = () => {
 
   useEffect(() => {
     adminMenuTree().then((res) => {
-      const { list } = res.data;
-      setMenuData(makeMenuSpreadTreeData(list));
+      const spreadTreeData = makeMenuSpreadTreeData(res.data, parentId);
+      setMenuData(spreadTreeData);
     });
   }, []);
 
@@ -91,7 +91,7 @@ const AddModal: React.FC = () => {
                 initialValue={parentId}
                 rules={rules.parentId}
               >
-                <MenuTreeSelect data={menuData} disabled={parentId > 0} />
+                <MenuTreeSelect value={parentId} data={menuData} disabled={parentId > 0} />
               </Form.Item>
               <Form.Item label="名称" name="name" initialValue={''} rules={rules.name}>
                 <Input />

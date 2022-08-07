@@ -34,7 +34,8 @@
     key: 'Admin',
     name: 'admin',
     icon: 'SettingOutlined',
-    access: 'allow',
+    access: 'forbidden',
+    hideInMenu: true,
     routes: [
       {
         key: 'AdminUser',
@@ -55,6 +56,15 @@
         access: 'forbidden',
       },
       {
+        key: 'AdminRoleBindPermission',
+        path: '/admin/role/bindPerrmission',
+        name: 'role',
+        icon: 'UserSwitchOutlined',
+        component: './Admin/Role/bindPermission',
+        hideInMenu: true,
+        access: 'forbidden',
+      },
+      {
         key: 'AdminMenu',
         path: '/admin/menu',
         name: 'menu',
@@ -62,15 +72,34 @@
         component: './Admin/Menu',
         hideInMenu: true,
         access: 'forbidden',
+        // hideChildrenInMenu: true,
+        redirect: '/admin/menu',
+        routes: [
+          {
+            //key: 'AdminMenu',
+            path: '/admin/menu',
+            component: './Admin/Menu',
+            hideInMenu: false,
+            access: 'allow',
+          },
+          {
+            key: 'AdminMenuAdd',
+            path: '/admin/menu/add',
+            name: 'add',
+            component: './Admin/Menu/add',
+            hideInMenu: true,
+            access: 'allow',
+          },
+        ],
       },
-      {
-        key: 'AdminMenuAdd',
-        path: '/admin/menu/add',
-        name: 'menu.add',
-        component: './Admin/Menu/add',
-        hideInMenu: true,
-        access: 'forbidden',
-      },
+      // {
+      //   key: 'AdminMenuAdd',
+      //   path: '/admin/menu/add',
+      //   name: 'menu.add',
+      //   component: './Admin/Menu/add',
+      //   hideInMenu: true,
+      //   access: 'forbidden',
+      // },
       {
         key: 'AdminMenuEdit',
         path: '/admin/menu/edit',

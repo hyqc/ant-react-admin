@@ -72,6 +72,9 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
         <Form.Item label="名称" name="name" rules={rules.name}>
           <Input />
         </Form.Item>
+        <Form.Item label="描述" name="describe">
+          <Input.TextArea />
+        </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
