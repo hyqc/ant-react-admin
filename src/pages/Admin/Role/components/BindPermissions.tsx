@@ -40,6 +40,11 @@ const BindPermissions: React.FC<MenuPagePermissionsType> = (props) => {
   const [dataMap, setDataMap] = useState<any>({});
   const [childrenDataMap, setChildrenDataMap] = useState<any>({});
   const [checkedPermissions, setCheckedPermissions] = useState<string[]>([]);
+  const [checkedIds, setCheckedIds] = useState<number[]>([]);
+
+  const triggerChange = (ids: number[]) => {
+    onChange?.(ids);
+  };
 
   function checkboxChange(v: any[]) {}
 
@@ -116,6 +121,19 @@ const BindPermissions: React.FC<MenuPagePermissionsType> = (props) => {
       }
     }
     return sets;
+  }
+
+  function makeCheckedIds() {
+    const tmpIds: number[] = checkedPermissions
+      .filter((id) => {
+        return id.split('-').length === 3;
+      })
+      .map((id) => {
+        return parseInt(id.split('-')[2]);
+      });
+    const idSets: Set<number> = new Set(tmpIds);
+    const ids: number[] = [...idSets].sort();
+    setCheckedIds(ids);
   }
 
   function changed(e: any) {
@@ -228,25 +246,20 @@ const BindPermissions: React.FC<MenuPagePermissionsType> = (props) => {
     setCheckedPermissions([...setKeys]);
   }, [dataMap, childrenDataMap]);
 
+  useEffect(() => {}, [dataStatusMap]);
+
   useEffect(() => {
+    makeCheckedIds();
     const keySets: Set<string> = new Set(checkedPermissions);
-    const tmpIds: number[] = checkedPermissions
-      .filter((id) => {
-        return id.split('-').length === 3;
-      })
-      .map((id) => {
-        return parseInt(id.split('-')[2]);
-      });
-    const idSets: Set<number> = new Set(tmpIds);
-    const ids: number[] = [...idSets].sort();
-    onChange?.(ids);
     //计算选中状态
     const tmpStatusMap = changeIndeterminate(keySets, childrenDataMap);
     const statusMap = { ...dataStatusMap, ...tmpStatusMap };
     setDataStatusMap(statusMap);
   }, [checkedPermissions]);
 
-  useEffect(() => {}, [dataStatusMap]);
+  useEffect(() => {
+    triggerChange(checkedIds);
+  }, [checkedIds]);
 
   return (
     <div className="menu-page-permissions">

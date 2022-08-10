@@ -40,9 +40,10 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       .validateFields()
       .then((values) => {
         const data: RequestAdminRoleBindPermissionsParamsType = {
-          ...values,
+          permissionIds: form.getFieldValue('permissionIds'),
           id: detailData.id,
         };
+        console.log('value', values);
         adminRoleBind(data).then((res) => {
           message.success(res.message, MessageDuritain, () => {
             noticeModal({ reload: true });
@@ -61,7 +62,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
   useEffect(() => {
     console.log(detailData);
     form.setFieldsValue(detailData);
-  });
+  }, [form]);
 
   return (
     <Drawer
