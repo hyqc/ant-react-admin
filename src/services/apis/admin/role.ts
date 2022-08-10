@@ -60,6 +60,7 @@ export type RequestAdminRoleIDetailParamsType = {
 export type ResponseAdminRoleDetailType = {
   roleId: number;
   roleName: string;
+  permissionIds?: number[];
   enabled?: boolean;
   enabledText?: string;
   createTime?: string;
@@ -141,6 +142,22 @@ export type RequestAdminRoleEnableParamsType = {
 export async function adminRoleEnable(params: RequestAdminRoleEnableParamsType) {
   return request<ResponseBodyType>(APIAdminRoles.enable.url, {
     method: APIAdminRoles.enable.method,
+    data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 角色分配权限
+ */
+export type RequestAdminRoleBindPermissionsParamsType = {
+  id: number;
+  permissionIds: number[];
+};
+
+export async function adminRoleBind(params: RequestAdminRoleBindPermissionsParamsType) {
+  return request<ResponseBodyType>(APIAdminRoles.bindPermissions.url, {
+    method: APIAdminRoles.bindPermissions.method,
     data: params,
   });
 }

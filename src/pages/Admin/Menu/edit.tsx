@@ -142,7 +142,7 @@ const EditModal: React.FC = () => {
                 <Button htmlType="submit" type="primary" onClick={handleOk} style={ButtonStyles}>
                   保存
                 </Button>
-                <Button type="primary" onClick={handleCancel} style={ButtonStyles}>
+                <Button onClick={handleCancel} style={ButtonStyles}>
                   返回
                 </Button>
               </Form.Item>

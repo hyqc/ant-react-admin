@@ -136,7 +136,7 @@ const AddModal: React.FC = () => {
                 <Button htmlType="button" type="primary" onClick={handleReset} style={ButtonStyles}>
                   重置
                 </Button>
-                <Button type="primary" onClick={handleCancel} style={ButtonStyles}>
+                <Button onClick={handleCancel} style={ButtonStyles}>
                   返回
                 </Button>
               </Form.Item>

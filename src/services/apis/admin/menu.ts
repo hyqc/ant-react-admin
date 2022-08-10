@@ -242,9 +242,11 @@ export type AdminMenuModePagesItemType = {
 };
 
 export type AdminMenuModePagesPermissionsItemType = {
+  ukid?: string;
   permissionId: number;
   permissionName: string;
   permission: string;
+  permissionText: string;
 };
 
 export async function adminMenuMode() {

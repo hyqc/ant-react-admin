@@ -99,6 +99,10 @@ export const APIAdminRoles = {
     url: '/admin/role/all',
     method: POST,
   },
+  bindPermissions: {
+    url: '/admin/role/bindPermissions',
+    method: POST,
+  },
 };
 
 export const APIAdminMenus = {
