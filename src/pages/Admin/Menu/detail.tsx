@@ -1,9 +1,9 @@
-import { ResponseAdminRoleDetailType } from '@/services/apis/admin/role';
 import { Drawer, Form, Input, Switch } from 'antd';
 import { useEffect } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { INPUT_STYLE } from '@/services/apis/config';
+import { ResponseAdminMenuDetailType } from '@/services/apis/admin/menu';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -11,7 +11,7 @@ export type NoticeModalPropsType = {
 
 export type DetailModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminRoleDetailType;
+  detailData: ResponseAdminMenuDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 const inputStyle = INPUT_STYLE;

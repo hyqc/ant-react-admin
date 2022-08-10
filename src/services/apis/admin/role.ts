@@ -58,8 +58,8 @@ export type RequestAdminRoleIDetailParamsType = {
 };
 
 export type ResponseAdminRoleDetailType = {
-  roleId: number;
-  roleName: string;
+  id: number;
+  name: string;
   permissionIds?: number[];
   enabled?: boolean;
   enabledText?: string;

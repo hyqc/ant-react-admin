@@ -3,7 +3,7 @@ import {
   RequestAdminRoleBindPermissionsParamsType,
   ResponseAdminRoleDetailType,
 } from '@/services/apis/admin/role';
-import { Button, Drawer, Form, Input, message, Popconfirm, Space } from 'antd';
+import { Button, Drawer, Form, Input, message, Popconfirm } from 'antd';
 import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
@@ -41,7 +41,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       .then((values) => {
         const data: RequestAdminRoleBindPermissionsParamsType = {
           ...values,
-          id: detailData.roleId,
+          id: detailData.id,
         };
         adminRoleBind(data).then((res) => {
           message.success(res.message, MessageDuritain, () => {
@@ -76,12 +76,12 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       onClose={onClose}
     >
       <Form form={form} labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
-        <Form.Item label="ID" name="roleId" hidden>
+        <Form.Item label="ID" name="id" hidden>
           <Input disabled style={inputStyle} />
         </Form.Item>
-        <Form.Item label="名称">{detailData.roleName}</Form.Item>
+        <Form.Item label="名称">{detailData.name}</Form.Item>
         <Form.Item label="权限" name="permissionIds">
-          <BindPermissions datasource={menuPageData} />
+          <BindPermissions datasource={menuPageData} permissionIds={detailData?.permissionIds} />
         </Form.Item>
         <Form.Item style={{ marginTop: '8rem', marginLeft: '4rem' }}>
           <Popconfirm

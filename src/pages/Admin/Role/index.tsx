@@ -208,8 +208,10 @@ const Admin: React.FC = () => {
 
   // 角色绑定权限
   function openBindPermissionsModal(record: ResponseAdminRoleListItemType) {
-    setDetailData(record);
-    setBindPermissionsModalStatus(true);
+    adminRoleDetail({ id: record.roleId }).then((res) => {
+      setDetailData(res.data);
+      setBindPermissionsModalStatus(true);
+    });
   }
 
   // 角色编辑
