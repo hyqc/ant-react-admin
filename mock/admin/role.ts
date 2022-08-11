@@ -1,5 +1,6 @@
 import {
   ResponseAdminRoleAllItemType,
+  ResponseAdminRoleDetailType,
   ResponseAdminRoleListItemType,
 } from '@/services/apis/admin/role';
 import { ResponseDetailType, ResponseListType } from '@/services/apis/types';
@@ -40,18 +41,11 @@ const rolesListRows: ResponseAdminRoleListItemType[] = [
   {
     roleId: 1,
     roleName: '管理员',
+    createAdminId: 1,
+    createAdminName: 'admin',
     enabled: true,
-    enabledText: '启用',
-    createTime: '2022-07-16 12:34:56',
-    modifyTime: '2022-07-16 12:34:56',
-  },
-  {
-    roleId: 2,
-    roleName: '管理员',
-    enabled: false,
-    enabledText: '启用',
-    createTime: '2022-07-16 12:34:56',
-    modifyTime: '2022-07-16 12:34:56',
+    createTime: '2022-08-11 02:09:58',
+    modifyTime: '2022-08-11 02:09:59',
   },
 ];
 
@@ -67,13 +61,18 @@ const list: ResponseListType = {
   },
 };
 
-const roleDetailData: ResponseAdminRoleListItemType = {
-  roleId: 2,
-  roleName: '管理员',
+const roleDetailData: ResponseAdminRoleDetailType = {
+  id: 1,
+  name: '管理员',
+  permissionIds: [1, 2, 3, 4, 5, 6, 7, 8],
+  describe: '拥有全部权限',
+  createAdminId: 1,
+  createAdminName: 'admin',
+  modifyAdminId: 9,
+  modifyAdminName: 'test00004',
   enabled: true,
-  enabledText: '启用',
-  createTime: '2022-07-16 12:34:56',
-  modifyTime: '2022-07-16 12:34:56',
+  createTime: '2022-08-11 02:09:58',
+  modifyTime: '2022-08-11 02:09:59',
 };
 
 const roleDetail: ResponseDetailType = {

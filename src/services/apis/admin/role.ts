@@ -20,9 +20,10 @@ export type ResponseAdminRoleListItemType = {
   roleId: number;
   roleName: string;
   enabled: boolean;
-  enabledText: string;
+  enabledText?: string;
   createTime: string;
   modifyTime: string;
+  [key: string]: any;
 };
 
 export async function adminRoleList(params?: RequestAdminRoleListParamsType) {
@@ -65,6 +66,7 @@ export type ResponseAdminRoleDetailType = {
   enabledText?: string;
   createTime?: string;
   modifyTime?: string;
+  [key: string]: any;
 };
 
 export async function adminRoleDetail(params: RequestAdminRoleIDetailParamsType) {

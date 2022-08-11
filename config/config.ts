@@ -59,6 +59,7 @@ export default defineConfig({
   devServer: {
     port: 8888,
   },
+  outputPath: 'wei',
   define: {
     LocalStorageTokenKey: 'token', // 记录token的键名
     LoginPath: '/login', // 登录页路径
