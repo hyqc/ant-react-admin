@@ -33,6 +33,7 @@ import AdminRoleEditModal from './edit';
 import AdminRoleDetailModal from './detail';
 import AdminBindModal from './bind';
 import { adminMenuMode, ResponseAdminMenuModeTypeData } from '@/services/apis/admin/menu';
+import FetchButton from '@/components/FetchButton';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -59,21 +60,21 @@ const Admin: React.FC = () => {
     {
       title: '名称',
       align: 'center',
-      dataIndex: 'roleName',
       width: '12rem',
+      dataIndex: 'roleName',
     },
     {
       title: '创建时间',
       align: 'center',
       dataIndex: 'createTime',
-      width: '12rem',
+      width: '10rem',
       sorter: true,
     },
     {
       title: '更新时间',
       align: 'center',
       dataIndex: 'modifyTime',
-      width: '12rem',
+      width: '10rem',
       sorter: true,
     },
     {
@@ -111,36 +112,19 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
+      width: '2rem',
       render(text, record: ResponseAdminRoleListItemType) {
         return (
           <Space>
             <Authorization name="AdminRoleView">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
-              >
-                详情
-              </Button>
+              <FetchButton onClick={() => openDetailModal(record)}>详情</FetchButton>
             </Authorization>
             <Authorization name="AdminRoleEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditModal(record)}
-              >
-                编辑
-              </Button>
+              <FetchButton onClick={() => openEditModal(record)}>编辑</FetchButton>
             </Authorization>
 
             <Authorization name="AdminRoleEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openBindPermissionsModal(record)}
-              >
-                分配权限
-              </Button>
+              <FetchButton onClick={() => openBindPermissionsModal(record)}>分配权限</FetchButton>
             </Authorization>
 
             {/* 禁用的才能删除 */}
@@ -152,9 +136,7 @@ const Admin: React.FC = () => {
                   cancelText="取消"
                   onConfirm={() => onDelete(record)}
                 >
-                  <Button type="primary" danger style={{ marginRight: 4 }}>
-                    删除
-                  </Button>
+                  <FetchButton danger>删除</FetchButton>
                 </Popconfirm>
               ) : (
                 ''

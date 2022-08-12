@@ -20,6 +20,7 @@ import Authorization from '@/components/Autuorization';
 import AdminMenuDetailModal, { NoticeModalPropsType } from './detail';
 import { history } from 'umi';
 import SavePermissionsModal from './components/PermissionsSave';
+import FetchButton from '@/components/FetchButton';
 
 const Admin: React.FC = () => {
   const [form] = Form.useForm();
@@ -37,17 +38,14 @@ const Admin: React.FC = () => {
       title: '名称',
       align: 'left',
       dataIndex: 'name',
-      width: '20rem',
     },
     {
       title: '路由',
       align: 'left',
       dataIndex: 'path',
-      width: '12rem',
     },
     {
       title: '菜单',
-      width: '6rem',
       align: 'left',
       dataIndex: 'hideInMenu',
       render(enabled: boolean, record: ResponseAdminMenuListItemType) {
@@ -82,7 +80,6 @@ const Admin: React.FC = () => {
     },
     {
       title: '子菜单',
-      width: '6rem',
       align: 'left',
       dataIndex: 'hideChildrenInMenu',
       render(enabled: boolean, record: ResponseAdminMenuListItemType) {
@@ -153,6 +150,7 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
+      width: '10rem',
       render(text, record: ResponseAdminMenuListItemType) {
         if (record.path == '/') {
           return <></>;
@@ -160,22 +158,10 @@ const Admin: React.FC = () => {
         return (
           <Space>
             <Authorization name="AdminMenuView">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
-              >
-                详情
-              </Button>
+              <FetchButton onClick={() => openDetailModal(record)}>详情</FetchButton>
             </Authorization>
             <Authorization name="AdminMenuEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openAddModal(record)}
-              >
-                添加子菜单
-              </Button>
+              <FetchButton onClick={() => openAddModal(record)}>添加子菜单</FetchButton>
             </Authorization>
             <Authorization name="AdminMenuEdit">
               {record.hideInMenu ||
@@ -184,23 +170,11 @@ const Admin: React.FC = () => {
                 !record.hideChildrenInMenu) ? (
                 ''
               ) : (
-                <Button
-                  type="primary"
-                  style={{ marginRight: 4 }}
-                  onClick={() => openSavePermissionsModal(record)}
-                >
-                  创建权限
-                </Button>
+                <FetchButton onClick={() => openSavePermissionsModal(record)}>创建权限</FetchButton>
               )}
             </Authorization>
             <Authorization name="AdminMenuEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditModal(record)}
-              >
-                编辑
-              </Button>
+              <FetchButton onClick={() => openEditModal(record)}>编辑</FetchButton>
             </Authorization>
 
             {/* 禁用的才能删除 */}
@@ -212,9 +186,7 @@ const Admin: React.FC = () => {
                   cancelText="取消"
                   onConfirm={() => onDelete(record)}
                 >
-                  <Button type="primary" danger style={{ marginRight: 4 }}>
-                    删除
-                  </Button>
+                  <FetchButton danger>删除</FetchButton>
                 </Popconfirm>
               ) : (
                 ''

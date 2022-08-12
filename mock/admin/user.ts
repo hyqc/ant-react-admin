@@ -14,7 +14,7 @@ const userListDataRows: ResponseAdminUserListItemType[] = [
     email: '',
     avatar: '',
     roles: [],
-    enabled: true,
+    enabled: false,
     loginTotal: 0,
     lastLoginIp: '',
     createTime: '2022-08-07 21:09:23',

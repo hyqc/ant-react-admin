@@ -113,6 +113,7 @@ export type RequestAdminAPIAllParamsType = {
 };
 
 export type ResponseAdminAPIAllItemType = {
+  permissionId: number;
   id: number;
   name: string;
   path?: string;

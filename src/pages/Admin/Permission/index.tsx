@@ -43,6 +43,7 @@ import AdminPermissionBindApiModal from './bind';
 import { adminMenuPages, ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
 import PageMenus from './components/PageMenus';
 import { ResponseAdminAPIAllItemType } from '@/services/apis/admin/resource';
+import FetchButton from '@/components/FetchButton';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -71,13 +72,11 @@ const Admin: React.FC = () => {
       title: '菜单名称',
       align: 'left',
       dataIndex: 'menuName',
-      width: '8rem',
     },
     {
       title: '名称',
       align: 'left',
       dataIndex: 'name',
-      width: '8rem',
       render(name: string, record: ResponseAdminPermissionListItemType) {
         return <Tooltip title={record.key}>{name}</Tooltip>;
       },
@@ -101,7 +100,6 @@ const Admin: React.FC = () => {
       title: '关联接口',
       align: 'left',
       dataIndex: 'apis',
-      width: '24rem',
       render(apis: ResponseAdminAPIAllItemType[], record: ResponseAdminPermissionListItemType) {
         return showApisTag(apis, record);
       },
@@ -141,35 +139,18 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
+      width: '15rem',
       render(text, record: ResponseAdminPermissionListItemType) {
         return (
           <Space>
             <Authorization name="AdminPermissionView">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
-              >
-                详情
-              </Button>
+              <FetchButton onClick={() => openDetailModal(record)}>详情</FetchButton>
             </Authorization>
             <Authorization name="AdminPermissionEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditModal(record)}
-              >
-                编辑
-              </Button>
+              <FetchButton onClick={() => openEditModal(record)}>编辑</FetchButton>
             </Authorization>
             <Authorization name="AdminPermissionEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openBindAPIModal(record)}
-              >
-                绑定接口
-              </Button>
+              <FetchButton onClick={() => openBindAPIModal(record)}>绑定接口</FetchButton>
             </Authorization>
             {/* 禁用的才能删除 */}
             <Authorization name="AdminPermissionDelete">
@@ -180,9 +161,7 @@ const Admin: React.FC = () => {
                   cancelText="取消"
                   onConfirm={() => onDelete(record)}
                 >
-                  <Button type="primary" danger style={{ marginRight: 4 }}>
-                    删除
-                  </Button>
+                  <FetchButton danger>删除</FetchButton>
                 </Popconfirm>
               ) : (
                 ''
@@ -277,7 +256,7 @@ const Admin: React.FC = () => {
             cancelText="取消"
             onConfirm={() => deleteBindApi(record.id, item.id)}
           >
-            <Tag style={{ cursor: 'pointer' }}>{item.name}</Tag>
+            <Tag style={{ cursor: 'pointer', margin: '4px' }}>{item.name}</Tag>
           </Popconfirm>
         </Authorization>
       );

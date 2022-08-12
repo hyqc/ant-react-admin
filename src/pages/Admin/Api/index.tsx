@@ -32,6 +32,7 @@ import Authorization from '@/components/Autuorization';
 import AdminAPIAddModal, { NoticeModalPropsType } from './add';
 import AdminAPIEditModal from './edit';
 import AdminAPIDetailModal from './detail';
+import FetchButton from '@/components/FetchButton';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -58,24 +59,22 @@ const Admin: React.FC = () => {
       title: '名称',
       align: 'left',
       dataIndex: 'name',
-      width: '8rem',
     },
     {
       title: '路由',
       align: 'left',
       dataIndex: 'path',
-      width: '12rem',
     },
     {
       title: '唯一键',
       align: 'left',
       dataIndex: 'key',
-      width: '12rem',
       sorter: true,
     },
     {
       title: '更新时间',
       align: 'center',
+      width: '10rem',
       dataIndex: 'modifyTime',
       sorter: true,
     },
@@ -114,26 +113,15 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
+      width: '10rem',
       render(text, record: ResponseAdminAPIListItemType) {
         return (
           <Space>
             <Authorization name="AdminApiView">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
-              >
-                详情
-              </Button>
+              <FetchButton onClick={() => openDetailModal(record)}>详情</FetchButton>
             </Authorization>
             <Authorization name="AdminApiEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditModal(record)}
-              >
-                编辑
-              </Button>
+              <FetchButton onClick={() => openEditModal(record)}>编辑</FetchButton>
             </Authorization>
 
             {/* 禁用的才能删除 */}
@@ -145,9 +133,7 @@ const Admin: React.FC = () => {
                   cancelText="取消"
                   onConfirm={() => onDelete(record)}
                 >
-                  <Button type="primary" danger style={{ marginRight: 4 }}>
-                    删除
-                  </Button>
+                  <FetchButton danger>删除</FetchButton>
                 </Popconfirm>
               ) : (
                 ''

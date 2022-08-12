@@ -44,6 +44,7 @@ import AdminUserBindRolesModal from './bind';
 import AdminUserEditPasswordModal from './password';
 import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
 import Authorization from '@/components/Autuorization';
+import FetchButton from '@/components/FetchButton';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -66,14 +67,14 @@ const Admin: React.FC = () => {
       title: '账号',
       align: 'left',
       dataIndex: 'username',
-      width: '6rem',
+      width: '8rem',
       sorter: true,
     },
     {
       title: '昵称',
       align: 'left',
       dataIndex: 'nickname',
-      width: '6rem',
+      width: '8rem',
     },
     {
       title: '头像',
@@ -83,12 +84,6 @@ const Admin: React.FC = () => {
       render: (avatar, record) => {
         return <Avatar src={avatar} />;
       },
-    },
-    {
-      title: '邮箱',
-      align: 'left',
-      width: '10rem',
-      dataIndex: 'email',
     },
     {
       title: '角色',
@@ -119,35 +114,15 @@ const Admin: React.FC = () => {
       sorter: true,
     },
     {
-      title: '最后登录IP',
-      align: 'center',
-      width: '7rem',
-      dataIndex: 'lastLoginIp',
-    },
-    {
-      title: '最后登录时间',
-      align: 'center',
-      width: '11rem',
-      dataIndex: 'lastLoginTime',
-      sorter: true,
-    },
-    {
-      title: '创建时间',
-      align: 'center',
-      width: '11rem',
-      dataIndex: 'createTime',
-      sorter: true,
-    },
-    {
       title: '更新时间',
       align: 'center',
-      width: '11rem',
+      width: '12rem',
       dataIndex: 'modifyTime',
       sorter: true,
     },
     {
       title: '状态',
-      width: '8rem',
+      width: '6rem',
       align: 'center',
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminUserListItemType) {
@@ -190,51 +165,28 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
+      width: '1rem',
       render(text, record: ResponseAdminUserListItemType) {
         return (
           <Space>
             <Authorization name="AdminUserView">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
-              >
-                详情
-              </Button>
+              <FetchButton onClick={() => openDetailModal(record)}>详情</FetchButton>
             </Authorization>
             {record.adminId === AdminId ? (
               <></>
             ) : (
               <>
                 <Authorization name="AdminUserEdit">
-                  <Button
-                    type="primary"
-                    style={{ marginRight: 4 }}
-                    onClick={() => openBindRolesModal(record)}
-                  >
-                    分配角色
-                  </Button>
+                  <FetchButton onClick={() => openBindRolesModal(record)}>分配角色</FetchButton>
                 </Authorization>
 
                 <Authorization name="AdminUserEdit">
-                  <Button
-                    type="primary"
-                    style={{ marginRight: 4 }}
-                    onClick={() => openEditModal(record)}
-                  >
-                    编辑
-                  </Button>
+                  <FetchButton onClick={() => openEditModal(record)}>编辑</FetchButton>
                 </Authorization>
 
                 <Authorization name="AdminUserEdit">
                   {/* 非超管修改密码 */}
-                  <Button
-                    type="primary"
-                    style={{ marginRight: 4 }}
-                    onClick={() => openEditPasswordModal(record)}
-                  >
-                    修改密码
-                  </Button>
+                  <FetchButton onClick={() => openEditPasswordModal(record)}>修改密码</FetchButton>
                 </Authorization>
 
                 {/* 禁用的才能删除 */}
@@ -246,9 +198,7 @@ const Admin: React.FC = () => {
                       cancelText="取消"
                       onConfirm={() => onDelete(record)}
                     >
-                      <Button type="primary" danger style={{ marginRight: 4 }}>
-                        删除
-                      </Button>
+                      <FetchButton danger>删除</FetchButton>
                     </Popconfirm>
                   ) : (
                     ''

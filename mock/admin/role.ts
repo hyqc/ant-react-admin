@@ -43,7 +43,7 @@ const rolesListRows: ResponseAdminRoleListItemType[] = [
     roleName: '管理员',
     createAdminId: 1,
     createAdminName: 'admin',
-    enabled: true,
+    enabled: false,
     createTime: '2022-08-11 02:09:58',
     modifyTime: '2022-08-11 02:09:59',
   },

@@ -55,6 +55,7 @@ export default defineConfig({
   mfsu: {},
   webpack5: {},
   exportStatic: {},
+  //https://v3.umijs.org/zh-CN/config#mock
   mock: {},
   devServer: {
     port: 8888,

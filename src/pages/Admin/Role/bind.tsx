@@ -85,6 +85,9 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
           <BindPermissions datasource={menuPageData} permissionIds={detailData?.permissionIds} />
         </Form.Item>
         <Form.Item style={{ marginTop: '8rem', marginLeft: '4rem' }}>
+          <Button onClick={onClose} style={ButtonStyles}>
+            取消
+          </Button>
           <Popconfirm
             title="确定要删除该角色吗？"
             okText="确定"
@@ -95,10 +98,6 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
               保存
             </Button>
           </Popconfirm>
-
-          <Button onClick={onClose} style={ButtonStyles}>
-            取消
-          </Button>
         </Form.Item>
       </Form>
     </Drawer>
