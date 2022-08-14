@@ -20,9 +20,10 @@ export type ResponseAdminRoleListItemType = {
   roleId: number;
   roleName: string;
   enabled: boolean;
-  enabledText: string;
+  enabledText?: string;
   createTime: string;
   modifyTime: string;
+  [key: string]: any;
 };
 
 export async function adminRoleList(params?: RequestAdminRoleListParamsType) {
@@ -37,9 +38,9 @@ export async function adminRoleList(params?: RequestAdminRoleListParamsType) {
  * 新增
  */
 export type RequestAdminRoleAddParamsType = {
-  roleName: string;
-  enabled?: boolean;
-  permissionIds?: string;
+  name: string;
+  enabled: boolean;
+  describe?: string;
 };
 
 export async function adminRoleAdd(params: RequestAdminRoleAddParamsType) {
@@ -54,17 +55,18 @@ export async function adminRoleAdd(params: RequestAdminRoleAddParamsType) {
  * 详情
  */
 export type RequestAdminRoleIDetailParamsType = {
-  roleId: number;
+  id: number;
 };
 
 export type ResponseAdminRoleDetailType = {
-  roleId: number;
-  roleName: string;
+  id: number;
+  name: string;
+  permissionIds?: number[];
   enabled?: boolean;
   enabledText?: string;
   createTime?: string;
   modifyTime?: string;
-  permissionIds: number[];
+  [key: string]: any;
 };
 
 export async function adminRoleDetail(params: RequestAdminRoleIDetailParamsType) {
@@ -79,8 +81,9 @@ export async function adminRoleDetail(params: RequestAdminRoleIDetailParamsType)
  * 编辑
  */
 export type RequestAdminRoleEditParamsType = {
-  roleId: number;
-  roleName?: string;
+  id: number;
+  name?: string;
+  describe?: string;
   enabled?: boolean;
   permissionIds?: string;
 };
@@ -97,7 +100,7 @@ export async function adminRoleEdit(params: RequestAdminRoleEditParamsType) {
  * 全部
  */
 export type RequestAdminRoleAllParamsType = {
-  roleName?: string; // 角色名称
+  name?: string; // 角色名称
 };
 
 export type ResponseAdminRoleAllItemType = {
@@ -118,7 +121,7 @@ export async function adminRoleAll(params?: RequestAdminRoleAllParamsType) {
  */
 
 export type RequestAdminRoleDeleteParamsType = {
-  roleId: number;
+  id: number;
   enabled: boolean;
 };
 
@@ -134,13 +137,29 @@ export async function adminRoleDelete(params: RequestAdminRoleDeleteParamsType) 
  * 启用禁用
  */
 export type RequestAdminRoleEnableParamsType = {
-  roleId: number;
+  id: number;
   enabled: boolean;
 };
 
 export async function adminRoleEnable(params: RequestAdminRoleEnableParamsType) {
   return request<ResponseBodyType>(APIAdminRoles.enable.url, {
     method: APIAdminRoles.enable.method,
+    data: params,
+  });
+}
+
+/************************************************************/
+/**
+ * 角色分配权限
+ */
+export type RequestAdminRoleBindPermissionsParamsType = {
+  id: number;
+  permissionIds: number[];
+};
+
+export async function adminRoleBind(params: RequestAdminRoleBindPermissionsParamsType) {
+  return request<ResponseBodyType>(APIAdminRoles.bindPermissions.url, {
+    method: APIAdminRoles.bindPermissions.method,
     data: params,
   });
 }

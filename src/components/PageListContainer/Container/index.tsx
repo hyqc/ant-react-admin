@@ -12,7 +12,9 @@ const Content: React.FC<ContentType> = (props: any) => {
   const { wrapperStyle } = props;
   const { initialState } = useModel('@@initialState');
   const menuMap = initialState?.menuData || {};
-  const canAccessLocalMenu = menuMap[location.pathname]?.access === AccessAllow;
+  const pathname = path(location.pathname);
+
+  const canAccessLocalMenu = menuMap[pathname]?.access === AccessAllow;
 
   const initCardStyle: any = () => {
     let wrapperStyless = {
@@ -25,6 +27,12 @@ const Content: React.FC<ContentType> = (props: any) => {
   };
 
   const wrapperStyless = initCardStyle();
+
+  function path(path: string) {
+    return path.length > 1 && path.substring(path.length - 1) === '/'
+      ? path.substring(0, path.length - 1)
+      : path;
+  }
 
   return canAccessLocalMenu ? (
     <PageHeaderWrapper style={wrapperStyless}>{props?.children}</PageHeaderWrapper>

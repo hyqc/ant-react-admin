@@ -1,9 +1,9 @@
-import { ResponseAdminRoleDetailType } from '@/services/apis/admin/role';
 import { Drawer, Form, Input, Switch } from 'antd';
 import { useEffect } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { INPUT_STYLE } from '@/services/apis/config';
+import { ResponseAdminMenuDetailType } from '@/services/apis/admin/menu';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -11,7 +11,7 @@ export type NoticeModalPropsType = {
 
 export type DetailModalPropsType = {
   modalStatus: boolean;
-  detailData: ResponseAdminRoleDetailType;
+  detailData: ResponseAdminMenuDetailType;
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 const inputStyle = INPUT_STYLE;
@@ -40,7 +40,7 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
       onClose={onClose}
     >
       <Form form={form} labelAlign="left" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="菜单ID" name="menuId">
+        <Form.Item label="菜单ID" name="id">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="名称" name="name">

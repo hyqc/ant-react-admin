@@ -1,4 +1,4 @@
-import { POST, GET } from '../config';
+import { POST } from '../config';
 
 export type APIItemType = {
   url: string;
@@ -7,6 +7,13 @@ export type APIItemType = {
 
 export type APIType = {
   [key: string]: APIItemType;
+};
+
+export const APICommon = {
+  upload: {
+    url: '/admin/common/upload',
+    method: POST,
+  },
 };
 
 export const APIAccount = {
@@ -20,10 +27,14 @@ export const APIAccount = {
   },
   detail: {
     url: '/admin/account/detail',
-    method: GET,
+    method: POST,
   },
-  upload: {
-    url: '/admin/account/upload',
+  edit: {
+    url: '/admin/account/edit',
+    method: POST,
+  },
+  password: {
+    url: '/admin/account/password',
     method: POST,
   },
 };
@@ -53,8 +64,8 @@ export const APIAdminUsers = {
     url: '/admin/user/enable',
     method: POST,
   },
-  bind: {
-    url: '/admin/user/bind',
+  bindRoles: {
+    url: '/admin/user/bindRoles',
     method: POST,
   },
 };
@@ -86,6 +97,10 @@ export const APIAdminRoles = {
   },
   all: {
     url: '/admin/role/all',
+    method: POST,
+  },
+  bindPermissions: {
+    url: '/admin/role/bindPermissions',
     method: POST,
   },
 };
@@ -127,8 +142,12 @@ export const APIAdminMenus = {
     url: '/admin/menu/permissions',
     method: POST,
   },
-  page: {
-    url: '/admin/menu/page',
+  pages: {
+    url: '/admin/menu/pages',
+    method: POST,
+  },
+  mode: {
+    url: '/admin/menu/mode',
     method: POST,
   },
 };
@@ -146,8 +165,8 @@ export const APIAdminPermissions = {
     url: '/admin/permission/add',
     method: POST,
   },
-  menu: {
-    url: '/admin/permission/menu',
+  addMenuPermissions: {
+    url: '/admin/permission/addMenuPermissions',
     method: POST,
   },
   delete: {
@@ -166,8 +185,8 @@ export const APIAdminPermissions = {
     url: '/admin/permission/all',
     method: POST,
   },
-  bind: {
-    url: '/admin/permission/bind',
+  bindApis: {
+    url: '/admin/permission/bindApis',
     method: POST,
   },
   unbind: {

@@ -1,6 +1,7 @@
 export default {
   'menu.login': '登錄',
   'menu.home': '首頁',
+  'menu.doc': '接口文档',
   'menu.welcome': '歡迎',
   'menu.exception.403': '403',
   'menu.exception.404': '404',

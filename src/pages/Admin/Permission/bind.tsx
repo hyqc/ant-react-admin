@@ -3,7 +3,6 @@ import {
   RequestAdminPermissionBindApiParamsType,
   ResponseAdminPermissionDetailType,
 } from '@/services/apis/admin/permission';
-import { SUCCESS } from '@/services/apis/code';
 import { Form, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import 'antd/es/modal/style';
@@ -27,8 +26,8 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
   const [apiOptions, setAPIOptions] = useState<ResponseAdminAPIAllItemType[]>([]);
 
   const apiIdsValue: number[] =
-    detailData?.apis.map((item: ResponseAdminAPIAllItemType) => {
-      return item.apiId;
+    detailData?.apis?.map((item: ResponseAdminAPIAllItemType) => {
+      return item.id;
     }) || [];
 
   function handleOk() {
@@ -71,7 +70,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
 
   useEffect(() => {
     form.resetFields();
-    if (detailData && detailData.name) {
+    if (detailData) {
       fetchAdminAPIs();
       form.setFieldsValue({ name: detailData?.name, apiIds: apiIdsValue });
     }
@@ -93,7 +92,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="name">
+        <Form.Item label="权限名称" name="name">
           <Input disabled />
         </Form.Item>
         <Form.Item label="接口" name="apiIds">
@@ -108,7 +107,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
           >
             {apiOptions?.map((item) => {
               return (
-                <Select.Option key={item.apiId} value={item.apiId}>
+                <Select.Option key={item.id} value={item.id}>
                   {item.name}
                 </Select.Option>
               );

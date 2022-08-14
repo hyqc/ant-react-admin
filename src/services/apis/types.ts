@@ -14,7 +14,7 @@ export interface PageInfoType {
 
 // 列表数据 data 部分
 export interface ResponseListDataType extends PageInfoType {
-  rows: any[];
+  list: any[];
 }
 
 // 列表数据 data 部分

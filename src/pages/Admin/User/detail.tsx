@@ -59,13 +59,17 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
         </Form.Item>
         <Form.Item label="角色" name="roles">
           <span>
-            {detailData?.roles?.map((item) => {
-              return (
-                <Tag key={item.roleId} color="blue">
-                  {item.roleName}
-                </Tag>
-              );
-            })}
+            {detailData?.adminId === AdminId ? (
+              <Tag color="blue">超管</Tag>
+            ) : (
+              detailData?.roles?.map((item) => {
+                return (
+                  <Tag key={item.roleId} color="blue">
+                    {item.roleName}
+                  </Tag>
+                );
+              })
+            )}
           </span>
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">

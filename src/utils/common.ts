@@ -19,7 +19,7 @@ export const HandleRemoteMenuIntoLocal = (
   childrenKey: string,
 ): MenuDataItem[] => {
   defaultMenuData?.forEach((item) => {
-    const tmpItem: MenuDataItem = { ...item };
+    let tmpItem: MenuDataItem = { ...item };
     if (tmpItem.key && remoteMenus[tmpItem.key]) {
       // 更新合并后的菜单的访问权限：access | forbidden，用于访问权限判断
       tmpItem.access = AccessAllow;
@@ -157,4 +157,8 @@ export const Logout = (): void => {
  */
 export const IsLongPage = (): boolean => {
   return location.pathname === LoginPath;
+};
+
+export const first2Upcase = (s: string): string => {
+  return s[0].toUpperCase() + s.substring(1).toLowerCase();
 };

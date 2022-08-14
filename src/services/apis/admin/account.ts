@@ -2,7 +2,7 @@ import { PureSettings } from '@ant-design/pro-layout/lib/defaultSettings';
 import { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { request } from 'umi';
 import { ResponseBodyType } from '../types';
-import { APIAccount } from './api';
+import { APIAccount, APICommon } from './api';
 
 export type MenusRemoteItem = {
   [key: string]: MenuDataItem;
@@ -75,15 +75,46 @@ export type RequestCurrentAdminInfoParamsType = {
 export async function currentAdminInfo(refreshToken?: boolean) {
   return request<ResponseBodyType>(APIAccount.detail.url, {
     method: APIAccount.detail.method,
-    params: {
+    data: {
       refreshToken: refreshToken || false,
     },
   });
 }
 
-export async function upload(data?: any) {
-  return request<ResponseBodyType>(APIAccount.upload.url, {
-    method: APIAccount.upload.method,
+// 1:image
+export type RequestUploadFileParamsType = {
+  fileType: number;
+  file: File;
+};
+
+export async function upload(data: RequestUploadFileParamsType) {
+  return request<ResponseBodyType>(APICommon.upload.url, {
+    method: APICommon.upload.method,
     data: data,
+  });
+}
+
+export type RequestCurrentAdminEditParamsType = {
+  nickname?: string;
+  avatar?: string;
+  email?: string;
+};
+
+export async function currentAdminEdit(params?: RequestCurrentAdminEditParamsType) {
+  return request<ResponseBodyType>(APIAccount.edit.url, {
+    method: APIAccount.edit.method,
+    data: params,
+  });
+}
+
+export type RequestCurrentAdminEditPasswordParamsType = {
+  password?: string;
+  confirmPassword?: string;
+};
+
+export async function currentAdminEditPassword(params?: RequestCurrentAdminEditPasswordParamsType) {
+  return request<ResponseBodyType>(APIAccount.password.url, {
+    method: APIAccount.password.method,
+    data: params,
   });
 }

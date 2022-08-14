@@ -3,14 +3,13 @@ import {
   RequestAdminUserEditParamsType,
   ResponseAdminUserDetailType,
 } from '@/services/apis/admin/user';
-import { APIAccount } from '@/services/apis/admin/api';
+import { APICommon } from '@/services/apis/admin/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
-import { AdminUserPassword } from '@/services/common/pattern';
 import { AdminUserFormRules } from './common';
 
 export type NoticeModalPropsType = {
@@ -111,6 +110,9 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+        <Form.Item label="ID" name="adminId" hidden>
+          <Input disabled value={detailData.adminId} />
+        </Form.Item>
         <Form.Item label="账号" name="username" rules={rules.username}>
           <Input />
         </Form.Item>
@@ -128,7 +130,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
             <Upload
               maxCount={1}
               accept={UploadImageAccept}
-              action={`${BaseAPI}${APIAccount.upload.url}`}
+              action={`${BaseAPI}${APICommon.upload.url}`}
               fileList={fileList}
               listType="picture-card"
               onPreview={onPreview}

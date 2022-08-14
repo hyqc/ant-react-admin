@@ -40,7 +40,7 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
       onClose={onClose}
     >
       <Form form={form} labelAlign="left" labelCol={{ span: 4 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="ID" name="apiId">
+        <Form.Item label="ID" name="id">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="名称" name="name">

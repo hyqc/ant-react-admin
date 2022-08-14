@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import 'antd/es/modal/style';
 import 'antd/es/slider/style';
 import { INPUT_STYLE } from '@/services/apis/config';
+import { ResponseAdminMenuModeTypeData } from '@/services/apis/admin/menu';
+import BindPermissions from './components/BindPermissions';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -12,13 +14,14 @@ export type NoticeModalPropsType = {
 export type DetailModalPropsType = {
   modalStatus: boolean;
   detailData: ResponseAdminRoleDetailType;
+  menuPageData: ResponseAdminMenuModeTypeData[];
   noticeModal: (data: NoticeModalPropsType) => void;
 };
 const inputStyle = INPUT_STYLE;
 
 const DetailModal: React.FC<DetailModalPropsType> = (props) => {
   const [form] = Form.useForm();
-  const { modalStatus, detailData, noticeModal } = props;
+  const { modalStatus, detailData, menuPageData, noticeModal } = props;
 
   function onClose() {
     noticeModal({ reload: false });
@@ -33,18 +36,34 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
       forceRender
       title="角色详情"
       footer={null}
-      width={DefaultDrawerWidth}
+      width={760}
       destroyOnClose={true}
       getContainer={false}
       visible={modalStatus}
       onClose={onClose}
     >
-      <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称" name="roleName">
+      <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+        <Form.Item label="名称" name="name">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="描述" name="describe">
+          <Input.TextArea disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="创建时间" name="createTime">
+          <Input disabled style={inputStyle} />
+        </Form.Item>
+        <Form.Item label="最后更新时间" name="modifyTime">
           <Input disabled style={inputStyle} />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
+        </Form.Item>
+        <Form.Item label="权限" name="permissionIds">
+          <BindPermissions
+            disabled
+            datasource={menuPageData}
+            permissionIds={detailData?.permissionIds}
+          />
         </Form.Item>
       </Form>
     </Drawer>

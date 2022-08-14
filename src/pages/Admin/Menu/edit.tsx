@@ -75,8 +75,8 @@ const EditModal: React.FC = () => {
 
   useEffect(() => {
     adminMenuTree().then((res) => {
-      const { rows } = res.data;
-      setMenuData(makeMenuSpreadTreeData(rows));
+      const spreadTreeData = makeMenuSpreadTreeData(res.data, menuId);
+      setMenuData(spreadTreeData);
     });
   }, []);
 
@@ -96,8 +96,11 @@ const EditModal: React.FC = () => {
         >
           <Row gutter={FormSearchRowGutter}>
             <Col span={FormSearchRowColSpan}>
+              <Form.Item label="ID" name="id" hidden>
+                <Input disabled />
+              </Form.Item>
               <Form.Item label="父级菜单" name="parentId" rules={rules.parentId}>
-                <MenuTreeSelect data={menuData} disabled={menuId > 0} />
+                <MenuTreeSelect data={menuData} />
               </Form.Item>
               <Form.Item label="名称" name="name" rules={rules.name}>
                 <Input />
@@ -136,11 +139,11 @@ const EditModal: React.FC = () => {
           <Row gutter={[12, 24]}>
             <Col span={24}>
               <Form.Item style={{ marginTop: '2rem' }}>
-                <Button type="primary" onClick={handleCancel} style={ButtonStyles}>
-                  返回
-                </Button>
                 <Button htmlType="submit" type="primary" onClick={handleOk} style={ButtonStyles}>
                   保存
+                </Button>
+                <Button onClick={handleCancel} style={ButtonStyles}>
+                  返回
                 </Button>
               </Form.Item>
             </Col>

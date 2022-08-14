@@ -9,7 +9,7 @@ export type AddModalPropsType = {
   onChange?: (parentid: number) => void;
 };
 
-const MenuTreeSelect: React.FC<AddModalPropsType> = (props) => {
+const PageMenus: React.FC<AddModalPropsType> = (props) => {
   const { data, value, disabled, onChange } = props;
   const [menuId, setMenuId] = useState<number>(value || 0);
   const triggerChange = (id: number) => {
@@ -20,6 +20,8 @@ const MenuTreeSelect: React.FC<AddModalPropsType> = (props) => {
     setMenuId(id);
     triggerChange(id);
   }
+
+  useEffect(() => {}, [data]);
 
   return (
     <Select
@@ -33,9 +35,9 @@ const MenuTreeSelect: React.FC<AddModalPropsType> = (props) => {
       value={value || menuId}
     >
       {props?.children}
-      {data?.map((item) => {
+      {data?.map((item: ResponseAdminMenuListItemType) => {
         return (
-          <Select.Option key={item.menuId} value={item.menuId}>
+          <Select.Option key={item.id + ''} value={item.id}>
             {item.name}
           </Select.Option>
         );
@@ -44,4 +46,4 @@ const MenuTreeSelect: React.FC<AddModalPropsType> = (props) => {
   );
 };
 
-export default MenuTreeSelect;
+export default PageMenus;

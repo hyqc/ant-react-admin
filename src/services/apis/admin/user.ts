@@ -25,6 +25,7 @@ export type RequestAdminUserListParamsType = {
  * 管理员列表的角色列表元素
  */
 export type ResponseAdminUserListItemRolesItemType = {
+  adminId: number; // 账号ID
   roleId: number; // 角色ID
   roleName: string; // 角色名称
 };
@@ -40,12 +41,13 @@ export type ResponseAdminUserListItemType = {
   avatar: string; // 管理员头像
   roles: ResponseAdminUserListItemRolesItemType[]; // 管理员有效角色信息列表
   enabled: boolean; // 正常，管理员状态, true启用，false禁用，
-  enabledText: string; //
+  enabledText?: string; //
   createTime: string; // 创建时间 "2021-12-01 12:23:21"
   modifyTime: string; // 最后更新时间
-  totalLogin: number; // 登录总次数
-  lastLoginIp: string; // 最后一次登录的IP地址
-  lastLoginTime: string; // 最后登录时间
+  loginTotal?: number; // 登录总次数
+  lastLoginIp?: string; // 最后一次登录的IP地址
+  lastLoginTime?: string; // 最后登录时间
+  [key: string]: any;
 };
 
 export async function adminUserList(params?: RequestAdminUserListParamsType) {
@@ -95,10 +97,10 @@ export type ResponseAdminUserDetailType = {
   avatar: string; // 管理员头像
   roles: ResponseAdminUserListItemRolesItemType[]; // 管理员有效角色信息列表
   enabled: boolean; // 正常，管理员状态, true启用，false禁用，
-  enabledText: string; //
+  enabledText?: string; //
   createTime: string; // 创建时间 "2021-12-01 12:23:21"
   modifyTime: string; // 最后更新时间
-  totalLogin: number; // 登录总次数
+  loginTotal?: number; // 登录总次数
   lastLoginIp: string; // 最后一次登录的IP地址
   lastLoginTime: string; // 最后登录时间
 };
@@ -122,7 +124,7 @@ export type RequestAdminUserEditParamsType = {
   avatar?: string;
   email?: string;
   enabled?: boolean;
-  passwrod?: string;
+  password?: string;
   confirmPassword?: string;
 };
 
@@ -158,9 +160,9 @@ export type RequestAdminUserAssignRolesParamsType = {
   roleIds: number[];
 };
 
-export async function adminUserAssignRoles(params: RequestAdminUserAssignRolesParamsType) {
-  return request<ResponseBodyType>(APIAdminUsers.bind.url, {
-    method: APIAdminUsers.bind.method,
+export async function adminUserBindRoles(params: RequestAdminUserAssignRolesParamsType) {
+  return request<ResponseBodyType>(APIAdminUsers.bindRoles.url, {
+    method: APIAdminUsers.bindRoles.method,
     data: params,
   });
 }
