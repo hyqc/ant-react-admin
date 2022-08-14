@@ -9,6 +9,7 @@ import 'antd/es/slider/style';
 import { DEFAULT_RULES, path2UpperCamelCase } from './components/common';
 import PageMenus from './components/PageMenus';
 import { ResponseAdminMenuListItemType } from '@/services/apis/admin/menu';
+import { first2Upcase } from '@/utils/common';
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -55,19 +56,32 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
   }
 
   function onChangePath(e: ChangeEvent) {
-    form.setFieldsValue({ key: path2UpperCamelCase(form.getFieldValue('path')) });
+    makePermissionKey(form.getFieldValue('path'));
+  }
+
+  function onChangeType(e: ChangeEvent) {
+    makePermissionKey();
   }
 
   function menuIdChange(index: number) {
     if (pageMenusDataMap[index] !== undefined) {
-      setMenuCheckedItem(pageMenusDataMap[index]);
+      const menu = pageMenusDataMap[index];
+      setMenuCheckedItem(menu);
+      makePermissionKey(menu.path);
     }
   }
 
+  function makePermissionKey(path?: string) {
+    const type = form.getFieldValue('type');
+    path = path ? path : menuCheckedItem ? menuCheckedItem.path : '';
+    const key = path2UpperCamelCase(path) + first2Upcase(type);
+    form.setFieldsValue({ key });
+  }
+
   useEffect(() => {
-    const data: any = {};
+    let data: any = {};
     pageMenusData?.forEach((item) => {
-      data[item.menuId] = item;
+      data[item.id] = item;
     });
     setPageMenusDataMap(data);
   }, [pageMenusData]);
@@ -77,7 +91,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
     if (detailData?.menuId) {
       menuIdChange(detailData.menuId);
     }
-  }, [detailData]);
+  }, [detailData, pageMenusData]);
 
   return (
     <Modal
@@ -95,6 +109,9 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
       cancelText="取消"
     >
       <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+        <Form.Item label="权限ID" hidden name="id">
+          <Input disabled />
+        </Form.Item>
         <Form.Item label="菜单名称" name="menuId">
           <PageMenus data={pageMenusData} onChange={menuIdChange} />
         </Form.Item>
@@ -105,14 +122,14 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
           <Input />
         </Form.Item>
         <Form.Item label="类型" name="type">
-          <Select style={{ offset: 0, width: '160' }}>
+          <Select style={{ offset: 0, width: '160' }} onChange={onChangeType}>
             <Select.Option value="view">查看</Select.Option>
             <Select.Option value="edit">编辑</Select.Option>
             <Select.Option value="delete">删除</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item label="键名" name="key" rules={rules.key}>
-          <Input onChange={onChangePath} />
+          <Input disabled onChange={onChangePath} />
         </Form.Item>
         <Form.Item label="描述" name="describe">
           <Input.TextArea />

@@ -7,5 +7,5 @@ const CurrentAdminUserDetail = {
   data: currentAdminUserDetail,
 };
 export default {
-  'GET /api/admin/account/detail': CurrentAdminUserDetail,
+  'POST /api/admin/account/detail': CurrentAdminUserDetail,
 };

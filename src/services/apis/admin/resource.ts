@@ -19,7 +19,7 @@ export type RequestAdminAPIListParamsType = {
 };
 
 export type ResponseAdminAPIListItemType = {
-  apiId: number;
+  id: number;
   key: string;
   path: string;
   name: string;
@@ -60,11 +60,11 @@ export async function adminAPIAdd(params: RequestAdminAPIAddParamsType) {
  * 详情
  */
 export type RequestAdminAPIDetailParamsType = {
-  apiId: number;
+  id: number;
 };
 
 export type ResponseAdminAPIDetailType = {
-  apiId: number;
+  id: number;
   path: string;
   name: string;
   key: string;
@@ -87,7 +87,7 @@ export async function adminAPIDetail(params: RequestAdminAPIDetailParamsType) {
  * 编辑
  */
 export type RequestAdminAPIEditParamsType = {
-  apiId: number;
+  id: number;
   enabled: boolean;
   path?: string;
   name?: string;
@@ -113,7 +113,8 @@ export type RequestAdminAPIAllParamsType = {
 };
 
 export type ResponseAdminAPIAllItemType = {
-  apiId: number;
+  permissionId: number;
+  id: number;
   name: string;
   path?: string;
   key?: string;
@@ -132,7 +133,7 @@ export async function adminAPIAll(params?: RequestAdminAPIAllParamsType) {
  */
 
 export type RequestAdminAPIDeleteParamsType = {
-  apiId: number;
+  id: number;
   enabled: boolean;
 };
 
@@ -148,7 +149,7 @@ export async function adminAPIDelete(params: RequestAdminAPIDeleteParamsType) {
  * 启用禁用
  */
 export type RequestAdminAPIEnableParamsType = {
-  apiId: number;
+  id: number;
   enabled: boolean;
 };
 

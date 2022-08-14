@@ -1,6 +1,7 @@
 export default {
   'menu.login': 'Login',
   'menu.home': 'Home',
+  'menu.doc': 'Document',
   'menu.welcome': 'Welcome',
   'menu.exception.403': '403',
   'menu.exception.404': '404',

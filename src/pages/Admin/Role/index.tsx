@@ -31,6 +31,9 @@ import Authorization from '@/components/Autuorization';
 import AdminRoleAddModal, { NoticeModalPropsType } from './add';
 import AdminRoleEditModal from './edit';
 import AdminRoleDetailModal from './detail';
+import AdminBindModal from './bind';
+import { adminMenuMode, ResponseAdminMenuModeTypeData } from '@/services/apis/admin/menu';
+import FetchButton from '@/components/FetchButton';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -39,12 +42,13 @@ const Admin: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const [pageInfo, setPageInfo] = useState<PageInfoType>({ ...DEFAULT_PAGE_INFO });
-  const [detailData, setDetailData] = useState<any>();
+  const [detailData, setDetailData] = useState<any>(undefined);
   const [rowsData, setRowsData] = useState<ResponseAdminRoleListItemType[]>([]);
   const [detailModalStatus, setDetailModalStatus] = useState<boolean>(false);
   const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
   const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
-
+  const [bindPermissionsModalStatus, setBindPermissionsModalStatus] = useState<boolean>(false);
+  const [modelPageData, setModelPageData] = useState<ResponseAdminMenuModeTypeData[]>([]);
   const columns: ColumnsType<any> = [
     {
       title: 'ID',
@@ -56,19 +60,21 @@ const Admin: React.FC = () => {
     {
       title: '名称',
       align: 'center',
-      dataIndex: 'roleName',
       width: '12rem',
+      dataIndex: 'roleName',
     },
     {
       title: '创建时间',
       align: 'center',
       dataIndex: 'createTime',
+      width: '10rem',
       sorter: true,
     },
     {
       title: '更新时间',
       align: 'center',
       dataIndex: 'modifyTime',
+      width: '10rem',
       sorter: true,
     },
     {
@@ -106,26 +112,19 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
+      width: '2rem',
       render(text, record: ResponseAdminRoleListItemType) {
         return (
           <Space>
             <Authorization name="AdminRoleView">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
-              >
-                详情
-              </Button>
+              <FetchButton onClick={() => openDetailModal(record)}>详情</FetchButton>
             </Authorization>
             <Authorization name="AdminRoleEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditModal(record)}
-              >
-                编辑
-              </Button>
+              <FetchButton onClick={() => openEditModal(record)}>编辑</FetchButton>
+            </Authorization>
+
+            <Authorization name="AdminRoleEdit">
+              <FetchButton onClick={() => openBindPermissionsModal(record)}>分配权限</FetchButton>
             </Authorization>
 
             {/* 禁用的才能删除 */}
@@ -137,9 +136,7 @@ const Admin: React.FC = () => {
                   cancelText="取消"
                   onConfirm={() => onDelete(record)}
                 >
-                  <Button type="primary" danger style={{ marginRight: 4 }}>
-                    删除
-                  </Button>
+                  <FetchButton danger>删除</FetchButton>
                 </Popconfirm>
               ) : (
                 ''
@@ -157,7 +154,7 @@ const Admin: React.FC = () => {
     adminRoleList(data)
       .then((res: ResponseListType) => {
         const data: ResponseListDataType = res.data;
-        const rows = data?.rows || [];
+        const rows = data?.list || [];
         const page = { total: data.total, pageSize: data.pageSize, pageNum: data.pageNum };
         setPageInfo(page);
         setRowsData(rows);
@@ -173,7 +170,7 @@ const Admin: React.FC = () => {
   // 角色状态更新
   function updateEnabled(record: ResponseAdminRoleListItemType) {
     const updateData: RequestAdminRoleEnableParamsType = {
-      roleId: record.roleId,
+      id: record.roleId,
       enabled: !record.enabled,
     };
     adminRoleEnable(updateData).then((res) => {
@@ -185,15 +182,23 @@ const Admin: React.FC = () => {
 
   // 角色详情
   function openDetailModal(record: ResponseAdminRoleListItemType) {
-    adminRoleDetail({ roleId: record.roleId }).then((res) => {
+    adminRoleDetail({ id: record.roleId }).then((res) => {
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
   }
 
+  // 角色绑定权限
+  function openBindPermissionsModal(record: ResponseAdminRoleListItemType) {
+    adminRoleDetail({ id: record.roleId }).then((res) => {
+      setDetailData(res.data);
+      setBindPermissionsModalStatus(true);
+    });
+  }
+
   // 角色编辑
   function openEditModal(record: ResponseAdminRoleListItemType) {
-    adminRoleDetail({ roleId: record.roleId }).then((res) => {
+    adminRoleDetail({ id: record.roleId }).then((res) => {
       setDetailData(res.data);
       setEditModalStatus(true);
     });
@@ -227,16 +232,22 @@ const Admin: React.FC = () => {
     }
   }
 
+  function noticeBindModal(data: NoticeModalPropsType) {
+    setDetailData(undefined);
+    setBindPermissionsModalStatus(false);
+  }
+
   // 删除角色
   function onDelete(record: ResponseAdminRoleListItemType) {
-    adminRoleDelete({ roleId: record.roleId, enabled: record.enabled }).then((res) => {
-      message.success(res.message, MessageDuritain);
-      getRows({ ...pageInfo, ...form.getFieldsValue() });
+    adminRoleDelete({ id: record.roleId, enabled: record.enabled }).then((res) => {
+      message.success(res.message, MessageDuritain, () => {
+        getRows({ ...pageInfo, ...form.getFieldsValue() });
+      });
     });
   }
 
   // 列表搜索
-  function onSearchFinish(values: RequestAdminUserListParamsType) {
+  function onSearchFinish(values: RequestAdminRoleListParamsType) {
     const page = { ...pageInfo, pageNum: 1 };
     getRows({ ...values, ...page });
   }
@@ -263,8 +274,15 @@ const Admin: React.FC = () => {
     });
   }
 
+  function getAdminMenuModeData() {
+    adminMenuMode().then((res) => {
+      setModelPageData(res.data || []);
+    });
+  }
+
   useEffect(() => {
     onSearchReset();
+    getAdminMenuModeData();
   }, []);
 
   return (
@@ -339,18 +357,31 @@ const Admin: React.FC = () => {
       {/* modal */}
 
       <AdminRoleAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
+      {detailData ? (
+        <>
+          <AdminRoleDetailModal
+            modalStatus={detailModalStatus}
+            detailData={detailData}
+            menuPageData={modelPageData}
+            noticeModal={noticeDetailModal}
+          />
 
-      <AdminRoleDetailModal
-        modalStatus={detailModalStatus}
-        detailData={detailData}
-        noticeModal={noticeDetailModal}
-      />
+          <AdminRoleEditModal
+            modalStatus={editModalStatus}
+            detailData={detailData}
+            noticeModal={noticeEditModal}
+          />
 
-      <AdminRoleEditModal
-        modalStatus={editModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditModal}
-      />
+          <AdminBindModal
+            modalStatus={bindPermissionsModalStatus}
+            detailData={detailData}
+            menuPageData={modelPageData}
+            noticeModal={noticeBindModal}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };

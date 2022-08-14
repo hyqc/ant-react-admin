@@ -33,7 +33,7 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
       .then((values) => {
         const data: RequestAdminUserEditParamsType = {
           adminId: detailData.adminId,
-          passwrod: values.password,
+          password: values.password,
           confirmPassword: values.confirmPassword,
         };
         adminUserEdit(data).then((res) => {

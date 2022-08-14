@@ -44,6 +44,7 @@ import AdminUserBindRolesModal from './bind';
 import AdminUserEditPasswordModal from './password';
 import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
 import Authorization from '@/components/Autuorization';
+import FetchButton from '@/components/FetchButton';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -63,21 +64,15 @@ const Admin: React.FC = () => {
 
   const columns: ColumnsType<any> = [
     {
-      title: 'ID',
-      dataIndex: 'adminId',
-      width: '4rem',
-      align: 'center',
+      title: '账号',
+      align: 'left',
+      dataIndex: 'username',
+      width: '8rem',
       sorter: true,
     },
     {
-      title: '账号',
-      align: 'center',
-      dataIndex: 'username',
-      width: '8rem',
-    },
-    {
       title: '昵称',
-      align: 'center',
+      align: 'left',
       dataIndex: 'nickname',
       width: '8rem',
     },
@@ -91,16 +86,17 @@ const Admin: React.FC = () => {
       },
     },
     {
-      title: '邮箱',
-      align: 'center',
-      width: '14rem',
-      dataIndex: 'email',
-    },
-    {
       title: '角色',
       width: '8rem',
       dataIndex: 'roles',
       render: (roles, record: ResponseAdminUserListItemType) => {
+        if (record.adminId === AdminId) {
+          return (
+            <Tag color="geekblue" style={{ cursor: 'default' }}>
+              超管
+            </Tag>
+          );
+        }
         return roles?.map((item: ResponseAdminUserListItemRolesItemType) => {
           return (
             <Tag color="geekblue" style={{ cursor: 'default' }} key={item.roleId}>
@@ -113,15 +109,8 @@ const Admin: React.FC = () => {
     {
       title: '登录次数',
       align: 'center',
-      width: '6rem',
-      dataIndex: 'totalLogin',
-      sorter: true,
-    },
-    {
-      title: '创建时间',
-      align: 'center',
-      width: '12rem',
-      dataIndex: 'createTime',
+      width: '7rem',
+      dataIndex: 'loginTotal',
       sorter: true,
     },
     {
@@ -132,23 +121,21 @@ const Admin: React.FC = () => {
       sorter: true,
     },
     {
-      title: '最后登录IP',
-      align: 'center',
-      width: '12rem',
-      dataIndex: 'lastLoginIp',
-    },
-    {
-      title: '最后登录时间',
-      align: 'center',
-      width: '12rem',
-      dataIndex: 'lastLoginTime',
-    },
-    {
       title: '状态',
       width: '6rem',
       align: 'center',
       dataIndex: 'enabled',
       render(enabled: boolean, record: ResponseAdminUserListItemType) {
+        if (record.adminId === AdminId) {
+          return (
+            <Switch
+              checkedChildren={'启用'}
+              disabled
+              unCheckedChildren={'禁用'}
+              checked={enabled}
+            />
+          );
+        }
         return (
           <Authorization
             name="AdminUserEdit"
@@ -164,7 +151,7 @@ const Admin: React.FC = () => {
             }
           >
             <Popconfirm
-              title={`确定要${record.enabled ? '禁用' : '启用'}该管理员吗？`}
+              title={`确定要${record.enabled ? '禁用' : '启用'}该账号吗？`}
               okText="确定"
               cancelText="取消"
               onConfirm={() => updateEnabled(record)}
@@ -178,80 +165,60 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
+      width: '1rem',
       render(text, record: ResponseAdminUserListItemType) {
         return (
           <Space>
             <Authorization name="AdminUserView">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
-              >
-                详情
-              </Button>
+              <FetchButton onClick={() => openDetailModal(record)}>详情</FetchButton>
             </Authorization>
+            {record.adminId === AdminId ? (
+              <></>
+            ) : (
+              <>
+                <Authorization name="AdminUserEdit">
+                  <FetchButton onClick={() => openBindRolesModal(record)}>分配角色</FetchButton>
+                </Authorization>
 
-            <Authorization name="AdminUserEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openBindRolesModal(record)}
-              >
-                分配角色
-              </Button>
-            </Authorization>
+                <Authorization name="AdminUserEdit">
+                  <FetchButton onClick={() => openEditModal(record)}>编辑</FetchButton>
+                </Authorization>
 
-            <Authorization name="AdminUserEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditModal(record)}
-              >
-                编辑
-              </Button>
-            </Authorization>
+                <Authorization name="AdminUserEdit">
+                  {/* 非超管修改密码 */}
+                  <FetchButton onClick={() => openEditPasswordModal(record)}>修改密码</FetchButton>
+                </Authorization>
 
-            <Authorization name="AdminUserEdit">
-              {/* 非超管修改密码 */}
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditPasswordModal(record)}
-              >
-                修改密码
-              </Button>
-            </Authorization>
-
-            {/* 禁用的才能删除 */}
-            <Authorization name="AdminUserDelete">
-              {!record.enabled ? (
-                <Popconfirm
-                  title="确定要删除该管理员吗？"
-                  okText="确定"
-                  cancelText="取消"
-                  onConfirm={() => onDelete(record)}
-                >
-                  <Button type="primary" danger style={{ marginRight: 4 }}>
-                    删除
-                  </Button>
-                </Popconfirm>
-              ) : (
-                ''
-              )}
-            </Authorization>
+                {/* 禁用的才能删除 */}
+                <Authorization name="AdminUserDelete">
+                  {!record.enabled ? (
+                    <Popconfirm
+                      title="确定要删除该账号吗？"
+                      okText="确定"
+                      cancelText="取消"
+                      onConfirm={() => onDelete(record)}
+                    >
+                      <FetchButton danger>删除</FetchButton>
+                    </Popconfirm>
+                  ) : (
+                    ''
+                  )}
+                </Authorization>
+              </>
+            )}
           </Space>
         );
       },
     },
   ];
 
-  // 获取管理员列表
+  // 获取账号列表
   function getRows(data?: RequestAdminUserListParamsType) {
     setLoading(true);
     adminUserList(data)
       .then((res: ResponseListType) => {
         const data: ResponseListDataType = res.data;
-        const rows = data?.rows || [];
+        const rows = data?.list || [];
         const page = { total: data.total, pageSize: data.pageSize, pageNum: data.pageNum };
         setPageInfo(page);
         setRowsData(rows);
@@ -264,7 +231,7 @@ const Admin: React.FC = () => {
       });
   }
 
-  // 管理员状态更新
+  // 账号状态更新
   function updateEnabled(record: ResponseAdminUserListItemType) {
     const updateData: RequestAdminUserEnableParamsType = {
       adminId: record.adminId,
@@ -277,24 +244,25 @@ const Admin: React.FC = () => {
     });
   }
 
-  function fetchAdminRoles(roleName?: string) {
-    adminRoleAll({ roleName }).then((res) => {
+  function fetchAdminRoles(name?: string) {
+    adminRoleAll({ name }).then((res) => {
       res.data.unshift({ roleId: 0, roleName: '全部' });
       setRoleOptions(res.data || []);
     });
   }
 
-  // 删除管理员
+  // 删除账号
   function onDelete(record: ResponseAdminUserListItemType) {
     adminUserDelete({ adminId: record.adminId, enabled: record.enabled }).then(
       (res: ResponseBodyType) => {
-        message.success(res.message, MessageDuritain);
-        getRows({ ...pageInfo, ...form.getFieldsValue() });
+        message.success(res.message, MessageDuritain, () => {
+          getRows({ ...pageInfo, ...form.getFieldsValue() });
+        });
       },
     );
   }
 
-  // 管理员详情
+  // 账号详情
   function openDetailModal(record: ResponseAdminUserListItemType) {
     adminUserDetail({ adminId: record.adminId }).then((res) => {
       setDetailData(res.data);
@@ -310,7 +278,7 @@ const Admin: React.FC = () => {
     });
   }
 
-  // 管理员编辑
+  // 账号编辑
   function openEditModal(record: ResponseAdminUserListItemType) {
     adminUserDetail({ adminId: record.adminId }).then((res) => {
       setDetailData(res.data);
@@ -318,7 +286,7 @@ const Admin: React.FC = () => {
     });
   }
 
-  // 管理员添加
+  // 账号添加
   function openAddModal() {
     setAddModalStatus(true);
   }
@@ -479,7 +447,7 @@ const Admin: React.FC = () => {
           <Authorization name="AdminUserEdit">
             <Button type="primary" onClick={openAddModal}>
               <PlusOutlined />
-              新建管理员
+              新建账号
             </Button>
           </Authorization>
         </Space>
@@ -509,29 +477,35 @@ const Admin: React.FC = () => {
 
       <AdminUserAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
 
-      <AdminUserDetailModal
-        modalStatus={detailModalStatus}
-        detailData={detailData}
-        noticeModal={noticeDetailModal}
-      />
+      {detailData ? (
+        <>
+          <AdminUserDetailModal
+            modalStatus={detailModalStatus}
+            detailData={detailData}
+            noticeModal={noticeDetailModal}
+          />
 
-      <AdminUserEditModal
-        modalStatus={editModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditModal}
-      />
+          <AdminUserEditModal
+            modalStatus={editModalStatus}
+            detailData={detailData}
+            noticeModal={noticeEditModal}
+          />
 
-      <AdminUserBindRolesModal
-        modalStatus={bindModalStatus}
-        detailData={detailData}
-        noticeModal={noticeBindRolesModal}
-      />
+          <AdminUserBindRolesModal
+            modalStatus={bindModalStatus}
+            detailData={detailData}
+            noticeModal={noticeBindRolesModal}
+          />
 
-      <AdminUserEditPasswordModal
-        modalStatus={editPasswordModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditPasswordModal}
-      />
+          <AdminUserEditPasswordModal
+            modalStatus={editPasswordModalStatus}
+            detailData={detailData}
+            noticeModal={noticeEditPasswordModal}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };

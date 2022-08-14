@@ -2,7 +2,10 @@
 import { request } from 'umi';
 import { APIAdminMenus } from './api';
 import type { ResponseBodyType } from '../types';
-import { ResponseAdminMenuPermissionsItemType } from './permission';
+import {
+  ResponseAdminMenuPermissionsItemType,
+  ResponseAdminPermissionListItemType,
+} from './permission';
 
 /************************************************************/
 /**
@@ -35,7 +38,7 @@ export type RequestAdminMenuListParamsType = {
 };
 
 export type ResponseAdminMenuListItemType = {
-  menuId: number; // 菜单ID，唯一键
+  id: number; // 菜单ID，唯一键
   parentId: number; // 父菜单ID
   name: string; // 菜单名称，唯一键
   path: string; // 菜单路由
@@ -127,17 +130,16 @@ export async function adminMenuDetail(params: RequestAdminMenuDetailParamsType) 
  * 编辑
  */
 export type RequestAdminMenuEditParamsType = {
-  menuId: number;
-  parentId: number; // 父菜单ID
-  name: string; // 菜单名称，唯一键
-  path: string; // 菜单路由
-  redirect: string; // 重定向路由
-  hideInMenu: boolean; // 是否在菜单中隐藏
-  authority: string; // 数据库中不设置
+  id: number;
+  parentId?: number; // 父菜单ID
+  name?: string; // 菜单名称，唯一键
+  path?: string; // 菜单路由
+  redirect?: string; // 重定向路由
+  hideInMenu?: boolean; // 是否在菜单中隐藏
   hideChildrenInMenu?: boolean;
   icon?: string;
   locale?: string;
-  enabled: boolean;
+  enabled?: boolean;
   [key: string]: any;
 };
 
@@ -170,9 +172,7 @@ export async function adminMenuDelete(params: RequestAdminMenuDeleteParamsType) 
  */
 export type RequestAdminMenuEnableParamsType = {
   menuId: number;
-  enabled?: boolean;
-  hideInMenu?: boolean;
-  hideChildrenInMenu?: boolean;
+  enabled: boolean;
 };
 
 export async function adminMenuEnable(params: RequestAdminMenuEnableParamsType) {
@@ -212,9 +212,46 @@ export async function adminMenuPermissions(params: RequestAdminMenuPermissionsPa
 /**
  * 权限的菜单列表
  */
-export async function adminPageMenus() {
-  return request<ResponseBodyType>(APIAdminMenus.page.url, {
-    method: APIAdminMenus.page.method,
+export type RequestAdminMenuPagesParamsType = {
+  all?: boolean;
+};
+export async function adminMenuPages(params?: RequestAdminMenuPagesParamsType) {
+  return request<ResponseBodyType>(APIAdminMenus.pages.url, {
+    method: APIAdminMenus.pages.method,
+    data: {
+      all: params?.all || false,
+    },
+  });
+}
+
+/************************************************************/
+/**
+ * 菜单页面权限列表
+ */
+
+export type ResponseAdminMenuModeTypeData = {
+  modelId: number; // 模块ID，父级菜单ID
+  modelName: string; // 父级菜单名称
+  pages: AdminMenuModePagesItemType[]; // 页面列表
+};
+
+export type AdminMenuModePagesItemType = {
+  pageId: number;
+  pageName: string;
+  permissions: AdminMenuModePagesPermissionsItemType[];
+};
+
+export type AdminMenuModePagesPermissionsItemType = {
+  ukid?: string;
+  permissionId: number;
+  permissionName: string;
+  permission: string;
+  permissionText: string;
+};
+
+export async function adminMenuMode() {
+  return request<ResponseBodyType>(APIAdminMenus.mode.url, {
+    method: APIAdminMenus.mode.method,
     data: {},
   });
 }

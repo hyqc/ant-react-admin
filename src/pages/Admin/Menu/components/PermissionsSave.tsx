@@ -35,7 +35,7 @@ const AddPermissionsModal: React.FC<AddModalPropsType> = (props) => {
       .then((values) => {
         const data: RequestAdminPermissionAddForMenuParamsType = {
           menuId: detailData.menu.id,
-          permission: handleFormValues(values),
+          permissions: handleFormValues(values),
         };
         adminAddMenuPermission(data).then((res) => {
           message.success(res.message, MessageDuritain, () => {
@@ -68,8 +68,8 @@ const AddPermissionsModal: React.FC<AddModalPropsType> = (props) => {
   }
 
   useEffect(() => {
-    console.log(form, '+++++++++');
-  }, [form]);
+    console.log('detailData', detailData);
+  }, [detailData]);
 
   return (
     <Modal

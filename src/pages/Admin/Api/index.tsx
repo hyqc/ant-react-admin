@@ -32,6 +32,7 @@ import Authorization from '@/components/Autuorization';
 import AdminAPIAddModal, { NoticeModalPropsType } from './add';
 import AdminAPIEditModal from './edit';
 import AdminAPIDetailModal from './detail';
+import FetchButton from '@/components/FetchButton';
 
 const FormSearchRowGutter: [Gutter, Gutter] = [12, 0];
 const FormSearchRowColSpan = 5.2;
@@ -49,7 +50,7 @@ const Admin: React.FC = () => {
   const columns: ColumnsType<any> = [
     {
       title: 'ID',
-      dataIndex: 'apiId',
+      dataIndex: 'id',
       width: '4rem',
       align: 'center',
       sorter: true,
@@ -58,23 +59,22 @@ const Admin: React.FC = () => {
       title: '名称',
       align: 'left',
       dataIndex: 'name',
-      width: '8rem',
     },
     {
       title: '路由',
       align: 'left',
       dataIndex: 'path',
-      width: '12rem',
     },
     {
       title: '唯一键',
       align: 'left',
       dataIndex: 'key',
-      width: '12rem',
+      sorter: true,
     },
     {
       title: '更新时间',
       align: 'center',
+      width: '10rem',
       dataIndex: 'modifyTime',
       sorter: true,
     },
@@ -113,26 +113,15 @@ const Admin: React.FC = () => {
     {
       title: '操作',
       align: 'left',
+      width: '10rem',
       render(text, record: ResponseAdminAPIListItemType) {
         return (
           <Space>
             <Authorization name="AdminApiView">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openDetailModal(record)}
-              >
-                详情
-              </Button>
+              <FetchButton onClick={() => openDetailModal(record)}>详情</FetchButton>
             </Authorization>
             <Authorization name="AdminApiEdit">
-              <Button
-                type="primary"
-                style={{ marginRight: 4 }}
-                onClick={() => openEditModal(record)}
-              >
-                编辑
-              </Button>
+              <FetchButton onClick={() => openEditModal(record)}>编辑</FetchButton>
             </Authorization>
 
             {/* 禁用的才能删除 */}
@@ -144,9 +133,7 @@ const Admin: React.FC = () => {
                   cancelText="取消"
                   onConfirm={() => onDelete(record)}
                 >
-                  <Button type="primary" danger style={{ marginRight: 4 }}>
-                    删除
-                  </Button>
+                  <FetchButton danger>删除</FetchButton>
                 </Popconfirm>
               ) : (
                 ''
@@ -164,7 +151,7 @@ const Admin: React.FC = () => {
     adminAPIList(data)
       .then((res: ResponseListType) => {
         const data: ResponseListDataType = res.data;
-        const rows = data?.rows || [];
+        const rows = data?.list || [];
         const page = { total: data.total, pageSize: data.pageSize, pageNum: data.pageNum };
         setPageInfo(page);
         setRowsData(rows);
@@ -180,7 +167,7 @@ const Admin: React.FC = () => {
   // 接口资源状态更新
   function updateEnabled(record: ResponseAdminAPIListItemType) {
     const updateData: RequestAdminAPIEnableParamsType = {
-      apiId: record.apiId,
+      id: record.id,
       enabled: !record.enabled,
     };
     adminAPIEnable(updateData).then((res) => {
@@ -197,7 +184,7 @@ const Admin: React.FC = () => {
 
   // 接口资源详情
   function openDetailModal(record: ResponseAdminAPIListItemType) {
-    adminAPIDetail({ apiId: record.apiId }).then((res) => {
+    adminAPIDetail({ id: record.id }).then((res) => {
       setDetailData(res.data);
       setDetailModalStatus(true);
     });
@@ -205,7 +192,7 @@ const Admin: React.FC = () => {
 
   // 接口资源编辑
   function openEditModal(record: ResponseAdminAPIListItemType) {
-    adminAPIDetail({ apiId: record.apiId }).then((res) => {
+    adminAPIDetail({ id: record.id }).then((res) => {
       setDetailData(res.data);
       setEditModalStatus(true);
     });
@@ -236,7 +223,7 @@ const Admin: React.FC = () => {
 
   // 删除接口资源
   function onDelete(record: ResponseAdminAPIListItemType) {
-    adminAPIDelete({ apiId: record.apiId, enabled: record.enabled }).then((res) => {
+    adminAPIDelete({ id: record.id, enabled: record.enabled }).then((res) => {
       message.success(res.message, MessageDuritain);
       getRows({ ...form.getFieldsValue() });
     });
@@ -335,7 +322,7 @@ const Admin: React.FC = () => {
         {/* table */}
         <Table
           sticky
-          rowKey="apiId"
+          rowKey="id"
           scroll={{ x: 'auto' }}
           loading={loading}
           columns={columns}
@@ -357,17 +344,22 @@ const Admin: React.FC = () => {
 
       <AdminAPIAddModal modalStatus={addModalStatus} noticeModal={noticeAddModal} />
 
-      <AdminAPIDetailModal
-        modalStatus={detailModalStatus}
-        detailData={detailData}
-        noticeModal={noticeDetailModal}
-      />
-
-      <AdminAPIEditModal
-        modalStatus={editModalStatus}
-        detailData={detailData}
-        noticeModal={noticeEditModal}
-      />
+      {detailData ? (
+        <>
+          <AdminAPIDetailModal
+            modalStatus={detailModalStatus}
+            detailData={detailData}
+            noticeModal={noticeDetailModal}
+          />
+          <AdminAPIEditModal
+            modalStatus={editModalStatus}
+            detailData={detailData}
+            noticeModal={noticeEditModal}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };

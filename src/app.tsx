@@ -6,8 +6,6 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentAdminInfo, CurrentUserPermissionsType } from './services/apis/admin/account';
 import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
-import { message } from 'antd';
-import type { ResponseBodyType } from '@/services/apis/types';
 import { SUCCESS } from './services/apis/code';
 import defaultSettings from '../config/defaultSettings';
 import { MenuDataItem } from '@umijs/route-utils';
@@ -20,6 +18,7 @@ import {
   Logout,
   MenusMapType,
 } from '@/utils/common';
+import { message } from 'antd';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -38,8 +37,11 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const tokenInfo = GetLoginToken();
-      const res = await currentAdminInfo(tokenInfo?.remember);
-      return res.data;
+      if (tokenInfo?.token) {
+        const res = await currentAdminInfo(tokenInfo?.remember);
+        return res.data;
+      }
+      return undefined;
     } catch (error) {
       history.push(LoginPath);
     }
@@ -54,7 +56,7 @@ export async function getInitialState(): Promise<{
       fetchUserInfo,
       currentUser,
       permissions,
-      settings: { ...defaultSettings, ...currentUser?.settings },
+      settings: { ...defaultSettings },
     };
   }
   return {
@@ -65,6 +67,7 @@ export async function getInitialState(): Promise<{
 
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    // collapsed: true,
     rightContentRender: () => <RightContent />,
     disableContentMargin: true,
     waterMarkProps: {
@@ -79,7 +82,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     links: [],
     menuItemRender: (menuItemProps, defaultDom) => {
-      if (menuItemProps.isUrl || !menuItemProps.path) {
+      if (menuItemProps.isUrl) {
         return defaultDom;
       }
       // 支持二级菜单显示icon
@@ -93,33 +96,27 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       );
     },
     menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: (
-    //   <Result
-    //     status="403"
-    //     title="403"
-    //     subTitle="Sorry, you are not authorized to access this page."
-    //     extra={<Button type="primary">sdfasdfsdf</Button>}
-    //   />
-    // ),
-    // 增加一个 loading 的状态
-    // childrenRender: (children) => {
-    //   if (initialState.loading) return <PageLoading />;
-    //   return children;
-    // },
     menu: {
       locale: true,
       defaultOpenAll: true,
-      //params: { time: new Date().getTime() },
       request: (params, defaultMenuData) => {
         const menuData = initialState?.currentUser?.menus;
-        const menuList: MenuDataItem[] = HandleRemoteMenuIntoLocal(
+        const tmpMenuList: MenuDataItem[] = HandleRemoteMenuIntoLocal(
           [],
-          HandleRemoteMenuIntoLocal([], defaultMenuData, menuData, 'children'),
+          defaultMenuData,
           menuData,
           'children',
         );
-        setInitialState({ ...initialState, menuData: HandleMenusToMap({}, menuList, 'children') });
+        const menuList: MenuDataItem[] = HandleRemoteMenuIntoLocal(
+          [],
+          tmpMenuList,
+          menuData,
+          'routes',
+        );
+        setInitialState({
+          ...initialState,
+          menuData: HandleMenusToMap({}, menuList, 'children'),
+        });
         return new Promise((resolve, reject) => {
           resolve(menuList);
         });
@@ -151,41 +148,58 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
 // 请求拦截器：
 const interceptorsRequest = (url: string, options: any) => {
-  isDev && console.log('请求拦截器：', BaseAPI, url, options, `${BaseAPI}${url}`);
+  message.destroy();
+  const realyUrl = `${BaseAPI}${url}`;
+  isDev && console.log('请求拦截器：', BaseAPI, url, options, realyUrl);
   if (!IsLongPage()) {
     const tokenInfo = GetLoginToken();
     const token = tokenInfo !== undefined ? tokenInfo.token : '';
     options.headers.Authorization = 'Bearer ' + token;
   }
+
   return {
-    url: `${BaseAPI}${url}`,
-    options: { ...options, interceptors: true },
+    url: realyUrl,
+    options: { ...options, interceptors: true, url: realyUrl },
   };
 };
 
 // 响应拦截器：
-const interceptorsResponse = async (response: any, options: any) => {
+const interceptorsResponse: any = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
-  const data: ResponseBodyType = await response.clone().json();
-  if (data.code !== SUCCESS) {
-    message.destroy();
+  return new Promise(async (resolve, reject) => {
+    const resData = await response.clone().json();
+    if (response.status !== 200) {
+      const msg: string =
+        resData && resData.path && resData.error
+          ? `${resData.status}：${resData.path} ${resData.error}`
+          : '请求失败';
+      message.error(msg, MessageDuritain);
+      return reject(msg);
+    }
+    if (resData.code !== SUCCESS) {
+      message.destroy();
+      message.error(resData.message, MessageDuritain);
+      return reject(resData.message);
+    }
+    return resolve(resData);
+  });
+};
+
+const errorHandler = (err: any) => {
+  const reg = /.*timeout.*/gi;
+  if (reg.test(err)) {
+    message.error('请求超时', MessageDuritain);
   }
-  return response;
+  throw err;
 };
 
 export const request: RequestConfig = {
   timeout: 6000,
   errorConfig: {
-    adaptor: (resData: { code: number; message: any; type: any }) => {
-      return {
-        ...resData,
-        success: resData.code === SUCCESS,
-        errorMessage: resData.message,
-        showType: resData.type,
-      };
-    },
+    // adaptor,
   },
   middlewares: [],
   requestInterceptors: [interceptorsRequest],
   responseInterceptors: [interceptorsResponse],
+  errorHandler,
 };
