@@ -67,6 +67,8 @@
     "antd-img-crop": "^4.2.3",
     "bizcharts": "^3.5.3-beta.0",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
+    "browserslist": "^4.22.1",
+    "caniuse-lite": "^1.0.30001563",
     "classnames": "^2.3.0",
     "gg-editor": "^2.0.2",
     "github-markdown-css": "^5.1.0",
@@ -76,6 +78,7 @@
     "markdown-navbar": "^1.4.3",
     "marked": "^4.0.18",
     "moment": "^2.29.0",
+    "npx": "^10.2.2",
     "numeral": "^2.0.6",
     "nzh": "^1.0.3",
     "omit.js": "^2.0.2",
@@ -91,7 +94,8 @@
     "react-syntax-highlighter": "^15.5.0",
     "remark-gfm": "^3.0.1",
     "umi": "^3.5.0",
-    "umi-serve": "^1.9.10"
+    "umi-serve": "^1.9.10",
+    "update-browserslist-db": "^1.0.13"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^2.1.0",
