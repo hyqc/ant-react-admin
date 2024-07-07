@@ -1,8 +1,13 @@
 import { adminAPIEdit, ResponseAdminAPIDetailType } from '@/services/apis/admin/resource';
 import { Form, Input, message, Modal, Switch } from 'antd';
 import { ChangeEvent, useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { DEFAULT_RULES, path2UpperCamelCase } from './components/common';
 
 export type NoticeModalPropsType = {
@@ -54,14 +59,14 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
   }, [detailData]);
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="编辑接口"
       width={DefaultModalWidth}
       destroyOnClose={true}
       maskClosable={false}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -88,7 +93,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} defaultChecked />
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

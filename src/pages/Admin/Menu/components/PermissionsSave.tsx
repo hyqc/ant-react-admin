@@ -1,7 +1,12 @@
 import { Form, Input, message, Modal, Space, Switch } from 'antd';
 import { useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import {
   adminAddMenuPermission,
   RequestAdminPermissionAddForMenuParamsType,
@@ -72,14 +77,14 @@ const AddPermissionsModal: React.FC<AddModalPropsType> = (props) => {
   }, [detailData]);
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="添加菜单操作权限"
       width={900}
       destroyOnClose={true}
       getContainer={false}
       maskClosable={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -129,7 +134,7 @@ const AddPermissionsModal: React.FC<AddModalPropsType> = (props) => {
           })}
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

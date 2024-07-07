@@ -1,7 +1,12 @@
 import { Drawer, Form, Input, Switch } from 'antd';
 import { useEffect } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { INPUT_STYLE } from '@/services/apis/config';
 import { ResponseAdminMenuDetailType } from '@/services/apis/admin/menu';
 
@@ -29,40 +34,40 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
   });
 
   return (
-    <Drawer
+    (<Drawer
       forceRender
       title="菜单详情"
       footer={null}
       width={DefaultDrawerWidth}
       destroyOnClose={true}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       onClose={onClose}
     >
       <Form form={form} labelAlign="left" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="菜单ID" name="id">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="名称" name="name">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="路由" name="path">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="唯一键名" name="key">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="图标" name="icon">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="排序值" name="sort">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="描述" name="describe">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="重定向路由" name="redirect">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="菜单中隐藏" name="hideInMenu" valuePropName="checked">
           <Switch disabled checkedChildren={'隐藏'} unCheckedChildren={'显示'} />
@@ -74,13 +79,13 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
           <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
         <Form.Item label="创建时间" name="createTime">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="最后更新时间" name="modifyTime">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
       </Form>
-    </Drawer>
+    </Drawer>)
   );
 };
 

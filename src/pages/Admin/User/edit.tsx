@@ -8,8 +8,13 @@ import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
 import { CloudUploadOutlined } from '@ant-design/icons';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { AdminUserFormRules } from './common';
 
 export type NoticeModalPropsType = {
@@ -95,14 +100,14 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
   }, []);
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="编辑管理员"
       width={DefaultModalWidth}
       destroyOnClose={true}
       maskClosable={false}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -142,7 +147,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
           </ImgCrop>
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

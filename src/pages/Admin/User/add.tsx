@@ -3,8 +3,13 @@ import { APICommon } from '@/services/apis/admin/api';
 import { Form, Input, message, Modal, Switch, Upload } from 'antd';
 import { useState } from 'react';
 import { CloudUploadOutlined } from '@ant-design/icons';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import ImgCrop from 'antd-img-crop';
 import { AdminUserFormRules } from './common';
 
@@ -77,14 +82,14 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
   }
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="新建管理员"
       width={DefaultModalWidth}
       destroyOnClose={true}
       getContainer={false}
       maskClosable={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -133,7 +138,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           </ImgCrop>
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

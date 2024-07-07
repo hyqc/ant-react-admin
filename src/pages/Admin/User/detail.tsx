@@ -1,8 +1,13 @@
 import { ResponseAdminUserDetailType } from '@/services/apis/admin/user';
 import { INPUT_STYLE } from '@/services/apis/config';
 import { Drawer, Form, Input, Switch, Tag } from 'antd';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import Avatar from 'antd/lib/avatar/avatar';
 import { useEffect } from 'react';
 
@@ -31,31 +36,31 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
   });
 
   return (
-    <Drawer
+    (<Drawer
       forceRender
       title="管理员详情"
       footer={null}
       width={DefaultDrawerWidth}
       destroyOnClose={true}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       onClose={onClose}
     >
       <Form form={form} labelAlign="left" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="ID" name="adminId">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="账号" name="username">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="头像" name="avatar" initialValue={true}>
           <Avatar size={64} src={detailData?.avatar} />
         </Form.Item>
         <Form.Item label="昵称" name="nickname">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="邮箱" name="email">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="角色" name="roles">
           <span>
@@ -76,22 +81,22 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
           <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
         <Form.Item label="登录次数" name="totalLogin">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="最后登录IP" name="lastLoginIp">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="最后登录时间" name="lastLoginTime">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="创建时间" name="createTime">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="更新时间" name="modifyTime">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
       </Form>
-    </Drawer>
+    </Drawer>)
   );
 };
 

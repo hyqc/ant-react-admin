@@ -1,7 +1,12 @@
 import { Form, Input, message, Modal, Select, Switch } from 'antd';
 import { ChangeEvent, useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import {
   adminPermissionAdd,
   RequestAdminPermissionAddParamsType,
@@ -90,14 +95,14 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
   }, [pageMenusData]);
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="新建权限"
       width={DefaultModalWidth}
       destroyOnClose={true}
       getContainer={false}
       maskClosable={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -133,7 +138,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} defaultChecked />
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

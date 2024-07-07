@@ -1,7 +1,12 @@
 import { Form, Input, message, Modal, Switch } from 'antd';
 import { useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { adminRoleAdd, RequestAdminRoleAddParamsType } from '@/services/apis/admin/role';
 
 export type NoticeModalPropsType = {
@@ -50,14 +55,14 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
   }
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="新建角色"
       width={DefaultModalWidth}
       destroyOnClose={true}
       getContainer={false}
       maskClosable={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -75,7 +80,7 @@ const AddModal: React.FC<AddModalPropsType> = (props) => {
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

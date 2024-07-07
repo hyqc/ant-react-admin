@@ -1,8 +1,12 @@
 import { adminRoleEdit, ResponseAdminRoleDetailType } from '@/services/apis/admin/role';
 import { Form, Input, message, Modal, Switch } from 'antd';
 import { useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
 
 export type NoticeModalPropsType = {
   reload?: boolean;
@@ -51,14 +55,14 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
   }, [detailData]);
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="编辑角色"
       width={DefaultModalWidth}
       destroyOnClose={true}
       maskClosable={false}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -79,7 +83,7 @@ const EditModal: React.FC<EditModalPropsType> = (props) => {
           <Switch checkedChildren={'启用'} unCheckedChildren={'禁用'} />
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

@@ -1,7 +1,12 @@
 import { Button, Col, Form, Input, message, Row, Switch } from 'antd';
 import { ChangeEvent, useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import {
   adminMenuDetail,
   adminMenuEdit,

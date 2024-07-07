@@ -5,8 +5,13 @@ import {
 } from '@/services/apis/admin/role';
 import { Button, Drawer, Form, Input, message, Popconfirm } from 'antd';
 import { useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { INPUT_STYLE } from '@/services/apis/config';
 import BindPermissions from './components/BindPermissions';
 import { ResponseAdminMenuModeTypeData } from '@/services/apis/admin/menu';
@@ -65,7 +70,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
   }, [form]);
 
   return (
-    <Drawer
+    (<Drawer
       forceRender
       mask={false}
       maskClosable={false}
@@ -73,19 +78,19 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
       width={700}
       destroyOnClose={true}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       onClose={onClose}
     >
       <Form form={form} labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
         <Form.Item label="ID" name="id" hidden>
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="名称">{detailData.name}</Form.Item>
         <Form.Item label="权限" name="permissionIds">
           <BindPermissions datasource={menuPageData} permissionIds={detailData?.permissionIds} />
         </Form.Item>
-        <Form.Item style={{ marginTop: '8rem', marginLeft: '4rem' }}>
-          <Button onClick={onClose} style={ButtonStyles}>
+        <Form.Item rootStyle={{ marginTop: '8rem', marginLeft: '4rem' }}>
+          <Button onClick={onClose} rootStyle={ButtonStyles}>
             取消
           </Button>
           <Popconfirm
@@ -94,13 +99,13 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
             cancelText="取消"
             onConfirm={handleOk}
           >
-            <Button loading={saveBtnLoading} type="primary" style={ButtonStyles}>
+            <Button loading={saveBtnLoading} type="primary" rootStyle={ButtonStyles}>
               保存
             </Button>
           </Popconfirm>
         </Form.Item>
       </Form>
-    </Drawer>
+    </Drawer>)
   );
 };
 

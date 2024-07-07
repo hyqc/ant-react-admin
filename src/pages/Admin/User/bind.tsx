@@ -5,8 +5,13 @@ import {
 } from '@/services/apis/admin/user';
 import { Form, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { adminRoleAll, ResponseAdminRoleAllItemType } from '@/services/apis/admin/role';
 import { ResponseAdminUserListItemRolesItemType } from '@/services/apis/admin/user';
 
@@ -79,14 +84,14 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
   }, [detailData]);
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="分配角色"
       width={DefaultModalWidth}
       destroyOnClose={true}
       maskClosable={false}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -120,7 +125,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
           </Select>
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

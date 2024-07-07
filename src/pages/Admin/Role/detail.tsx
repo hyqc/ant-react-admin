@@ -1,8 +1,13 @@
 import { ResponseAdminRoleDetailType } from '@/services/apis/admin/role';
 import { Drawer, Form, Input, Switch } from 'antd';
 import { useEffect } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { INPUT_STYLE } from '@/services/apis/config';
 import { ResponseAdminMenuModeTypeData } from '@/services/apis/admin/menu';
 import BindPermissions from './components/BindPermissions';
@@ -32,28 +37,28 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
   });
 
   return (
-    <Drawer
+    (<Drawer
       forceRender
       title="角色详情"
       footer={null}
       width={760}
       destroyOnClose={true}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       onClose={onClose}
     >
       <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
         <Form.Item label="名称" name="name">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="描述" name="describe">
-          <Input.TextArea disabled style={inputStyle} />
+          <Input.TextArea disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="创建时间" name="createTime">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="最后更新时间" name="modifyTime">
-          <Input disabled style={inputStyle} />
+          <Input disabled rootStyle={inputStyle} />
         </Form.Item>
         <Form.Item label="状态" name="enabled" valuePropName="checked">
           <Switch disabled checkedChildren={'启用'} unCheckedChildren={'禁用'} />
@@ -66,7 +71,7 @@ const DetailModal: React.FC<DetailModalPropsType> = (props) => {
           />
         </Form.Item>
       </Form>
-    </Drawer>
+    </Drawer>)
   );
 };
 

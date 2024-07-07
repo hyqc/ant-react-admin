@@ -5,8 +5,13 @@ import {
 } from '@/services/apis/admin/user';
 import { Form, Input, message, Modal } from 'antd';
 import { useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { AdminUserFormRules } from './common';
 
 export type NoticeModalPropsType = {
@@ -59,14 +64,14 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
   }, []);
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="修改密码"
       width={DefaultModalWidth}
       destroyOnClose={true}
       maskClosable={false}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -90,7 +95,7 @@ const Password: React.FC<AdminUserEditPasswordModalPropsType> = (props) => {
           <Input.Password />
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 

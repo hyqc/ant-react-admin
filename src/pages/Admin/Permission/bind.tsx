@@ -5,8 +5,13 @@ import {
 } from '@/services/apis/admin/permission';
 import { Form, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import 'antd/es/modal/style';
-import 'antd/es/slider/style';
+
+// import 'antd/es/modal/style';
+
+
+// import 'antd/es/slider/style';
+
+
 import { adminAPIAll, ResponseAdminAPIAllItemType } from '@/services/apis/admin/resource';
 
 export type NoticeModalPropsType = {
@@ -77,14 +82,14 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
   }, [detailData]);
 
   return (
-    <Modal
+    (<Modal
       forceRender
       title="绑定接口"
       width={DefaultModalWidth}
       destroyOnClose={true}
       maskClosable={false}
       getContainer={false}
-      visible={modalStatus}
+      open={modalStatus}
       confirmLoading={confirmLoading}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -115,7 +120,7 @@ const BindModal: React.FC<BindModalPropsType> = (props) => {
           </Select>
         </Form.Item>
       </Form>
-    </Modal>
+    </Modal>)
   );
 };
 
