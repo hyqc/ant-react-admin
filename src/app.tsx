@@ -1,14 +1,6 @@
-import { SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { PageLoading } from '@ant-design/pro-layout';
-import { RunTimeLayoutConfig, RequestConfig, Link } from 'umi';
-import { history } from 'umi';
-import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentAdminInfo, CurrentUserPermissionsType } from './services/apis/admin/account';
+import RightContent from '@/components/RightContent';
 import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
-import { SUCCESS } from './services/apis/code';
-import defaultSettings from '../config/defaultSettings';
-import { MenuDataItem } from '@umijs/route-utils';
 import {
   GetLoginToken,
   HandleMenusToMap,
@@ -18,7 +10,13 @@ import {
   Logout,
   MenusMapType,
 } from '@/utils/common';
+import { PageLoading, SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { history, Link, RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
+import { MenuDataItem } from '@umijs/route-utils';
 import { message } from 'antd';
+import defaultSettings from '../config/defaultSettings';
+import { currentAdminInfo, CurrentUserPermissionsType } from './services/apis/admin/account';
+import { SUCCESS } from './services/apis/code';
 
 const isDev = process.env.NODE_ENV === 'development';
 
