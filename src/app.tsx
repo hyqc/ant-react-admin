@@ -97,7 +97,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     menu: {
       locale: true,
       defaultOpenAll: true,
-      request: (params, defaultMenuData) => {
+      request: (_params: any, defaultMenuData: MenuDataItem[]) => {
         const menuData = initialState?.currentUser?.menus;
         const tmpMenuList: MenuDataItem[] = HandleRemoteMenuIntoLocal(
           [],
