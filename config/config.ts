@@ -1,6 +1,7 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
+import routes from './routes';
 
 export default defineConfig({
   model: {},
@@ -36,4 +37,5 @@ export default defineConfig({
     AccessForbidden: 'forbidden', // 403权限禁止访问
     AdminId: 1, // 超管ID
   },
+  routes,
 });

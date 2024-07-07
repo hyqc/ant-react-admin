@@ -1,7 +1,6 @@
-import { ResponseAdminAPIListItemType } from '@/services/apis/admin/resource';
 import { ResponseBodyType, ResponseDetailType } from '@/services/apis/types';
-import { success } from '../common';
 import { Request, Response } from 'express';
+import { success } from '../common';
 
 const allData: ResponseBodyType = {
   code: 0,

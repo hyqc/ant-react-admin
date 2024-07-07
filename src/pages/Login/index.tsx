@@ -1,12 +1,13 @@
+import type { RequestLoginParamsType } from '@/services/apis/admin/account';
+import { login } from '@/services/apis/admin/account';
+import { SetLoginToken } from '@/utils/common';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Card, Checkbox, Form, Input } from 'antd';
+import { parse } from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { history, SelectLang, useModel } from 'umi';
-import styles from './index.less';
-import { login } from '@/services/apis/admin/account';
-import type { RequestLoginParamsType } from '@/services/apis/admin/account';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { SetLoginToken } from '@/utils/common';
 import { AdminUserFormRules } from '../Admin/User/common';
+import styles from './index.less';
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
@@ -18,6 +19,7 @@ const Login: React.FC = () => {
     try {
       setLoginBtnLoading(true);
       const res = await login(values);
+      console.log('登录返回：', res, history);
       // 设置token
       SetLoginToken(res.data.token, res.data.expire, values.remember || false);
       // 设置菜单
@@ -27,7 +29,7 @@ const Login: React.FC = () => {
       }));
       /** 此方法会跳转到 redirect 参数所在的位置 */
       if (!history) return;
-      const { query } = history.location;
+      const query = parse(history.location.search);
       const { redirect } = query as { redirect: string };
       window.location.href = redirect || '/home';
       return;

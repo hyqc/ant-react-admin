@@ -10,20 +10,22 @@ import {
   Logout,
   MenusMapType,
 } from '@/utils/common';
-import { PageLoading, SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { history, Link, RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { MenuDataItem } from '@umijs/route-utils';
 import { message } from 'antd';
 import defaultSettings from '../config/defaultSettings';
+// import { errorConfig } from './requestErrorConfig';
 import { currentAdminInfo, CurrentUserPermissionsType } from './services/apis/admin/account';
 import { SUCCESS } from './services/apis/code';
 
 const isDev = process.env.NODE_ENV === 'development';
 
-/** 获取用户信息比较慢的时候会展示一个 loading */
-export const initialStateConfig = {
-  loading: <PageLoading />,
-};
+// interface ResponseStructure {
+//   code?: number;
+//   data?: any;
+//   message?: string;
+// }
 
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
@@ -164,31 +166,22 @@ const interceptorsRequest = (url: string, options: any) => {
 // 响应拦截器：
 const interceptorsResponse: any = async (response: any, options: any) => {
   isDev && console.log('响应拦截器：', response, options);
+  console.log('返回数据：', response.data);
+  const data: any = response.data;
   return new Promise(async (resolve, reject) => {
-    const resData = await response.clone().json();
     if (response.status !== 200) {
-      const msg: string =
-        resData && resData.path && resData.error
-          ? `${resData.status}：${resData.path} ${resData.error}`
-          : '请求失败';
+      const msg: string = data.message;
+
       message.error(msg, MessageDuritain);
       return reject(msg);
     }
-    if (resData.code !== SUCCESS) {
+    if (data.code !== SUCCESS) {
       message.destroy();
-      message.error(resData.message, MessageDuritain);
-      return reject(resData.message);
+      message.error(data.message, MessageDuritain);
+      return reject(data.message);
     }
-    return resolve(resData);
+    return resolve(response);
   });
-};
-
-const errorHandler = (err: any) => {
-  const reg = /.*timeout.*/gi;
-  if (reg.test(err)) {
-    message.error('请求超时', MessageDuritain);
-  }
-  throw err;
 };
 
 export const request: RequestConfig = {
@@ -196,8 +189,7 @@ export const request: RequestConfig = {
   errorConfig: {
     // adaptor,
   },
-  middlewares: [],
   requestInterceptors: [interceptorsRequest],
   responseInterceptors: [interceptorsResponse],
-  errorHandler,
+  //...errorConfig,
 };
