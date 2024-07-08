@@ -1,7 +1,7 @@
-import React from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useModel } from 'umi';
 import ForbiddenPage from '@/pages/403';
+import { PageContainer } from '@ant-design/pro-layout';
+import React from 'react';
+import { useModel } from 'umi';
 
 export type ContentType = {
   wrapperStyle?: React.CSSProperties;
@@ -35,7 +35,7 @@ const Content: React.FC<ContentType> = (props: any) => {
   }
 
   return canAccessLocalMenu ? (
-    <PageHeaderWrapper style={wrapperStyless}>{props?.children}</PageHeaderWrapper>
+    <PageContainer style={wrapperStyless}>{props?.children}</PageContainer>
   ) : (
     <ForbiddenPage />
   );

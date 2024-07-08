@@ -10,22 +10,15 @@ import {
   Logout,
   MenusMapType,
 } from '@/utils/common';
-import { SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history, Link, RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { MenuDataItem } from '@umijs/route-utils';
 import { message } from 'antd';
 import defaultSettings from '../config/defaultSettings';
-// import { errorConfig } from './requestErrorConfig';
 import { currentAdminInfo, CurrentUserPermissionsType } from './services/apis/admin/account';
 import { SUCCESS } from './services/apis/code';
 
 const isDev = process.env.NODE_ENV === 'development';
-
-// interface ResponseStructure {
-//   code?: number;
-//   data?: any;
-//   message?: string;
-// }
 
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
@@ -71,7 +64,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     rightContentRender: () => <RightContent />,
     disableContentMargin: true,
     waterMarkProps: {
-      content: '',
+      content: initialState?.currentUser?.username,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -86,12 +79,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return defaultDom;
       }
       // 支持二级菜单显示icon
+      const styleSpan = { display: 'inline-block', marginRight: '2px' };
       return (
         <Link to={menuItemProps.path}>
-          {menuItemProps.pro_layout_parentKeys &&
-            menuItemProps.pro_layout_parentKeys.length > 0 &&
-            menuItemProps.icon}
-          {defaultDom}
+          <span style={styleSpan}>
+            {menuItemProps.pro_layout_parentKeys &&
+              menuItemProps.pro_layout_parentKeys.length > 0 &&
+              menuItemProps.icon}
+          </span>
+          <span style={styleSpan}> {defaultDom}</span>
         </Link>
       );
     },
