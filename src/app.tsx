@@ -75,9 +75,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     links: [],
     menuItemRender: (menuItemProps, defaultDom) => {
-      if (menuItemProps.isUrl) {
-        return defaultDom;
-      }
+      // if (menuItemProps.isUrl) {
+      //   return defaultDom;
+      // }
       // 支持二级菜单显示icon
       const styleSpan = { display: 'inline-block', marginRight: '2px' };
       return (
@@ -91,7 +91,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </Link>
       );
     },
-    menuHeaderRender: undefined,
+    //menuHeaderRender: undefined,
     menu: {
       locale: true,
       defaultOpenAll: true,

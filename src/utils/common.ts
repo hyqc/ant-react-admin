@@ -1,9 +1,9 @@
-import { MenuDataItem } from '@umijs/route-utils';
 import * as IconMap from '@ant-design/icons';
+import { MenuDataItem } from '@umijs/route-utils';
+import { parse } from 'query-string';
+import { stringify } from 'querystring';
 import React from 'react';
 import { history } from 'umi';
-import { stringify } from 'querystring';
-
 /**
  * 合并远程菜单和本地菜单
  * @param result
@@ -108,14 +108,14 @@ export const GetLoginToken = (): TokenType | undefined => {
       if (now >= obj.expire) {
         // 过期
         Logout();
-        return;
+        return undefined;
       }
       return obj;
     }
-    return;
+    return undefined;
   } catch (e) {
     console.log(e);
-    return;
+    return undefined;
   }
 };
 
@@ -140,7 +140,8 @@ export const SetLoginToken = (token: string, expire: number, remember: boolean):
  */
 export const Logout = (): void => {
   localStorage.removeItem(LocalStorageTokenKey);
-  const { query = {}, search, pathname } = history.location;
+  const query = parse(history.location.search);
+  const { search, pathname } = history.location;
   const { redirect } = query;
   if (!IsLongPage() && !redirect) {
     history.replace({
