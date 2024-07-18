@@ -1,5 +1,3 @@
-import Footer from '@/components/Footer';
-import RightContent from '@/components/RightContent';
 import type { ReponseCurrentAdminUserDetailType } from '@/services/apis/admin/account';
 import {
   GetLoginToken,
@@ -10,7 +8,7 @@ import {
   Logout,
   MenusMapType,
 } from '@/utils/common';
-import { SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
+import { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history, Link, RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { MenuDataItem } from '@umijs/route-utils';
 import { message } from 'antd';
@@ -61,12 +59,12 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     // collapsed: true,
-    rightContentRender: () => <RightContent />,
-    disableContentMargin: true,
+    //rightContentRender: () => <RightContent />,
+    //disableContentMargin: true,
     waterMarkProps: {
       content: initialState?.currentUser?.username,
     },
-    footerRender: () => <Footer />,
+    //footerRender: () => <Footer />,
     onPageChange: () => {
       // 如果没有登录，重定向到 login
       if (location.pathname !== LoginPath && !IsLogin(initialState)) {
@@ -74,6 +72,27 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       }
     },
     links: [],
+    // subMenuItemRender(item, defaultDom, menuProps) {
+    //   console.log('----', defaultDom, menuProps);
+    //   const m = menuProps?.breadcrumb || {};
+    //   console.log('=== m', m);
+    //   if (m !== undefined) {
+    //     const k = m[location.pathname];
+    //     console.log('=== k', k);
+    //     if (k !== undefined) {
+    //       const arr = k.pro_layout_parentKeys;
+    //       console.log('=== arr', arr);
+    //       if (arr !== undefined && arr.length > 0) {
+    //         const res = arr?.indexOf(item.key);
+    //         console.log('=== res', res);
+    //         if (res >= 0) {
+    //           menuProps.matchMenuKeys = [item.key];
+    //         }
+    //       }
+    //     }
+    //   }
+    //   return defaultDom;
+    // },
     menuItemRender: (menuItemProps, defaultDom) => {
       // if (menuItemProps.isUrl) {
       //   return defaultDom;
@@ -118,26 +137,26 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         });
       },
     },
-    childrenRender: (children, props) => {
-      // if (initialState?.loading) return <PageLoading />;
-      return (
-        <>
-          {children}
-          {!props.location?.pathname?.includes('/login') && (
-            <SettingDrawer
-              enableDarkTheme
-              settings={initialState?.settings}
-              onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
-                  ...preInitialState,
-                  settings,
-                }));
-              }}
-            />
-          )}
-        </>
-      );
-    },
+    // childrenRender: (children, props) => {
+    //   // if (initialState?.loading) return <PageLoading />;
+    //   return (
+    //     <>
+    //       {children}
+    //       {!props.location?.pathname?.includes('/login') && (
+    //         <SettingDrawer
+    //           enableDarkTheme
+    //           settings={initialState?.settings}
+    //           onSettingChange={(settings) => {
+    //             setInitialState((preInitialState) => ({
+    //               ...preInitialState,
+    //               settings,
+    //             }));
+    //           }}
+    //         />
+    //       )}
+    //     </>
+    //   );
+    // },
     ...initialState?.settings,
   };
 };
